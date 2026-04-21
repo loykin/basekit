@@ -60,11 +60,23 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/unit:
+    devDependencies:
+      tsup:
+        specifier: ^8.4.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   playground:
     dependencies:
       '@loykin/datetime-range':
         specifier: workspace:*
         version: link:../packages/datetime-range
+      '@loykin/unit':
+        specifier: workspace:*
+        version: link:../packages/unit
       react:
         specifier: ^19.0.0
         version: 19.2.5

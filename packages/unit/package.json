@@ -1,0 +1,36 @@
+{
+  "name": "@loykin/unit",
+  "version": "0.0.1",
+  "description": "Unit formatter — bytes, time, currency, percentage and more.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit && tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "unit",
+    "formatter",
+    "bytes",
+    "duration",
+    "currency"
+  ],
+  "license": "MIT"
+}

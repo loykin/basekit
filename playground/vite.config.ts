@@ -9,6 +9,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@loykin/datetime-range': resolve(__dirname, '../packages/datetime-range/src/index.ts'),
+      '@loykin/unit': resolve(__dirname, '../packages/unit/src/index.ts'),
+      '@': resolve(__dirname, '../packages/datetime-range/src'),
     },
   },
 })

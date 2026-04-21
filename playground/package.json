@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@loykin/datetime-range": "workspace:*",
+    "@loykin/unit": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
