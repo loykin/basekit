@@ -7,6 +7,7 @@ import { DayPicker, Matcher, TZDate } from 'react-day-picker';
 import { cn } from './lib/utils';
 import { Button, buttonVariants } from './ui/button';
 import { MonthYearPicker, TimePicker } from './DatetimeUtil';
+import type { DatetimePrecision } from './types';
 
 export type CalendarProps = Omit<React.ComponentProps<typeof DayPicker>, 'mode'>;
 
@@ -18,10 +19,10 @@ export interface DateTimePanelProps {
   max?: Date;
   timezone?: string;
   disabled?: boolean;
-  hideTime?: boolean;
+  /** Controls which time fields are shown. 'date' hides time entirely. @default 'second' */
+  precision?: DatetimePrecision;
   use12HourFormat?: boolean;
   clearable?: boolean;
-  timePicker?: { hour?: boolean; minute?: boolean; second?: boolean };
   /** When true, hides Cancel/Done buttons and propagates changes immediately. */
   immediate?: boolean;
   isError?: boolean;
@@ -31,15 +32,23 @@ export interface DateTimePanelProps {
   getRangeErrorMessage?: (errorType: 'validation' | 'range' | 'empty' | null, title?: string) => string;
 }
 
+function precisionToTimePicker(precision: DatetimePrecision) {
+  if (precision === 'date') return undefined;
+  return {
+    hour: true,
+    minute: precision === 'minute' || precision === 'second',
+    second: precision === 'second',
+  };
+}
+
 export function DateTimePanel({
   value,
   onChangeAction,
   min,
   max,
   timezone,
-  hideTime,
+  precision = 'second',
   use12HourFormat,
-  timePicker,
   immediate = false,
   isError,
   compareValue,
@@ -206,9 +215,9 @@ export function DateTimePanel({
       </div>
 
       <div className="flex flex-col gap-6 mt-4">
-        {!hideTime && (
+        {precision !== 'date' && (
           <TimePicker
-            timePicker={timePicker}
+            timePicker={precisionToTimePicker(precision)}
             value={date}
             onChange={onTimeChanged}
             use12HourFormat={use12HourFormat}

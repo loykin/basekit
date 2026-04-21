@@ -16,6 +16,8 @@ import {
   ValidationErrorType,
   QuickPreset,
   DatetimePrecision,
+  DatetimeRangeLabels,
+  DEFAULT_LABELS,
 } from './types';
 import {
   toDate,
@@ -25,34 +27,6 @@ import {
   RELATIVE_FORMATS,
   QUICK_PRESETS,
 } from './datetime-utils';
-
-// ─── Labels ───────────────────────────────────────────────────────────────────
-
-export interface DatetimeRangeLabels {
-  start?: string;
-  end?: string;
-  quickRanges?: string;
-  apply?: string;
-  cancel?: string;
-  absolute?: string;
-  relative?: string;
-  amount?: string;
-  now?: string;
-  nowDescription?: string;
-}
-
-const DEFAULT_LABELS: Required<DatetimeRangeLabels> = {
-  start: 'Start',
-  end: 'End',
-  quickRanges: 'Quick ranges',
-  apply: 'Apply',
-  cancel: 'Cancel',
-  absolute: 'Absolute',
-  relative: 'Relative',
-  amount: 'Amount',
-  now: 'Now',
-  nowDescription: 'Set to current time',
-};
 
 // ─── RelativeSidePanel ────────────────────────────────────────────────────────
 
@@ -159,28 +133,26 @@ function RelativeSidePanel({ value, onChange, relativeFormats, showNow, labels }
   );
 }
 
-// ─── AbsoluteContent ──────────────────────────────────────────────────────────
+// ─── SidePanel ────────────────────────────────────────────────────────────────
 
-interface AbsoluteContentProps {
+interface SidePanelProps {
+  title: string;
   value: DateTimeRangeValue;
   compareValue?: DateTimeRangeValue;
-  title: string;
   onChange: (value: DateTimeRangeValue) => void;
+  showAbsolute: boolean;
+  showRelative: boolean;
   precision: DatetimePrecision;
+  relativeFormats: DateTimeRelativeFormat[];
+  showNow: boolean;
   min?: Date;
   max?: Date;
   timezone?: string;
   use12HourFormat?: boolean;
+  labels: Required<DatetimeRangeLabels>;
 }
 
-function precisionToTimePicker(precision: DatetimePrecision) {
-  if (precision === 'date') return undefined;  // hideTime handles this
-  return {
-    hour: true,
-    minute: precision === 'minute' || precision === 'second',
-    second: precision === 'second',
-  };
-}
+// ─── AbsoluteContent ──────────────────────────────────────────────────────────
 
 function AbsoluteContent({
   value,
@@ -192,7 +164,7 @@ function AbsoluteContent({
   max,
   timezone,
   use12HourFormat,
-}: AbsoluteContentProps) {
+}: Pick<SidePanelProps, 'value' | 'compareValue' | 'title' | 'onChange' | 'precision' | 'min' | 'max' | 'timezone' | 'use12HourFormat'>) {
   const compareDate = compareValue ? toDate(compareValue) : undefined;
   const [calendarVisible, setCalendarVisible] = useState(false);
   const absoluteDate_ = value.type === 'absolute' ? toDate(value) : new Date();
@@ -228,8 +200,7 @@ function AbsoluteContent({
             compareValue={compareDate}
             title={title}
             immediate
-            hideTime={precision === 'date'}
-            timePicker={precisionToTimePicker(precision)}
+            precision={precision}
             min={min}
             max={max}
             timezone={timezone}
@@ -243,25 +214,6 @@ function AbsoluteContent({
       )}
     </div>
   );
-}
-
-// ─── SidePanel ────────────────────────────────────────────────────────────────
-
-interface SidePanelProps {
-  title: string;
-  value: DateTimeRangeValue;
-  compareValue?: DateTimeRangeValue;
-  onChange: (value: DateTimeRangeValue) => void;
-  showAbsolute: boolean;
-  showRelative: boolean;
-  precision: DatetimePrecision;
-  relativeFormats: DateTimeRelativeFormat[];
-  showNow: boolean;
-  min?: Date;
-  max?: Date;
-  timezone?: string;
-  use12HourFormat?: boolean;
-  labels: Required<DatetimeRangeLabels>;
 }
 
 function SidePanel({

@@ -27,3 +27,29 @@ export interface QuickPreset {
   start: DateTimeRangeValue;
   end: DateTimeRangeValue;
 }
+
+export interface DatetimeRangeLabels {
+  start?: string;
+  end?: string;
+  quickRanges?: string;
+  apply?: string;
+  cancel?: string;
+  absolute?: string;
+  relative?: string;
+  amount?: string;
+  now?: string;
+  nowDescription?: string;
+}
+
+export const DEFAULT_LABELS: Required<DatetimeRangeLabels> = {
+  start: 'Start',
+  end: 'End',
+  quickRanges: 'Quick ranges',
+  apply: 'Apply',
+  cancel: 'Cancel',
+  absolute: 'Absolute',
+  relative: 'Relative',
+  amount: 'Amount',
+  now: 'Now',
+  nowDescription: 'Set to current time',
+};
