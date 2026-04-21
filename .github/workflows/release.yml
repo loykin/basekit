@@ -1,0 +1,125 @@
+name: Release
+
+# Tag format: <package-name>/v<semver>
+# e.g. datetime-range/v0.1.0
+on:
+  push:
+    tags:
+      - '*/v*'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+    outputs:
+      package: ${{ steps.parse.outputs.package }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Parse tag
+        id: parse
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          PACKAGE="${TAG%%/v*}"
+          echo "package=$PACKAGE" >> "$GITHUB_OUTPUT"
+          echo "Releasing package: $PACKAGE"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm --filter "@loykin/${{ steps.parse.outputs.package }}" build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: packages/${{ steps.parse.outputs.package }}/dist/
+          if-no-files-found: error
+
+  publish-npm:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Download dist artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: packages/${{ needs.build.outputs.package }}/dist/
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Publish to npm
+        shell: bash
+        run: |
+          PACKAGE="${{ needs.build.outputs.package }}"
+          VERSION=$(node -p "require('./packages/$PACKAGE/package.json').version")
+          if [[ "$VERSION" =~ -(alpha|beta|rc|next) ]]; then
+            TAG="${BASH_REMATCH[1]}"
+            pnpm --filter "@loykin/$PACKAGE" publish --no-git-checks --access public --tag "$TAG"
+          else
+            pnpm --filter "@loykin/$PACKAGE" publish --no-git-checks --access public
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: publish-npm
+    steps:
+      - name: Download dist artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - name: Generate checksums
+        run: |
+          cd dist
+          find . -type f | sort | xargs sha256sum > ../checksums.txt
+          cat ../checksums.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            checksums.txt
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
