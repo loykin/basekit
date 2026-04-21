@@ -304,7 +304,7 @@ export default function App() {
             title="Custom Trigger"
             description="renderTrigger for a fully custom trigger element."
             code={`<DatetimeRange
-  renderTrigger={(triggerProps, { open, startTime, endTime }) => (
+  renderTrigger={(triggerProps, { startTime, endTime }) => (
     <button {...triggerProps} className="...">
       {toDisplayString(startTime)} ~ {toDisplayString(endTime)}
     </button>
