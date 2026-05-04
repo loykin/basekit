@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { DatetimeRangeTab } from './tabs/DatetimeRangeTab'
+import { SidePanelTab } from './tabs/SidePanelTab'
 import { UnitTab } from './tabs/UnitTab'
 
 const TABS = [
   { id: 'datetime-range', label: 'Datetime Range', content: <DatetimeRangeTab /> },
   { id: 'unit',           label: 'Unit',           content: <UnitTab /> },
+  { id: 'side-panel',     label: 'Side Panel',     content: <SidePanelTab /> },
 ] as const
 
 type TabId = (typeof TABS)[number]['id']

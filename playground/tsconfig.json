@@ -8,7 +8,8 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "@loykin/datetime-range": ["../packages/datetime-range/src/index.ts"]
+      "@loykin/datetime-range": ["../packages/datetime-range/src/index.ts"],
+      "@loykin/side-panel": ["../packages/side-panel/src/index.ts"]
     }
   },
   "include": ["src"]
