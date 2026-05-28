@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import {
   SidePanelProvider,
   useSidePanel,
@@ -6,6 +6,19 @@ import {
   usePanelGuard,
   type Side,
 } from '@loykin/side-panel'
+import '@loykin/side-panel/styles'
+import type { TokenGroupDef } from '../components/TokensPanel'
+
+export const TOKEN_GROUPS: TokenGroupDef[] = [
+  {
+    title: 'Side Panel Tokens',
+    tokens: [
+      { key: '--bk-background', type: 'color', description: 'Panel content area background' },
+      { key: '--bk-card', type: 'color', description: 'Panel surface (.sp-panel)' },
+      { key: '--bk-border', type: 'color', description: 'Panel edge border' },
+    ],
+  },
+]
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -330,6 +343,51 @@ function SimplePanel({ title, description }: { title: string; description?: stri
       </div>
       <div className="flex-1 px-4 py-4">
         {description && <p className="text-xs text-muted-foreground">{description}</p>}
+      </div>
+    </div>
+  )
+}
+
+// ─── Token preview ────────────────────────────────────────────────────────────
+
+export function SidePanelPreview() {
+  return (
+    <div style={{ height: 420 }}>
+      <SidePanelProvider defaultSize={280} defaultMinSize={200} defaultMaxSize={500} className="h-full border border-border">
+        <SidePanelPreviewInner />
+      </SidePanelProvider>
+    </div>
+  )
+}
+
+function SidePanelPreviewInner() {
+  const { open, isOpen } = useSidePanel()
+
+  useEffect(() => {
+    open(
+      <SimplePanel title="Preview Panel" description="Edit tokens on the left to see panel colors change." />,
+      { size: 280 }
+    )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <div className="h-full flex flex-col">
+      <div className="px-4 py-2 border-b border-border bg-muted/30 text-xs text-muted-foreground shrink-0">
+        Click outside the panel to close, then click "Open Panel" to reopen.
+      </div>
+      <div className="flex-1 p-4">
+        {!isOpen && (
+          <button
+            onClick={() => open(
+              <SimplePanel title="Preview Panel" description="Edit tokens on the left to see panel colors change." />,
+              { size: 280 }
+            )}
+            className="px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded"
+          >
+            Open Panel
+          </button>
+        )}
       </div>
     </div>
   )

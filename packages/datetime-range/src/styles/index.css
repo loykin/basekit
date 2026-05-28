@@ -1,0 +1,140 @@
+/*
+ * @loykin/datetime-range
+ *
+ * Plain CSS entry for consumers. Override with:
+ *   - CSS custom properties: --bk-*
+ *   - Semantic class names: .dr-*
+ */
+
+:root {
+  --bk-background:           oklch(1 0 0);
+  --bk-foreground:           oklch(0.145 0 0);
+  --bk-popover:              oklch(1 0 0);
+  --bk-popover-foreground:   oklch(0.145 0 0);
+  --bk-muted:                oklch(0.97 0 0);
+  --bk-muted-foreground:     oklch(0.556 0 0);
+  --bk-border:               oklch(0.922 0 0);
+  --bk-input:                oklch(0.922 0 0);
+  --bk-ring:                 oklch(0.708 0 0);
+  --bk-destructive:          oklch(0.577 0.245 27.325);
+  --bk-primary:              oklch(0.488 0.243 264.376);
+  --bk-primary-foreground:   oklch(0.97 0.014 254.604);
+  --bk-secondary:            oklch(0.967 0.001 286.375);
+  --bk-secondary-foreground: oklch(0.21 0.006 285.885);
+  --bk-accent:               oklch(0.97 0 0);
+  --bk-accent-foreground:    oklch(0.205 0 0);
+  --bk-radius:               0px;
+}
+
+.dark {
+  --bk-background:           oklch(0.145 0 0);
+  --bk-foreground:           oklch(0.985 0 0);
+  --bk-popover:              oklch(0.205 0 0);
+  --bk-popover-foreground:   oklch(0.985 0 0);
+  --bk-muted:                oklch(0.269 0 0);
+  --bk-muted-foreground:     oklch(0.708 0 0);
+  --bk-border:               oklch(1 0 0 / 10%);
+  --bk-input:                oklch(1 0 0 / 15%);
+  --bk-ring:                 oklch(0.556 0 0);
+  --bk-destructive:          oklch(0.704 0.191 22.216);
+  --bk-secondary:            oklch(0.274 0.006 286.033);
+  --bk-secondary-foreground: oklch(0.985 0 0);
+  --bk-accent:               oklch(0.269 0 0);
+  --bk-accent-foreground:    oklch(0.985 0 0);
+}
+
+.dr-input {
+  height: 32px;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--bk-input);
+  border-radius: var(--bk-radius);
+  background: transparent;
+  color: var(--bk-foreground);
+  padding: 4px 10px;
+  font-size: 12px;
+  outline: none;
+}
+
+.dr-input::placeholder { color: var(--bk-muted-foreground); }
+.dr-input:focus-visible {
+  border-color: var(--bk-ring);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bk-ring) 50%, transparent);
+}
+.dr-input:disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  background: color-mix(in oklab, var(--bk-input) 50%, transparent);
+  opacity: 0.5;
+}
+
+.dr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 6px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: var(--bk-radius);
+  background: transparent;
+  color: inherit;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+.dr-btn:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.dr-btn:focus-visible {
+  border-color: var(--bk-ring);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bk-ring) 50%, transparent);
+}
+.dr-btn svg {
+  pointer-events: none;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+.dr-btn[data-variant="default"] {
+  background: var(--bk-primary);
+  color: var(--bk-primary-foreground);
+}
+.dr-btn[data-variant="outline"] {
+  border-color: var(--bk-border);
+  background: var(--bk-background);
+  color: var(--bk-foreground);
+}
+.dr-btn[data-variant="outline"]:hover,
+.dr-btn[data-variant="outline"][aria-expanded="true"] {
+  background: var(--bk-muted);
+}
+.dr-btn[data-variant="secondary"] {
+  background: var(--bk-secondary);
+  color: var(--bk-secondary-foreground);
+}
+.dr-btn[data-variant="ghost"]:hover,
+.dr-btn[data-variant="ghost"][aria-expanded="true"] {
+  background: var(--bk-muted);
+}
+.dr-btn[data-variant="destructive"] {
+  background: color-mix(in oklab, var(--bk-destructive) 10%, transparent);
+  color: var(--bk-destructive);
+}
+.dr-btn[data-variant="link"] {
+  color: var(--bk-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.dr-btn[data-size="xs"] { height: 24px; padding: 0 8px; }
+.dr-btn[data-size="sm"] { height: 28px; padding: 0 10px; }
+.dr-btn[data-size="lg"] { height: 36px; }
+.dr-btn[data-size="icon"] { width: 32px; padding: 0; }
+.dr-btn[data-size="icon-xs"] { width: 24px; height: 24px; padding: 0; }
+.dr-btn[data-size="icon-sm"] { width: 28px; height: 28px; padding: 0; }
+.dr-btn[data-size="icon-lg"] { width: 36px; height: 36px; padding: 0; }

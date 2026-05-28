@@ -11,11 +11,10 @@ import React, {
 import { useStore } from 'zustand'
 import { Resizable } from 're-resizable'
 import { clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
 import { createSidePanelStore, SidePanelStore, PanelOptions, Side } from './sidePanelStore'
 
 function cn(...inputs: Parameters<typeof clsx>) {
-  return twMerge(clsx(inputs))
+  return clsx(inputs)
 }
 
 type GuardRef = React.RefObject<HTMLDivElement | null>
@@ -95,7 +94,7 @@ export function SidePanelProvider({
 
   return (
     <SidePanelContext.Provider value={{ store, open, close, registerGuard, unregisterGuard }}>
-      <div ref={containerRef} className={cn('relative overflow-hidden', className)} style={style}>
+      <div ref={containerRef} className={cn('sp-root', className)} style={style}>
         {children}
         <SidePanelSlot
           store={store}
@@ -179,9 +178,6 @@ function SidePanelSlot({
     topLeft:     false,
   }
 
-  // Single divider border on the edge touching the main content.
-  const dividerClass = { right: 'border-l', left: 'border-r', top: 'border-b', bottom: 'border-t' }[side]
-
   // Capture phase fires before React's onClick. If the same click also calls
   // open(), _open() runs afterward and overrides _close() via React 18 batching.
   useEffect(() => {
@@ -225,9 +221,10 @@ function SidePanelSlot({
         setIsResizing(false)
       }}
       enable={resizeEnable}
-      className={cn(dividerClass, 'border-border bg-card z-50 overflow-hidden')}
+      className="sp-panel"
+      data-side={side}
     >
-      <div ref={panelRef} className="h-full overflow-auto bg-background">
+      <div ref={panelRef} className="sp-panel-content">
         {content}
       </div>
     </Resizable>

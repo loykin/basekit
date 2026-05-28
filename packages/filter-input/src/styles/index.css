@@ -1,0 +1,515 @@
+/*
+ * @loykin/filter-input
+ *
+ * Plain CSS, no Tailwind dependency. Consumers can override with:
+ *   - CSS custom properties: --bk-*
+ *   - Semantic class names: .fi-*
+ *   - classNames props
+ */
+
+:root {
+  --bk-background:           oklch(1 0 0);
+  --bk-foreground:           oklch(0.145 0 0);
+  --bk-popover:              oklch(1 0 0);
+  --bk-popover-foreground:   oklch(0.145 0 0);
+  --bk-muted:                oklch(0.97 0 0);
+  --bk-muted-foreground:     oklch(0.556 0 0);
+  --bk-border:               oklch(0.922 0 0);
+  --bk-input:                oklch(0.922 0 0);
+  --bk-ring:                 oklch(0.708 0 0);
+  --bk-primary:              oklch(0.205 0 0);
+  --bk-primary-foreground:   oklch(0.985 0 0);
+  --bk-destructive:          oklch(0.577 0.245 27.325);
+  --bk-radius:               6px;
+  /* filter-input 고유 토큰 */
+  --bk-fi-control-background:   var(--bk-background);
+  --bk-fi-control-foreground:   var(--bk-foreground);
+  --bk-fi-control-border:       var(--bk-input);
+  --bk-fi-control-placeholder:  var(--bk-muted-foreground);
+  --bk-fi-separator:            var(--bk-border);
+}
+
+.dark {
+  --bk-background:           oklch(0.145 0 0);
+  --bk-foreground:           oklch(0.985 0 0);
+  --bk-popover:              oklch(0.205 0 0);
+  --bk-popover-foreground:   oklch(0.985 0 0);
+  --bk-muted:                oklch(0.269 0 0);
+  --bk-muted-foreground:     oklch(0.708 0 0);
+  --bk-border:               oklch(1 0 0 / 10%);
+  --bk-input:                oklch(1 0 0 / 15%);
+  --bk-ring:                 oklch(0.556 0 0);
+  --bk-primary:              oklch(0.985 0 0);
+  --bk-primary-foreground:   oklch(0.205 0 0);
+  --bk-destructive:          oklch(0.704 0.191 22.216);
+  --bk-fi-separator:         oklch(1 0 0 / 20%);
+}
+
+.fi-variable {
+  display: flex;
+  align-items: stretch;
+  min-height: 32px;
+  min-width: 0;
+  overflow: visible;
+  border: 1px solid var(--bk-fi-control-border);
+  border-radius: var(--bk-radius);
+  background: var(--bk-fi-control-background);
+  color: var(--bk-fi-control-foreground);
+}
+
+.fi-variable:hover {
+  border-color: var(--bk-fi-control-border);
+}
+
+.fi-variable:focus-within {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bk-ring) 50%, transparent);
+}
+
+.fi-variable[data-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fi-variable-label {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  padding: 0 12px;
+  border-right: 1px solid var(--bk-fi-separator);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fi-variable-value {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.fi-field {
+  width: 100%;
+  min-width: 0;
+}
+
+.fi-field-label {
+  margin-bottom: 6px;
+  color: var(--bk-muted-foreground);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.fi-field-required {
+  color: var(--bk-destructive);
+}
+
+.fi-control,
+.fi-select,
+.fi-textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--bk-fi-control-border);
+  border-radius: var(--bk-radius);
+  background: var(--bk-fi-control-background);
+  color: var(--bk-fi-control-foreground);
+  outline: none;
+  font-size: 12px;
+}
+
+.fi-control,
+.fi-select {
+  height: 32px;
+  padding: 0 8px;
+}
+
+.fi-textarea {
+  min-height: 80px;
+  padding: 8px;
+  resize: none;
+}
+
+.fi-control::placeholder,
+.fi-textarea::placeholder {
+  color: var(--bk-fi-control-placeholder);
+}
+
+.fi-control:focus-visible,
+.fi-select:focus-visible,
+.fi-textarea:focus-visible {
+  border-color: var(--bk-ring);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bk-ring) 50%, transparent);
+}
+
+.fi-control:disabled,
+.fi-select:disabled,
+.fi-textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fi-variable .fi-control,
+.fi-variable .fi-select,
+.fi-variable .fi-textarea {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.fi-row {
+  display: flex;
+  gap: 6px;
+}
+
+.fi-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fi-range {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px;
+}
+
+.fi-clear-button {
+  height: 32px;
+  border: 1px solid var(--bk-border);
+  border-radius: var(--bk-radius);
+  background: var(--bk-background);
+  color: var(--bk-muted-foreground);
+  padding: 0 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.fi-clear-button:hover {
+  background: var(--bk-muted);
+  color: var(--bk-foreground);
+}
+
+.fi-clear-button:disabled {
+  opacity: 0.5;
+}
+
+.fi-multi {
+  position: relative;
+  width: 100%;
+}
+
+.fi-multi-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 32px;
+  border: 0;
+  background: transparent;
+  color: var(--bk-fi-control-foreground);
+  padding: 4px 8px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fi-multi-value {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.fi-chevron {
+  display: flex;
+  align-items: center;
+  color: var(--bk-muted-foreground);
+  padding-left: 8px;
+  flex-shrink: 0;
+}
+
+.fi-popover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin-top: 4px;
+  max-height: 256px;
+  overflow: auto;
+  border: 1px solid var(--bk-border);
+  border-radius: var(--bk-radius);
+  background: var(--bk-popover);
+  color: var(--bk-popover-foreground);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.fi-popover-search {
+  padding: 6px;
+  border-bottom: 1px solid var(--bk-border);
+}
+
+.fi-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  border: 0;
+  background: none;
+  color: inherit;
+  padding: 6px 8px;
+  text-align: left;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.fi-option:hover {
+  background: var(--bk-muted);
+}
+
+.fi-option:disabled {
+  opacity: 0.5;
+}
+
+.fi-option-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border: 1px solid var(--bk-border);
+  border-radius: 2px;
+  color: var(--bk-primary);
+}
+
+.fi-option-check[data-checked] {
+  background: var(--bk-primary);
+  border-color: var(--bk-primary);
+  color: var(--bk-primary-foreground);
+}
+
+.fi-option-label {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fi-empty,
+.fi-loading,
+.fi-error,
+.fi-selected-mark,
+.fi-selected-empty,
+.fi-selected-count,
+.fi-selected-summary {
+  color: var(--bk-muted-foreground);
+  font-size: 12px;
+}
+
+.fi-error {
+  color: var(--bk-destructive);
+}
+
+.fi-selected-list,
+.fi-tag-input {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-width: 0;
+  gap: 4px;
+}
+
+.fi-tag-input {
+  width: 100%;
+  min-height: 32px;
+  padding: 4px 8px;
+}
+
+.fi-tag-input[data-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fi-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 176px;
+  height: 20px;
+  border: 1px solid var(--bk-border);
+  background: var(--bk-muted);
+  color: var(--bk-foreground);
+  padding: 0 6px;
+  font-size: 11px;
+}
+
+.fi-tag-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fi-tag-remove {
+  display: flex;
+  align-items: center;
+  border: 0;
+  background: none;
+  color: var(--bk-muted-foreground);
+  padding: 0;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.fi-tag-remove:hover {
+  color: var(--bk-foreground);
+}
+
+.fi-tag-overflow {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  border: 1px solid var(--bk-border);
+  background: var(--bk-background);
+  color: var(--bk-muted-foreground);
+  padding: 0 6px;
+  font-size: 11px;
+}
+
+.fi-tag-text-input {
+  height: 24px;
+  min-width: 96px;
+  flex: 1 1 auto;
+  border: 0;
+  background: transparent;
+  color: var(--bk-foreground);
+  outline: none;
+  padding: 0 4px;
+  font-size: 12px;
+}
+
+.fi-tag-text-input::placeholder {
+  color: var(--bk-muted-foreground);
+}
+
+/* ── Custom Select ───────────────────────────────────── */
+
+.fi-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  border: 1px solid var(--bk-fi-control-border);
+  border-radius: var(--bk-radius);
+  background: var(--bk-fi-control-background);
+  color: var(--bk-fi-control-foreground);
+  padding: 0 8px;
+  font-size: 12px;
+  gap: 4px;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  text-align: left;
+}
+
+.fi-select-trigger:focus-visible {
+  border-color: var(--bk-ring);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bk-ring) 50%, transparent);
+}
+
+.fi-select-trigger[data-disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fi-select-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fi-select-value[data-placeholder] {
+  color: var(--bk-fi-control-placeholder);
+}
+
+.fi-select-icon {
+  display: flex;
+  align-items: center;
+  color: var(--bk-muted-foreground);
+  flex-shrink: 0;
+}
+
+.fi-select-popup {
+  min-width: var(--anchor-width, 120px);
+  max-height: 256px;
+  overflow-y: auto;
+  border: 1px solid var(--bk-border);
+  border-radius: var(--bk-radius);
+  background: var(--bk-popover);
+  color: var(--bk-popover-foreground);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  outline: none;
+}
+
+.fi-select-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  border: 0;
+  background: none;
+  color: inherit;
+  padding: 6px 8px;
+  text-align: left;
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+.fi-select-item:hover,
+.fi-select-item[data-highlighted] {
+  background: var(--bk-muted);
+}
+
+.fi-select-item[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fi-select-item[data-selected] .fi-select-item-text {
+  font-weight: 500;
+}
+
+.fi-select-item-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fi-select-item-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--bk-primary);
+}
+
+/* ── Multi-select popup (portal-based) ───────────────── */
+
+.fi-multi-popup {
+  min-width: var(--anchor-width, 160px);
+  max-height: 256px;
+  overflow-y: auto;
+  border: 1px solid var(--bk-border);
+  border-radius: var(--bk-radius);
+  background: var(--bk-popover);
+  color: var(--bk-popover-foreground);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  outline: none;
+}

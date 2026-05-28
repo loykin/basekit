@@ -1,0 +1,41 @@
+/*
+ * @loykin/side-panel
+ *
+ * Plain CSS, no Tailwind dependency. Consumers can override with:
+ *   - CSS custom properties: --bk-*
+ *   - Semantic class names: .sp-*
+ */
+
+:root {
+  --bk-background: oklch(1 0 0);
+  --bk-card:       oklch(1 0 0);
+  --bk-border:     oklch(0.922 0 0);
+}
+
+.dark {
+  --bk-background: oklch(0.145 0 0);
+  --bk-card:       oklch(0.205 0 0);
+  --bk-border:     oklch(1 0 0 / 10%);
+}
+
+.sp-root {
+  position: relative;
+  overflow: hidden;
+}
+
+.sp-panel {
+  z-index: 50;
+  overflow: hidden;
+  background: var(--bk-card);
+}
+
+.sp-panel[data-side="right"] { border-left: 1px solid var(--bk-border); }
+.sp-panel[data-side="left"] { border-right: 1px solid var(--bk-border); }
+.sp-panel[data-side="top"] { border-bottom: 1px solid var(--bk-border); }
+.sp-panel[data-side="bottom"] { border-top: 1px solid var(--bk-border); }
+
+.sp-panel-content {
+  height: 100%;
+  overflow: auto;
+  background: var(--bk-background);
+}

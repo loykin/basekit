@@ -10,6 +10,43 @@ import {
   toUrlString,
   toDisplayString,
 } from '@loykin/datetime-range'
+import '@loykin/datetime-range/styles'
+import type { TokenGroupDef } from '../components/TokensPanel'
+
+export const TOKEN_GROUPS: TokenGroupDef[] = [
+  {
+    title: 'Surfaces',
+    tokens: [
+      { key: '--bk-background', type: 'color' },
+      { key: '--bk-foreground', type: 'color' },
+      { key: '--bk-popover', type: 'color', description: 'Popup panel background' },
+      { key: '--bk-popover-foreground', type: 'color' },
+      { key: '--bk-muted', type: 'color', description: 'Hover / subtle backgrounds' },
+      { key: '--bk-muted-foreground', type: 'color', description: 'Placeholder / de-emphasized text' },
+    ],
+  },
+  {
+    title: 'Accents',
+    tokens: [
+      { key: '--bk-primary', type: 'color', description: 'Apply button, selected date highlight' },
+      { key: '--bk-primary-foreground', type: 'color' },
+      { key: '--bk-secondary', type: 'color', description: 'Secondary button background' },
+      { key: '--bk-secondary-foreground', type: 'color' },
+      { key: '--bk-accent', type: 'color', description: 'Active / hovered item background' },
+      { key: '--bk-accent-foreground', type: 'color' },
+      { key: '--bk-destructive', type: 'color', description: 'Out-of-range / error indication' },
+    ],
+  },
+  {
+    title: 'Borders & Shape',
+    tokens: [
+      { key: '--bk-border', type: 'color', description: 'Dividers, panel border' },
+      { key: '--bk-input', type: 'color', description: 'Input field border' },
+      { key: '--bk-ring', type: 'color', description: 'Focus ring' },
+      { key: '--bk-radius', type: 'dimension', description: 'Border radius', rangeMin: 0, rangeMax: 16 },
+    ],
+  },
+]
 
 function useRange(
   initStart: DateTimeRangeValue = relativeAgo(1, 'Hours ago'),
@@ -82,6 +119,32 @@ const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000)
 yesterday.setHours(0, 0, 0, 0)
 const tomorrow  = new Date(Date.now() + 24 * 60 * 60 * 1000)
 tomorrow.setHours(23, 59, 59, 0)
+
+export function DatetimeRangePreview() {
+  const range = useRange()
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <p className="text-[11px] text-muted-foreground mb-2">DatetimeRange</p>
+        <DatetimeRange startTime={range.start} endTime={range.end} onChange={range.onChange} />
+      </div>
+      <div>
+        <p className="text-[11px] text-muted-foreground mb-2">Button variants</p>
+        <div className="flex flex-wrap gap-2">
+          <button className="dr-btn" data-variant="default" data-size="sm">Primary</button>
+          <button className="dr-btn" data-variant="outline" data-size="sm">Outline</button>
+          <button className="dr-btn" data-variant="secondary" data-size="sm">Secondary</button>
+          <button className="dr-btn" data-variant="ghost" data-size="sm">Ghost</button>
+          <button className="dr-btn" data-variant="destructive" data-size="sm">Destructive</button>
+        </div>
+      </div>
+      <div>
+        <p className="text-[11px] text-muted-foreground mb-2">Input</p>
+        <input className="dr-input" placeholder="Placeholder text..." style={{ maxWidth: 280 }} readOnly />
+      </div>
+    </div>
+  )
+}
 
 export function DatetimeRangeTab() {
   const full          = useRange()
