@@ -63,8 +63,7 @@ export function MonthYearPicker({ value, minDate, maxDate, mode = 'month', onCha
       result.push({ value: i, label: i.toString(), disabled });
     }
     return result;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, minDate, maxDate]);
 
   const months = useMemo(() => {
     const result: TimeOption[] = [];
@@ -77,8 +76,7 @@ export function MonthYearPicker({ value, minDate, maxDate, mode = 'month', onCha
       result.push({ value: i, label: format(new Date(0, i), 'MMM'), disabled });
     }
     return result;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, minDate, maxDate]);
 
   const onYearChange = useCallback(
     (v: TimeOption) => {
@@ -209,8 +207,7 @@ export function TimePicker({ value, onChange, use12HourFormat, min, max, timePic
 
   const hourIn24h = useMemo(
     () => (use12HourFormat ? (hour % 12) + ampm * 12 : hour),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [value, use12HourFormat, ampm],
+    [hour, use12HourFormat, ampm],
   );
 
   const hours = useMemo(
@@ -267,20 +264,22 @@ export function TimePicker({ value, onChange, use12HourFormat, min, max, timePic
   }, [value, min, max]);
 
   const [open, setOpen] = useState(false);
-  const hourRef = useRef<HTMLDivElement>(null);
-  const minuteRef = useRef<HTMLDivElement>(null);
-  const secondRef = useRef<HTMLDivElement>(null);
+  const hourViewportRef = useRef<HTMLDivElement>(null);
+  const minuteViewportRef = useRef<HTMLDivElement>(null);
+  const secondViewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const id = setTimeout(() => {
       if (open) {
-        hourRef.current?.scrollIntoView({ behavior: 'auto' });
-        minuteRef.current?.scrollIntoView({ behavior: 'auto' });
-        secondRef.current?.scrollIntoView({ behavior: 'auto' });
+        const ITEM_H = 32;
+        const hourIdx = hours.findIndex((h) => h.value === hour);
+        if (hourViewportRef.current) hourViewportRef.current.scrollTop = hourIdx * ITEM_H;
+        if (minuteViewportRef.current) minuteViewportRef.current.scrollTop = minute * ITEM_H;
+        if (secondViewportRef.current) secondViewportRef.current.scrollTop = second * ITEM_H;
       }
     }, 1);
     return () => clearTimeout(id);
-  }, [open]);
+  }, [open, hours, hour, minute, second]);
 
   const onHourChange = useCallback(
     (v: TimeOption) => {
@@ -294,8 +293,7 @@ export function TimePicker({ value, onChange, use12HourFormat, min, max, timePic
       }
       setHour(v.value);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [use12HourFormat, value, formatStr, minute, second, ampm],
+    [use12HourFormat, value, formatStr, minute, second, ampm, min, max],
   );
 
   const onMinuteChange = useCallback(
@@ -310,8 +308,7 @@ export function TimePicker({ value, onChange, use12HourFormat, min, max, timePic
       }
       setMinute(v.value);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [use12HourFormat, value, formatStr, hour, second, ampm],
+    [use12HourFormat, value, formatStr, hour, second, ampm, min, max],
   );
 
   const onAmpmChange = useCallback(
@@ -364,34 +361,28 @@ export function TimePicker({ value, onChange, use12HourFormat, min, max, timePic
         <div className="flex-col gap-2 p-2">
           <div className="flex h-56 grow">
             {(!timePicker || timePicker.hour) && (
-              <ScrollArea className="h-full grow">
+              <ScrollArea className="h-full grow" viewportRef={hourViewportRef}>
                 <div className="flex grow flex-col items-stretch overflow-y-auto pe-2 pb-48">
                   {hours.map((v) => (
-                    <div key={v.value} ref={v.value === hour ? hourRef : undefined}>
-                      <TimeItem option={v} selected={v.value === hour} onSelect={onHourChange} className="h-8" disabled={v.disabled} />
-                    </div>
+                    <TimeItem key={v.value} option={v} selected={v.value === hour} onSelect={onHourChange} className="h-8" disabled={v.disabled} />
                   ))}
                 </div>
               </ScrollArea>
             )}
             {(!timePicker || timePicker.minute) && (
-              <ScrollArea className="h-full grow">
+              <ScrollArea className="h-full grow" viewportRef={minuteViewportRef}>
                 <div className="flex grow flex-col items-stretch overflow-y-auto pe-2 pb-48">
                   {minutes.map((v) => (
-                    <div key={v.value} ref={v.value === minute ? minuteRef : undefined}>
-                      <TimeItem option={v} selected={v.value === minute} onSelect={onMinuteChange} className="h-8" disabled={v.disabled} />
-                    </div>
+                    <TimeItem key={v.value} option={v} selected={v.value === minute} onSelect={onMinuteChange} className="h-8" disabled={v.disabled} />
                   ))}
                 </div>
               </ScrollArea>
             )}
             {(!timePicker || timePicker.second) && (
-              <ScrollArea className="h-full grow">
+              <ScrollArea className="h-full grow" viewportRef={secondViewportRef}>
                 <div className="flex grow flex-col items-stretch overflow-y-auto pe-2 pb-48">
                   {seconds.map((v) => (
-                    <div key={v.value} ref={v.value === second ? secondRef : undefined}>
-                      <TimeItem option={v} selected={v.value === second} onSelect={(v) => setSecond(v.value)} className="h-8" disabled={v.disabled} />
-                    </div>
+                    <TimeItem key={v.value} option={v} selected={v.value === second} onSelect={(v) => setSecond(v.value)} className="h-8" disabled={v.disabled} />
                   ))}
                 </div>
               </ScrollArea>

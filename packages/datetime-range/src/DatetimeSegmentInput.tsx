@@ -181,10 +181,10 @@ export function DatetimeSegmentInput({
     <div
       ref={containerRef}
       className={cn(
-        'inline-flex h-8 px-2.5 border border-input bg-transparent text-xs transition-colors',
-        'focus-within:border-ring focus-within:ring-1 focus-within:ring-ring/50 items-center',
-        isError && 'border-destructive ring-1 ring-destructive/20',
-        disabled && 'opacity-50 cursor-not-allowed pointer-events-none bg-input/50',
+        'inline-flex h-8 px-2.5 border border-[var(--bk-input)] bg-transparent text-xs transition-colors',
+        'focus-within:border-[var(--bk-ring)] focus-within:ring-1 focus-within:ring-[var(--bk-ring)]/50 items-center',
+        isError && 'border-[var(--bk-destructive)] ring-1 ring-[var(--bk-destructive)]/20',
+        disabled && 'opacity-50 cursor-not-allowed pointer-events-none bg-[var(--bk-input)]/50',
         className,
       )}
       onMouseDown={(e) => {
@@ -201,7 +201,7 @@ export function DatetimeSegmentInput({
         return (
           <React.Fragment key={seg.key}>
             {sep !== null && (
-              <span className="text-muted-foreground select-none items-center" aria-hidden>{sep}</span>
+              <span className="text-[var(--bk-muted-foreground)] select-none items-center" aria-hidden>{sep}</span>
             )}
             <div
               ref={(el) => { spanRefs.current[seg.key] = el; }}
@@ -213,8 +213,8 @@ export function DatetimeSegmentInput({
               tabIndex={disabled ? -1 : 0}
               className={cn(
                 'outline-none rounded-sm px-1 cursor-default select-none',
-                'focus:bg-primary focus:text-primary-foreground',
-                isFocused && 'bg-primary/20',
+                'focus:bg-[var(--bk-primary)] focus:text-[var(--bk-primary-foreground)]',
+                isFocused && 'bg-[var(--bk-primary)]/20',
               )}
               style={{ height: '24px', lineHeight: '24px' }}
               onKeyDown={(e) => handleKeyDown(e, seg)}

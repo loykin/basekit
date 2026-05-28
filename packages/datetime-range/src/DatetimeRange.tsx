@@ -166,35 +166,38 @@ function AbsoluteContent({
   use12HourFormat,
 }: Pick<SidePanelProps, 'value' | 'compareValue' | 'title' | 'onChange' | 'precision' | 'min' | 'max' | 'timezone' | 'use12HourFormat'>) {
   const compareDate = compareValue ? toDate(compareValue) : undefined;
-  const [calendarVisible, setCalendarVisible] = useState(false);
   const absoluteDate_ = value.type === 'absolute' ? toDate(value) : new Date();
 
-  useEffect(() => {
-    if (value.type !== 'absolute') setCalendarVisible(false);
-  }, [value.type]);
-
   return (
-    <div className="flex flex-col gap-1.5 mt-3">
-      <div className="flex items-center gap-1.5">
-        <DatetimeSegmentInput
-          value={absoluteDate_}
-          onChange={(d) => onChange(absoluteDate(d))}
-          className="flex-1"
-          precision={precision}
+    <div className="flex items-center gap-1.5 mt-3">
+      <DatetimeSegmentInput
+        value={absoluteDate_}
+        onChange={(d) => onChange(absoluteDate(d))}
+        className="flex-1"
+        precision={precision}
+      />
+      <Popover>
+        <PopoverTrigger
+          render={(triggerProps) => (
+            <Button
+              {...triggerProps}
+              type="button"
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 shrink-0"
+              title="Pick from calendar"
+            >
+              <CalendarDays size={14} />
+            </Button>
+          )}
         />
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          className={cn('h-8 w-8 shrink-0', calendarVisible && 'bg-accent border-foreground')}
-          onClick={() => setCalendarVisible(v => !v)}
-          title="Pick from calendar"
+        <PopoverContent
+          className="p-0 w-auto"
+          side="bottom"
+          align="start"
+          sideOffset={6}
+          disableAnchorTracking={true}
         >
-          <CalendarDays size={14} />
-        </Button>
-      </div>
-      {calendarVisible && (
-        <div className="border-t pt-2 mt-1">
           <DateTimePanel
             value={value.type === 'absolute' ? toDate(value) : undefined}
             compareValue={compareDate}
@@ -210,8 +213,8 @@ function AbsoluteContent({
               onChange(absoluteDate(d));
             }}
           />
-        </div>
-      )}
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
@@ -427,7 +430,7 @@ export function DatetimeRange({
               disabled={disabled}
               className={cn(
                 'h-8 px-3 gap-2 text-xs font-normal justify-start',
-                isOpen && 'border-foreground',
+                isOpen && 'border-[var(--bk-foreground)]',
                 className,
               )}
             >

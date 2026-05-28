@@ -88,8 +88,7 @@ export function DateTimePanel({
       setDate(d);
       if (immediate) onChangeAction(new Date(d), true);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [date, immediate, onChangeAction],
+    [date, immediate, onChangeAction, min, max],
   );
 
   const onTimeChanged = useCallback(
@@ -188,22 +187,22 @@ export function DateTimePanel({
             button_next: 'hidden',
             month_grid: 'w-full border-collapse',
             weekdays: 'flex justify-between mt-2',
-            weekday: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
+            weekday: 'text-[var(--bk-muted-foreground)] rounded-md w-9 font-normal text-[0.8rem]',
             week: 'flex w-full justify-between mt-2',
-            day: 'h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center focus-within:relative focus-within:z-20 [&[aria-selected]>button:hover]:bg-primary [&[aria-selected]>button:hover]:text-primary-foreground',
+            day: 'h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center focus-within:relative focus-within:z-20 [&[aria-selected]>button:hover]:bg-[var(--bk-primary)] [&[aria-selected]>button:hover]:text-[var(--bk-primary-foreground)]',
             day_button: cn(buttonVariants({ variant: 'ghost' }), 'size-9 p-0 font-normal'),
-            range_end: 'day-range-end bg-primary',
-            selected: 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
-            today: 'bg-accent text-accent-foreground',
-            outside: 'day-outside text-muted-foreground/80 aria-selected:bg-primary aria-selected:text-primary-foreground',
-            disabled: 'text-muted-foreground opacity-50',
-            range_middle: 'w-full bg-secondary aria-selected:bg-primary aria-selected:text-primary-foreground',
+            range_end: 'day-range-end bg-[var(--bk-primary)]',
+            selected: 'bg-[var(--bk-primary)] text-[var(--bk-primary-foreground)] hover:bg-[var(--bk-primary)] hover:text-[var(--bk-primary-foreground)] focus:bg-[var(--bk-primary)] focus:text-[var(--bk-primary-foreground)]',
+            today: 'bg-[var(--bk-accent)] text-[var(--bk-accent-foreground)]',
+            outside: 'day-outside text-[var(--bk-muted-foreground)]/80 aria-selected:bg-[var(--bk-primary)] aria-selected:text-[var(--bk-primary-foreground)]',
+            disabled: 'text-[var(--bk-muted-foreground)] opacity-50',
+            range_middle: 'w-full bg-[var(--bk-secondary)] aria-selected:bg-[var(--bk-primary)] aria-selected:text-[var(--bk-primary-foreground)]',
             hidden: 'invisible',
           }}
           showOutsideDays={true}
           {...props}
         />
-        <div className={cn('absolute top-0 left-0 bottom-0 right-0', monthYearPicker ? 'bg-popover' : 'hidden')} />
+        <div className={cn('absolute top-0 left-0 bottom-0 right-0', monthYearPicker ? 'bg-[var(--bk-popover)]' : 'hidden')} />
         <MonthYearPicker
           value={month}
           mode={monthYearPicker as 'month' | 'year'}
@@ -226,8 +225,8 @@ export function DateTimePanel({
           />
         )}
         {(isError || errorType !== null) && (
-          <div className="py-3 px-4 border border-destructive max-w-full">
-            <span className="text-xs text-destructive leading-snug block">
+          <div className="py-3 px-4 border border-[var(--bk-destructive)] max-w-full">
+            <span className="text-xs text-[var(--bk-destructive)] leading-snug block">
               {getRangeErrorMessage?.(errorType, title) ?? 'Invalid date range.'}
             </span>
           </div>
