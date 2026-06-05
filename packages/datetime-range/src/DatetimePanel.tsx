@@ -132,8 +132,8 @@ export function DateTimePanel({
 
   return (
     <div>
-      <div className="flex items-center justify-between mt-4">
-        <div className="text-md font-bold ms-2 flex gap-2 items-center cursor-pointer">
+      <div className="flex items-center justify-between px-3 pt-3">
+        <div className="text-md font-bold flex gap-2 items-center cursor-pointer">
           <div>
             <span onClick={() => setMonthYearPicker(monthYearPicker === 'month' ? false : 'month')}>
               {format(month, 'MMMM')}
@@ -170,7 +170,7 @@ export function DateTimePanel({
         </div>
       </div>
 
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden px-3">
         <DayPicker
           timeZone={timezone}
           mode="single"
@@ -225,9 +225,9 @@ export function DateTimePanel({
         />
       </div>
 
-      <div className="flex flex-col gap-6 mt-4">
+      <div className="flex flex-col gap-3 px-3 pb-2">
         {precision !== 'date' && (
-          <div className="border-t border-[var(--bk-border)] pt-3">
+          <div className="mt-2 border-t border-[var(--bk-border)] pt-2">
             <TimePicker
               timePicker={precisionToTimePicker(precision)}
               value={date}
