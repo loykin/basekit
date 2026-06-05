@@ -350,7 +350,14 @@ export function TimePicker({ value, onChange, use12HourFormat, min, max, timePic
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         render={(props) => (
-          <Button {...props} variant="outline" role="combobox" aria-expanded={open} className="justify-between">
+          <Button
+            {...props}
+            variant="ghost"
+            role="combobox"
+            aria-label="Select time"
+            aria-expanded={open}
+            className="w-full justify-between px-2"
+          >
             <Clock className="mr-2 size-4" />
             {display}
             <ChevronDownIcon className="ml-2 size-4 shrink-0 opacity-50" />

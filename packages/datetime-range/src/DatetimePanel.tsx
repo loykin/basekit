@@ -149,10 +149,22 @@ export function DateTimePanel({
           </Button>
         </div>
         <div className={cn('flex space-x-2', monthYearPicker ? 'hidden' : '')}>
-          <Button variant="outline" size="icon" className="w-7 h-7" onClick={onPrevMonth}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-7 h-7"
+            aria-label="Previous month"
+            onClick={onPrevMonth}
+          >
             <ChevronLeftIcon className="w-4 h-4 stroke-muted-foreground" />
           </Button>
-          <Button variant="outline" size="icon" className="w-7 h-7" onClick={onNextMonth}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-7 h-7"
+            aria-label="Next month"
+            onClick={onNextMonth}
+          >
             <ChevronRightIcon className="w-4 h-4 stroke-muted-foreground" />
           </Button>
         </div>
@@ -215,14 +227,16 @@ export function DateTimePanel({
 
       <div className="flex flex-col gap-6 mt-4">
         {precision !== 'date' && (
-          <TimePicker
-            timePicker={precisionToTimePicker(precision)}
-            value={date}
-            onChange={onTimeChanged}
-            use12HourFormat={use12HourFormat}
-            min={minDate}
-            max={maxDate}
-          />
+          <div className="border-t border-[var(--bk-border)] pt-3">
+            <TimePicker
+              timePicker={precisionToTimePicker(precision)}
+              value={date}
+              onChange={onTimeChanged}
+              use12HourFormat={use12HourFormat}
+              min={minDate}
+              max={maxDate}
+            />
+          </div>
         )}
         {(isError || errorType !== null) && (
           <div className="py-3 px-4 border border-[var(--bk-destructive)] max-w-full">

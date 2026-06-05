@@ -181,7 +181,7 @@ export function DatetimeSegmentInput({
     <div
       ref={containerRef}
       className={cn(
-        'inline-flex h-8 px-2.5 border border-[var(--bk-input)] bg-transparent text-xs transition-colors',
+        'inline-flex h-8 px-2.5 rounded-[var(--bk-radius)] border border-[var(--bk-input)] bg-transparent text-xs transition-colors',
         'focus-within:border-[var(--bk-ring)] focus-within:ring-1 focus-within:ring-[var(--bk-ring)]/50 items-center',
         isError && 'border-[var(--bk-destructive)] ring-1 ring-[var(--bk-destructive)]/20',
         disabled && 'opacity-50 cursor-not-allowed pointer-events-none bg-[var(--bk-input)]/50',
