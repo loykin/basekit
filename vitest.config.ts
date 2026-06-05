@@ -1,12 +1,45 @@
 import react from '@vitejs/plugin-react'
+import { resolve } from 'node:path'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
-  plugins: [react()],
   test: {
-    environment: 'jsdom',
-    globals: true,
-    setupFiles: ['./vitest.setup.ts'],
-    include: ['packages/**/*.test.ts', 'packages/**/*.test.tsx'],
+    projects: [
+      {
+        plugins: [react()],
+        resolve: {
+          alias: {
+            '@': resolve(__dirname, 'packages/datetime-range/src'),
+          },
+        },
+        test: {
+          name: 'datetime-range',
+          environment: 'jsdom',
+          globals: true,
+          setupFiles: ['./vitest.setup.ts'],
+          include: [
+            'packages/datetime-range/**/*.test.ts',
+            'packages/datetime-range/**/*.test.tsx',
+          ],
+        },
+      },
+      {
+        plugins: [react()],
+        test: {
+          name: 'packages',
+          environment: 'jsdom',
+          globals: true,
+          setupFiles: ['./vitest.setup.ts'],
+          include: [
+            'packages/filter-input/**/*.test.ts',
+            'packages/filter-input/**/*.test.tsx',
+            'packages/side-panel/**/*.test.ts',
+            'packages/side-panel/**/*.test.tsx',
+            'packages/unit/**/*.test.ts',
+            'packages/unit/**/*.test.tsx',
+          ],
+        },
+      },
+    ],
   },
 })
