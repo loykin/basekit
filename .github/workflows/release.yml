@@ -1,23 +1,50 @@
 name: Release
 
+# Tag format: <package-name>/v<semver>
+# Example: datetime-range/v0.1.0
 on:
   push:
-    branches: [master]
+    tags:
+      - '*/v*'
 
 permissions:
   contents: write
   id-token: write
-  pull-requests: write
 
 concurrency: release-${{ github.ref }}
 
 jobs:
   release:
-    name: Version or publish packages
+    name: Build and publish package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Parse and validate tag
+        id: release
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          PACKAGE="${TAG%%/v*}"
+          VERSION="${TAG#*/v}"
+
+          case "$PACKAGE" in
+            datetime-range|filter-input|side-panel|unit) ;;
+            *)
+              echo "Unknown package: $PACKAGE" >&2
+              exit 1
+              ;;
+          esac
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid version: $VERSION" >&2
+            exit 1
+          fi
+
+          echo "package=$PACKAGE" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Releasing @loykin/$PACKAGE@$VERSION"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -32,16 +59,43 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build and verify packages
+      - name: Set package version from tag
+        run: npm version "${{ steps.release.outputs.version }}" --no-git-tag-version
+        working-directory: packages/${{ steps.release.outputs.package }}
+
+      - name: Verify repository
         run: pnpm release:check
 
-      - name: Create version PR or publish
-        uses: changesets/action@v1
+      - name: Publish package
+        shell: bash
+        run: |
+          PACKAGE="${{ steps.release.outputs.package }}"
+          VERSION="${{ steps.release.outputs.version }}"
+
+          if [[ "$VERSION" =~ -(alpha|beta|rc|next) ]]; then
+            DIST_TAG="${BASH_REMATCH[1]}"
+            pnpm --filter "@loykin/$PACKAGE" publish --no-git-checks --tag "$DIST_TAG"
+          else
+            pnpm --filter "@loykin/$PACKAGE" publish --no-git-checks
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Pack release artifact
+        shell: bash
+        run: |
+          PACKAGE="${{ steps.release.outputs.package }}"
+          mkdir -p release-artifacts
+          npm pack "./packages/$PACKAGE" --pack-destination release-artifacts
+          cd release-artifacts
+          shasum -a 256 ./*.tgz > checksums.txt
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3
         with:
-          version: pnpm version-packages
-          publish: pnpm release
-          commit: 'chore: release packages'
-          title: 'chore: release packages'
+          generate_release_notes: true
+          files: |
+            release-artifacts/*.tgz
+            release-artifacts/checksums.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
