@@ -32,8 +32,17 @@ jobs:
       - name: Type check
         run: pnpm type-check
 
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit and component tests
+        run: pnpm test
+
       - name: Build
         run: pnpm build
+
+      - name: Verify packaged consumer app
+        run: pnpm test:consumer
 
       - name: Trivy Scan (npm dependencies)
         uses: aquasecurity/trivy-action@master

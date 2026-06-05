@@ -1,4 +1,22 @@
-import type { FormatterOptions, Formatter } from './types';
+import type {
+  AngleUnit,
+  BitRateUnit,
+  BitUnit,
+  ByteRateUnit,
+  CurrencyUnit,
+  Formatter,
+  FormatterOptions,
+  IECByteUnit,
+  LengthUnit,
+  NumberUnit,
+  PercentUnit,
+  SIByteUnit,
+  TemperatureUnit,
+  ThroughputUnit,
+  TimeUnit,
+  VelocityUnit,
+  WeightUnit,
+} from './types';
 import formatBits, { formatSIBytes, formatIECBytes, formatBitRate, formatByteRate } from './bytes';
 import { formatTime } from './time';
 import { formatNumber } from './number';
@@ -13,7 +31,7 @@ const IEC_BYTE_UNITS  = new Set(['kibytes','mibytes','gibytes','tibytes','pibyte
 const BIT_UNITS       = new Set(['bits','kbits','mbits','gbits']);
 const BIT_RATE_UNITS  = new Set(['bps','Kbps','Mbps','Gbps','Tbps']);
 const BYTE_RATE_UNITS = new Set(['Bps','KBps','MBps','GBps','TBps']);
-const TIME_UNITS      = new Set(['ns','µs','ms','s','min','h','d','duration','durationS']);
+const TIME_UNITS      = new Set(['ns','us','ms','s','min','h','d','duration','durationS']);
 const PERCENT_UNITS   = new Set(['percent','percentunit']);
 const CURRENCY_UNITS  = new Set(['usd','eur','krw','jpy','gbp','cny','inr','brl','aud','cad','chf','hkd','sgd']);
 const NUMBER_UNITS    = new Set(['none','short','scientific','locale']);
@@ -27,21 +45,21 @@ const VELOCITY_UNITS  = new Set(['m/s','km/h','mph','knot']);
 export function formatUnit(value: number, options: FormatterOptions): string {
   const { unit, decimals, locale } = options;
 
-  if (SI_BYTE_UNITS.has(unit))    return formatSIBytes(value, unit as any, decimals);
-  if (IEC_BYTE_UNITS.has(unit))   return formatIECBytes(value, unit as any, decimals);
-  if (BIT_UNITS.has(unit))        return formatBits(value, unit as any, decimals);
-  if (BIT_RATE_UNITS.has(unit))   return formatBitRate(value, unit as any, decimals);
-  if (BYTE_RATE_UNITS.has(unit))  return formatByteRate(value, unit as any, decimals);
-  if (TIME_UNITS.has(unit))       return formatTime(value, unit as any, decimals);
-  if (PERCENT_UNITS.has(unit))    return formatPercent(value, unit as any, decimals);
-  if (CURRENCY_UNITS.has(unit))   return formatCurrency(value, unit as any, decimals, locale);
-  if (NUMBER_UNITS.has(unit))     return formatNumber(value, unit as any, decimals, locale);
-  if (THROUGHPUT_UNITS.has(unit)) return formatThroughput(value, unit as any, decimals);
-  if (TEMP_UNITS.has(unit))       return formatTemperature(value, unit as any, decimals);
-  if (LENGTH_UNITS.has(unit))     return formatLength(value, unit as any, decimals);
-  if (WEIGHT_UNITS.has(unit))     return formatWeight(value, unit as any, decimals);
-  if (ANGLE_UNITS.has(unit))      return formatAngle(value, unit as any, decimals);
-  if (VELOCITY_UNITS.has(unit))   return formatVelocity(value, unit as any, decimals);
+  if (SI_BYTE_UNITS.has(unit))    return formatSIBytes(value, unit as SIByteUnit, decimals);
+  if (IEC_BYTE_UNITS.has(unit))   return formatIECBytes(value, unit as IECByteUnit, decimals);
+  if (BIT_UNITS.has(unit))        return formatBits(value, unit as BitUnit, decimals);
+  if (BIT_RATE_UNITS.has(unit))   return formatBitRate(value, unit as BitRateUnit, decimals);
+  if (BYTE_RATE_UNITS.has(unit))  return formatByteRate(value, unit as ByteRateUnit, decimals);
+  if (TIME_UNITS.has(unit))       return formatTime(value, unit as TimeUnit, decimals);
+  if (PERCENT_UNITS.has(unit))    return formatPercent(value, unit as PercentUnit, decimals);
+  if (CURRENCY_UNITS.has(unit))   return formatCurrency(value, unit as CurrencyUnit, decimals, locale);
+  if (NUMBER_UNITS.has(unit))     return formatNumber(value, unit as NumberUnit, decimals, locale);
+  if (THROUGHPUT_UNITS.has(unit)) return formatThroughput(value, unit as ThroughputUnit, decimals);
+  if (TEMP_UNITS.has(unit))       return formatTemperature(value, unit as TemperatureUnit, decimals);
+  if (LENGTH_UNITS.has(unit))     return formatLength(value, unit as LengthUnit, decimals);
+  if (WEIGHT_UNITS.has(unit))     return formatWeight(value, unit as WeightUnit, decimals);
+  if (ANGLE_UNITS.has(unit))      return formatAngle(value, unit as AngleUnit, decimals);
+  if (VELOCITY_UNITS.has(unit))   return formatVelocity(value, unit as VelocityUnit, decimals);
 
   return String(value);
 }

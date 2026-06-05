@@ -1,3 +1,9 @@
 packages:
   - 'packages/*'
   - 'playground'
+allowBuilds:
+  esbuild: true
+overrides:
+  # Temporary supply-chain holdbacks for packages published on 2026-06-05.
+  electron-to-chromium: 1.5.367
+  semver: 7.8.1

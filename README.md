@@ -111,7 +111,7 @@ formatUnit(3600, { unit: 's' })                    // "1h"
 formatUnit(0.9234, { unit: 'percentunit' })        // "92.34%"
 
 const fmt = createFormatter({ unit: 'mbytes', decimals: 2 })
-fmt(1024)  // "1024.00 MB"
+fmt(1_024_000_000)  // "1024.00 MB"
 ```
 
 ---
@@ -198,3 +198,30 @@ pnpm build
 ```bash
 pnpm type-check
 ```
+
+## Quality checks
+
+```bash
+pnpm lint
+pnpm test
+pnpm test:consumer
+```
+
+`test:consumer` packs all four publishable packages, installs the tarballs in
+a temporary Vite application, then runs TypeScript and production builds.
+
+## Releases
+
+This repository uses Changesets with independent package versions.
+
+```bash
+pnpm changeset
+```
+
+Commit the generated changeset with the package change. Merges to `master`
+update the release pull request. Merging that pull request publishes the
+changed npm packages, updates package-specific changelogs, and creates tags.
+
+## License
+
+[MIT](./LICENSE)

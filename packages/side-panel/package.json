@@ -20,6 +20,12 @@
   "files": [
     "dist"
   ],
+  "sideEffects": [
+    "./dist/styles.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc --noEmit && tsup && node scripts/build-css.mjs && echo 'declare const styles: string; export default styles;' > dist/styles.d.ts",
     "build:css": "node scripts/build-css.mjs",
@@ -48,5 +54,14 @@
     "zustand",
     "resizable"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loykin/basekit.git",
+    "directory": "packages/side-panel"
+  },
+  "homepage": "https://loykin.github.io/basekit/playground/",
+  "bugs": {
+    "url": "https://github.com/loykin/basekit/issues"
+  },
   "license": "MIT"
 }

@@ -16,6 +16,10 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc --noEmit && tsup",
     "dev": "tsup --watch",
@@ -32,5 +36,14 @@
     "duration",
     "currency"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loykin/basekit.git",
+    "directory": "packages/unit"
+  },
+  "homepage": "https://loykin.github.io/basekit/playground/",
+  "bugs": {
+    "url": "https://github.com/loykin/basekit/issues"
+  },
   "license": "MIT"
 }

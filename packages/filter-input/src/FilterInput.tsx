@@ -230,12 +230,13 @@ export function FilterInput<TMeta = unknown>({
   const display = config.display ?? {}
   const searchable = !!behavior.searchable || config.type === 'autocomplete' || config.type === 'combobox'
   const disabled = !!behavior.disabled
+  const remote = hasRemoteSource(config)
 
   const filteredOptions = useMemo(() => {
-    if (hasRemoteSource(config) || !query || !searchable) return options
+    if (remote || !query || !searchable) return options
     const normalized = query.toLowerCase()
     return options.filter((option) => option.label.toLowerCase().includes(normalized) || stringifyValue(option.value).toLowerCase().includes(normalized))
-  }, [config.dataSource, options, query, searchable])
+  }, [options, query, remote, searchable])
 
   const emit = (nextValue: FilterValue, option?: FilterOption) => {
     onChange(nextValue, { key: config.key, option: option as FilterOption<TMeta> | undefined, options: options as FilterOption<TMeta>[] })
@@ -539,16 +540,19 @@ export function FilterInput<TMeta = unknown>({
       case 'text':
       default:
         return (
-          <input
-            className={commonInputClass}
-            type="text"
-            value={normalizeText(value)}
-            pattern={config.validation?.pattern}
-            placeholder={config.placeholder}
-            disabled={disabled}
-            required={behavior.required}
-            onChange={(event) => emit(event.target.value)}
-          />
+          <div className={cn('fi-row', classNames?.row)}>
+            <input
+              className={commonInputClass}
+              type="text"
+              value={normalizeText(value)}
+              pattern={config.validation?.pattern}
+              placeholder={config.placeholder}
+              disabled={disabled}
+              required={behavior.required}
+              onChange={(event) => emit(event.target.value)}
+            />
+            {clearButton}
+          </div>
         )
     }
   })()
