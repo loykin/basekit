@@ -56,6 +56,8 @@ export type FilterDataSourceContext = {
 
 export type FilterDataSource<TMeta = unknown> = {
   type: 'static' | 'remote'
+  /** 'immediate' fetches on mount; 'open' fetches only when the dropdown first opens. @default 'immediate' */
+  trigger?: 'immediate' | 'open'
   fetch?: (context: FilterDataSourceContext) => Promise<FilterOption<TMeta>[]>
 }
 
@@ -69,6 +71,8 @@ export type FilterBehaviorConfig = {
   minSearchLength?: number
   allowCustomValue?: boolean
   selectOnBlur?: boolean
+  /** Show the reload button for remote sources. Set to false to hide it. @default true */
+  showReload?: boolean
 }
 
 export type FilterDisplayConfig<TMeta = unknown> = {

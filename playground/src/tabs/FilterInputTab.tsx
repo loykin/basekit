@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { FilterInput, FilterInputConfig, FilterValue, FilterVariable } from '@loykin/filter-input'
 import '@loykin/filter-input/styles'
 import type { TokenGroupDef } from '../components/TokensPanel'
@@ -25,13 +25,13 @@ export const TOKEN_GROUPS: TokenGroupDef[] = [
   },
   {
     title: 'Control overrides',
-    description: 'FilterInput / FilterVariable 전용 — 기본값은 Base 토큰에서 상속',
+    description: 'FilterInput / FilterVariable only — inherits from Base tokens by default',
     tokens: [
       { key: '--bk-fi-control-background', type: 'color', description: '↳ --bk-background' },
       { key: '--bk-fi-control-foreground', type: 'color', description: '↳ --bk-foreground' },
       { key: '--bk-fi-control-border', type: 'color', description: '↳ --bk-input' },
       { key: '--bk-fi-control-placeholder', type: 'color', description: '↳ --bk-muted-foreground' },
-      { key: '--bk-fi-separator', type: 'color', description: 'Label | value 구분선' },
+      { key: '--bk-fi-separator', type: 'color', description: 'Label | value divider' },
     ],
   },
 ]
@@ -113,6 +113,114 @@ export function FilterInputPreview() {
         onChange={update}
       />
     </div>
+  )
+}
+
+const ALL_USERS = [
+  { label: 'Alice', value: 'alice' },
+  { label: 'Bob', value: 'bob' },
+  { label: 'Charlie', value: 'charlie' },
+  { label: 'Diana', value: 'diana' },
+  { label: 'Eve', value: 'eve' },
+]
+
+function AsyncSection() {
+  const [vals, setVals] = useState<Record<string, FilterValue>>({ user: '', users: [] })
+  const update = (v: FilterValue, ctx: { key: string }) =>
+    setVals(prev => ({ ...prev, [ctx.key]: v }))
+
+  const fetchCountRef = useRef(0)
+  const [fetchLog, setFetchLog] = useState<string[]>([])
+  const [simulateError, setSimulateError] = useState(false)
+
+  const makeFetch = (key: string) => async ({ query, signal }: { query?: string; signal?: AbortSignal }) => {
+    const n = ++fetchCountRef.current
+    const willFail = simulateError
+    setFetchLog(prev => [...prev, `#${n} [${key}] fetch (query="${query}"${willFail ? ', will fail' : ''})`])
+    await new Promise<void>((resolve, reject) => {
+      const t = setTimeout(resolve, 600)
+      signal?.addEventListener('abort', () => { clearTimeout(t); reject(new Error('aborted')) })
+    })
+    if (willFail) throw new Error('Network error (simulated)')
+    const q = query?.toLowerCase() ?? ''
+    return ALL_USERS.filter(u => u.label.toLowerCase().includes(q))
+  }
+
+  const lazySelectConfig = useMemo<FilterInputConfig>(() => ({
+    key: 'user',
+    label: 'User (searchable)',
+    type: 'select',
+    placeholder: 'Select user...',
+    behavior: { searchable: true },
+    dataSource: { type: 'remote', trigger: 'open', fetch: makeFetch('select') },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [simulateError])
+
+  const lazyMultiConfig = useMemo<FilterInputConfig>(() => ({
+    key: 'users',
+    label: 'Users',
+    type: 'multi-select',
+    placeholder: 'Select users...',
+    behavior: { searchable: true },
+    display: { variant: 'tags', maxVisible: 3, overflow: 'count' },
+    dataSource: { type: 'remote', trigger: 'open', fetch: makeFetch('multi') },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [simulateError])
+
+  const noReloadConfig = useMemo<FilterInputConfig>(() => ({
+    key: 'user2',
+    label: 'No reload btn',
+    type: 'select',
+    placeholder: 'Select user...',
+    behavior: { showReload: false },
+    dataSource: { type: 'remote', trigger: 'open', fetch: makeFetch('no-reload') },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [simulateError])
+
+  return (
+    <section className="border border-border">
+      <SectionHeader
+        title="Async / Lazy loading + Reload"
+        description="trigger: 'open' — fetch runs only on first open, not on mount. Reload button appears automatically for remote sources."
+      />
+      <div className="flex flex-col gap-3 p-4">
+        <Code>{`dataSource: {
+  type: 'remote',
+  trigger: 'open',   // 'immediate' (default) | 'open'
+  fetch: async ({ query, signal }) => fetchUsers(query),
+}
+// reload button is shown automatically for any remote source`}</Code>
+        <label className="flex items-center gap-2 text-[12px] text-muted-foreground cursor-pointer select-none">
+          <input type="checkbox" checked={simulateError} onChange={e => setSimulateError(e.target.checked)} />
+          Simulate fetch error (next fetch will fail)
+        </label>
+        <Code>{`// hide reload button
+behavior: { showReload: false }`}</Code>
+        <div className="flex flex-col gap-2">
+          <FilterVariable config={lazySelectConfig} value={vals.user} onChange={update} />
+          <FilterVariable config={lazyMultiConfig} value={vals.users as string[]} onChange={update} />
+          <FilterVariable config={noReloadConfig} value={vals.user2 as string ?? ''} onChange={update} />
+        </div>
+        <div className="border border-border bg-background p-3">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">Fetch log</span>
+            <button
+              type="button"
+              className="text-[10px] text-muted-foreground hover:text-foreground"
+              onClick={() => { fetchCountRef.current = 0; setFetchLog([]) }}
+            >
+              Clear
+            </button>
+          </div>
+          {fetchLog.length === 0
+            ? <p className="text-[11px] text-muted-foreground">Open a dropdown to see fetch calls logged here.</p>
+            : fetchLog.map((line, i) => (
+              <p key={i} className="text-[11px] font-mono text-muted-foreground">{line}</p>
+            ))
+          }
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -280,6 +388,9 @@ export function FilterInputTab() {
           </pre>
         </div>
       </section>
+
+      {/* ── Async / lazy loading ─────────────────────────── */}
+      <AsyncSection />
 
       {/* ── Shape reference ──────────────────────────────── */}
       <section className="border border-border">

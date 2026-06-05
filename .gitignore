@@ -1,5 +1,6 @@
 # dependencies
 node_modules/
+.pnpm-store/
 
 # build output
 dist/
@@ -15,6 +16,9 @@ playground/dist/
 
 # IDE
 .idea/
+
+# local tooling
+.claude/
 
 # misc
 .DS_Store

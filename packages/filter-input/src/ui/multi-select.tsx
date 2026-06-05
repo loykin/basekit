@@ -1,7 +1,7 @@
 import React from 'react'
 import { Popover } from '@base-ui/react/popover'
 import { cn } from '../utils'
-import { ChevronDownIcon, CheckIcon } from './icons'
+import { ChevronDownIcon, CheckIcon, RefreshIcon } from './icons'
 import type { FilterOption, FilterOptionValue } from '../types'
 
 function stringifyValue(value: FilterOptionValue) {
@@ -18,9 +18,13 @@ interface FiMultiSelectProps {
   placeholder?: string
   disabled?: boolean
   searchable?: boolean
+  loading?: boolean
+  error?: string | null
   query: string
   onQueryChange: (query: string) => void
   onToggle: (option: FilterOption) => void
+  onOpen?: () => void
+  onReload?: () => void
   renderTriggerValue: () => React.ReactNode
   renderOption?: (option: FilterOption) => React.ReactNode
   classNames?: {
@@ -36,15 +40,19 @@ export function FiMultiSelect({
   placeholder = 'Select...',
   disabled,
   searchable,
+  loading,
+  error,
   query,
   onQueryChange,
   onToggle,
+  onOpen,
+  onReload,
   renderTriggerValue,
   renderOption,
   classNames,
 }: FiMultiSelectProps) {
   return (
-    <Popover.Root>
+    <Popover.Root onOpenChange={(open) => { if (open) onOpen?.() }}>
       <Popover.Trigger
         className={cn('fi-multi-trigger', classNames?.trigger)}
         disabled={disabled}
@@ -57,17 +65,32 @@ export function FiMultiSelect({
       <Popover.Portal>
         <Popover.Positioner sideOffset={4} align="start" className="isolate z-50">
           <Popover.Popup className={cn('fi-multi-popup', classNames?.popup)}>
-            {searchable && (
-              <div className="fi-popover-search">
-                <input
-                  className="fi-control"
-                  value={query}
-                  placeholder={placeholder}
-                  onChange={(e) => onQueryChange(e.target.value)}
-                />
+            {(searchable || onReload) && (
+              <div className="fi-popup-header">
+                {searchable && (
+                  <input
+                    className="fi-control"
+                    value={query}
+                    placeholder={placeholder}
+                    onChange={(e) => onQueryChange(e.target.value)}
+                  />
+                )}
+                {onReload && (
+                  <button
+                    type="button"
+                    className="fi-reload-button"
+                    onClick={onReload}
+                    disabled={loading}
+                    aria-label="Reload"
+                  >
+                    <RefreshIcon />
+                  </button>
+                )}
               </div>
             )}
-            {options.map((option) => {
+            {loading && <div className="fi-popup-status"><span className="fi-loading">Loading…</span></div>}
+            {!loading && error && <div className="fi-popup-status"><span className="fi-error">{error}</span></div>}
+            {!loading && !error && options.map((option) => {
               const checked = value.some((item) => optionMatches(option, item))
               return (
                 <button
@@ -87,7 +110,9 @@ export function FiMultiSelect({
                 </button>
               )
             })}
-            {!options.length && <div className="fi-empty">No options</div>}
+            {!loading && !error && !options.length && (
+              <div className="fi-popup-status"><span className="fi-empty">No options</span></div>
+            )}
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

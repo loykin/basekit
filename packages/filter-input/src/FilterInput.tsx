@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from './utils'
 import type {
   DateRangeValue,
@@ -84,9 +84,17 @@ function useOptions<TMeta>({
   const remote = hasRemoteSource(config)
   const debounceMs = config.behavior?.debounceMs ?? 200
   const minSearchLength = config.behavior?.minSearchLength ?? 0
+  const isLazy = config.dataSource?.trigger === 'open'
+  const [activated, setActivated] = useState(!isLazy)
+  const [reloadKey, setReloadKey] = useState(0)
+  const activate = useCallback(() => setActivated(true), [])
+  const reload = useCallback(() => {
+    setActivated(true)
+    setReloadKey((k) => k + 1)
+  }, [])
 
   useEffect(() => {
-    if (!remote || !fetcher) return
+    if (!remote || !fetcher || !activated) return
     if (query.length < minSearchLength) {
       setRemoteOptions([])
       setLoading(false)
@@ -118,12 +126,14 @@ function useOptions<TMeta>({
       controller.abort()
       window.clearTimeout(timer)
     }
-  }, [debounceMs, fetcher, filters, minSearchLength, query, remote, value])
+  }, [activated, debounceMs, fetcher, filters, minSearchLength, query, reloadKey, remote, value])
 
   return {
     options: remote ? remoteOptions : staticOptions,
     loading,
     error,
+    activate,
+    reload,
   }
 }
 
@@ -215,7 +225,7 @@ export function FilterInput<TMeta = unknown>({
   renderOption,
 }: FilterInputProps<TMeta>) {
   const [query, setQuery] = useState('')
-  const { options, loading, error } = useOptions({ config, value, filters, query })
+  const { options, loading, error, activate, reload } = useOptions({ config, value, filters, query })
   const behavior = config.behavior ?? {}
   const display = config.display ?? {}
   const searchable = !!behavior.searchable || config.type === 'autocomplete' || config.type === 'combobox'
@@ -225,7 +235,7 @@ export function FilterInput<TMeta = unknown>({
     if (hasRemoteSource(config) || !query || !searchable) return options
     const normalized = query.toLowerCase()
     return options.filter((option) => option.label.toLowerCase().includes(normalized) || stringifyValue(option.value).toLowerCase().includes(normalized))
-  }, [config.type, options, query, searchable])
+  }, [config.dataSource, options, query, searchable])
 
   const emit = (nextValue: FilterValue, option?: FilterOption) => {
     onChange(nextValue, { key: config.key, option: option as FilterOption<TMeta> | undefined, options: options as FilterOption<TMeta>[] })
@@ -320,12 +330,16 @@ export function FilterInput<TMeta = unknown>({
               placeholder={config.placeholder ?? 'Select...'}
               disabled={disabled}
               searchable={searchable}
+              loading={loading}
+              error={error}
               query={query}
               onQueryChange={(q) => {
                 setQuery(q)
                 onSearch?.(q, { key: config.key })
               }}
               onToggle={toggleOption}
+              onOpen={activate}
+              onReload={hasRemoteSource(config) && behavior.showReload !== false ? reload : undefined}
               renderTriggerValue={() => (
                 <SelectedValueDisplay
                   options={options}
@@ -353,6 +367,16 @@ export function FilterInput<TMeta = unknown>({
               placeholder={config.placeholder ?? 'Select...'}
               disabled={disabled}
               required={behavior.required}
+              loading={loading}
+              error={error}
+              searchable={searchable}
+              query={query}
+              onQueryChange={(q) => {
+                setQuery(q)
+                onSearch?.(q, { key: config.key })
+              }}
+              onOpen={activate}
+              onReload={hasRemoteSource(config) && behavior.showReload !== false ? reload : undefined}
               onChange={(next) => {
                 const resolved = valueFromString(next, options)
                 emit(next === '' ? null : resolved, options.find((o) => optionMatches(o, resolved)))

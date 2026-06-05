@@ -21,3 +21,12 @@ export function XIcon() {
     </svg>
   )
 }
+
+export function RefreshIcon() {
+  return (
+    <svg width="12" height="12" viewBox="-1 -1 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M10 2a5 5 0 1 0 .9 3" />
+      <path d="M10 1v3h-3" />
+    </svg>
+  )
+}

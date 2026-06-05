@@ -151,10 +151,16 @@
 
 .fi-variable .fi-control,
 .fi-variable .fi-select,
+.fi-variable .fi-select-trigger,
 .fi-variable .fi-textarea {
   border: 0;
   border-radius: 0;
   background: transparent;
+  box-shadow: none;
+}
+
+.fi-variable .fi-select-trigger:focus-visible {
+  border-color: transparent;
   box-shadow: none;
 }
 
@@ -242,9 +248,75 @@
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
+/* legacy alias kept for external use */
 .fi-popover-search {
   padding: 6px;
   border-bottom: 1px solid var(--bk-border);
+}
+
+/* Header row: search input + reload button */
+.fi-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-bottom: 1px solid var(--bk-border);
+}
+
+.fi-popup-header .fi-control {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Status row: loading / error / empty message */
+.fi-popup-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--bk-border);
+  font-size: 12px;
+  min-height: 32px;
+}
+
+.fi-popup-status .fi-loading,
+.fi-popup-status .fi-error,
+.fi-popup-status .fi-empty {
+  flex: 1;
+}
+
+/* Footer row: reload button only (select, idle state) */
+.fi-popup-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 4px 6px;
+  border-top: 1px solid var(--bk-border);
+}
+
+.fi-reload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--bk-border);
+  border-radius: var(--bk-radius);
+  background: transparent;
+  color: var(--bk-muted-foreground);
+  cursor: pointer;
+  padding: 0;
+}
+
+.fi-reload-button:hover {
+  background: var(--bk-muted);
+  color: var(--bk-foreground);
+}
+
+.fi-reload-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .fi-option {
