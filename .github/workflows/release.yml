@@ -72,7 +72,7 @@ jobs:
           PACKAGE="${{ steps.release.outputs.package }}"
           VERSION="${{ steps.release.outputs.version }}"
 
-          if [[ "$VERSION" =~ -(alpha|beta|rc|next) ]]; then
+          if [[ "$VERSION" =~ -(alpha|beta|dev|rc|next) ]]; then
             DIST_TAG="${BASH_REMATCH[1]}"
             pnpm --filter "@loykin/$PACKAGE" publish --no-git-checks --tag "$DIST_TAG"
           else
