@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import {
   Sidebar,
   SidebarContent,
@@ -20,62 +21,26 @@ import { UnitTab } from './tabs/UnitTab'
 import { TokensPanel } from './components/TokensPanel'
 import { THEMES, type Theme } from './themes'
 
-// ── Routing ───────────────────────────────────────────────────────────────────
+// ── Nav config ────────────────────────────────────────────────────────────────
 
 type PackageId = 'datetime-range' | 'filter-input' | 'unit' | 'side-panel'
 type Section   = 'usage' | 'tokens'
-type Route     = { pkg: PackageId; section: Section }
-
-function parseRoute(): Route {
-  const parts = window.location.pathname.replace(/^\//, '').split('/')
-  const pkg = parts[0] as PackageId
-  const section = parts[1] === 'tokens' ? 'tokens' : 'usage'
-  const validPkgs: PackageId[] = ['datetime-range', 'filter-input', 'unit', 'side-panel']
-  return { pkg: validPkgs.includes(pkg) ? pkg : 'datetime-range', section }
-}
-
-function pushRoute(pkg: PackageId, section: Section) {
-  const path = section === 'tokens' ? `/${pkg}/tokens` : `/${pkg}`
-  window.history.pushState({}, '', path)
-}
-
-// ── Nav config ────────────────────────────────────────────────────────────────
 
 const NAV_GROUPS = [
-  {
-    id: 'datetime-range' as PackageId,
-    label: 'Datetime Range',
-    pkg: '@loykin/datetime-range',
-    hasTokens: true,
-  },
-  {
-    id: 'filter-input' as PackageId,
-    label: 'Filter Input',
-    pkg: '@loykin/filter-input',
-    hasTokens: true,
-  },
-  {
-    id: 'unit' as PackageId,
-    label: 'Unit',
-    pkg: '@loykin/unit',
-    hasTokens: false,
-  },
-  {
-    id: 'side-panel' as PackageId,
-    label: 'Side Panel',
-    pkg: '@loykin/side-panel',
-    hasTokens: true,
-  },
+  { id: 'datetime-range' as PackageId, label: 'Datetime Range', pkg: '@loykin/datetime-range', hasTokens: true },
+  { id: 'filter-input'   as PackageId, label: 'Filter Input',   pkg: '@loykin/filter-input',   hasTokens: true },
+  { id: 'unit'           as PackageId, label: 'Unit',           pkg: '@loykin/unit',           hasTokens: false },
+  { id: 'side-panel'     as PackageId, label: 'Side Panel',     pkg: '@loykin/side-panel',     hasTokens: true },
 ]
 
 // ── Theme / Radius controls ───────────────────────────────────────────────────
 
 const RADIUS_PRESETS = [
-  { label: 'None', value: '0rem'    },
-  { label: 'SM',   value: '0.25rem' },
-  { label: 'MD',   value: '0.375rem'},
-  { label: 'LG',   value: '0.5rem'  },
-  { label: 'XL',   value: '0.75rem' },
+  { label: 'None', value: '0rem'     },
+  { label: 'SM',   value: '0.25rem'  },
+  { label: 'MD',   value: '0.375rem' },
+  { label: 'LG',   value: '0.5rem'   },
+  { label: 'XL',   value: '0.75rem'  },
 ] as const
 
 type RadiusValue = (typeof RADIUS_PRESETS)[number]['value']
@@ -104,9 +69,7 @@ function ThemeSwatch({ theme, active, onClick }: { theme: Theme; active: boolean
 
 // ── Main content ──────────────────────────────────────────────────────────────
 
-function PageContent({ route }: { route: Route }) {
-  const { pkg, section } = route
-
+function PageContent({ pkg, section }: { pkg: PackageId; section: Section }) {
   if (section === 'tokens') {
     const groups =
       pkg === 'datetime-range' ? DR_TOKENS :
@@ -146,23 +109,22 @@ function PageContent({ route }: { route: Route }) {
   return null
 }
 
-// ── App ───────────────────────────────────────────────────────────────────────
+// ── Shell (sidebar + layout) ──────────────────────────────────────────────────
 
-export default function App() {
-  const [route, setRouteState] = useState<Route>(parseRoute)
+const VALID_PKGS: PackageId[] = ['datetime-range', 'filter-input', 'unit', 'side-panel']
+
+function isPackageId(s: string | undefined): s is PackageId {
+  return VALID_PKGS.includes(s as PackageId)
+}
+
+function PlaygroundApp() {
+  const { pkgId = 'datetime-range', sectionId } = useParams<{ pkgId: string; sectionId?: string }>()
+  const navigate = useNavigate()
+  const pkg = isPackageId(pkgId) ? pkgId : 'datetime-range'
+  const section: Section = sectionId === 'tokens' ? 'tokens' : 'usage'
+
   const [theme, setTheme] = useState<Theme>(THEMES[0]!)
   const [radius, setRadius] = useState<RadiusValue>('0rem')
-
-  const navigate = (pkg: PackageId, section: Section) => {
-    pushRoute(pkg, section)
-    setRouteState({ pkg, section })
-  }
-
-  useEffect(() => {
-    const onPop = () => setRouteState(parseRoute())
-    window.addEventListener('popstate', onPop)
-    return () => window.removeEventListener('popstate', onPop)
-  }, [])
 
   useEffect(() => {
     const root = document.documentElement
@@ -178,14 +140,14 @@ export default function App() {
     }
   }, [theme, radius])
 
-  const currentGroup = NAV_GROUPS.find(g => g.id === route.pkg)!
-  const pageTitle = route.section === 'tokens'
+  const currentGroup = NAV_GROUPS.find(g => g.id === pkg)!
+  const pageTitle = section === 'tokens'
     ? `${currentGroup.label} — Theme Tokens`
     : currentGroup.label
 
   return (
     <SidebarProvider>
-      <Sidebar variant="inset">
+      <Sidebar>
 
         <SidebarHeader>
           <div className="px-2 py-1">
@@ -201,8 +163,8 @@ export default function App() {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    isActive={route.pkg === group.id && route.section === 'usage'}
-                    onClick={() => navigate(group.id, 'usage')}
+                    isActive={pkg === group.id && section === 'usage'}
+                    onClick={() => navigate(`/${group.id}`)}
                   >
                     Usage
                   </SidebarMenuButton>
@@ -210,8 +172,8 @@ export default function App() {
                 {group.hasTokens && (
                   <SidebarMenuItem>
                     <SidebarMenuButton
-                      isActive={route.pkg === group.id && route.section === 'tokens'}
-                      onClick={() => navigate(group.id, 'tokens')}
+                      isActive={pkg === group.id && section === 'tokens'}
+                      onClick={() => navigate(`/${group.id}/tokens`)}
                     >
                       Theme Tokens
                     </SidebarMenuButton>
@@ -274,10 +236,23 @@ export default function App() {
           <p className="text-xs text-muted-foreground ml-2">{currentGroup.pkg}</p>
         </header>
         <div className="flex-1 overflow-auto px-6 py-5">
-          <PageContent route={route} />
+          <PageContent pkg={pkg} section={section} />
         </div>
       </SidebarInset>
 
     </SidebarProvider>
+  )
+}
+
+// ── Routes ────────────────────────────────────────────────────────────────────
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/:pkgId/:sectionId" element={<PlaygroundApp />} />
+      <Route path="/:pkgId" element={<PlaygroundApp />} />
+      <Route path="/" element={<Navigate to="/datetime-range" replace />} />
+      <Route path="*" element={<Navigate to="/datetime-range" replace />} />
+    </Routes>
   )
 }
