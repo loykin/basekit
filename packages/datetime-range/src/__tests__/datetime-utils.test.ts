@@ -6,7 +6,7 @@ import {
   relativeNow,
   toUrlString,
   validateRange,
-} from '@/datetime-utils'
+} from '../datetime-utils'
 
 describe('datetime URL serialization', () => {
   it('round-trips relative ranges', () => {

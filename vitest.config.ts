@@ -1,5 +1,4 @@
 import react from '@vitejs/plugin-react'
-import { resolve } from 'node:path'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -7,11 +6,6 @@ export default defineConfig({
     projects: [
       {
         plugins: [react()],
-        resolve: {
-          alias: {
-            '@': resolve(__dirname, 'packages/datetime-range/src'),
-          },
-        },
         test: {
           name: 'datetime-range',
           environment: 'jsdom',
