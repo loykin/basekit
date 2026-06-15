@@ -1,11 +1,11 @@
 name: Release
 
-# Tag format: <package-name>/v<semver>
-# Example: datetime-range/v0.1.0
+# Tag format: v<semver>  (all packages released together at the same version)
+# Examples:  v1.0.0  |  v1.0.0-dev.0  |  v1.0.0-alpha.1
 on:
   push:
     tags:
-      - '*/v*'
+      - 'v[0-9]*'
 
 permissions:
   contents: write
@@ -14,84 +14,87 @@ permissions:
 concurrency: release-${{ github.ref }}
 
 jobs:
-  release:
-    name: Build and publish package
+  verify:
+    name: Verify
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-      - name: Parse and validate tag
-        id: release
-        shell: bash
-        run: |
-          TAG="${GITHUB_REF_NAME}"
-          PACKAGE="${TAG%%/v*}"
-          VERSION="${TAG#*/v}"
+      - uses: pnpm/action-setup@v4
 
-          case "$PACKAGE" in
-            datetime-range|filter-input|side-panel|unit) ;;
-            *)
-              echo "Unknown package: $PACKAGE" >&2
-              exit 1
-              ;;
-          esac
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'pnpm'
 
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
-            echo "Invalid version: $VERSION" >&2
-            exit 1
-          fi
+      - run: pnpm install --frozen-lockfile
 
-          echo "package=$PACKAGE" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Releasing @loykin/$PACKAGE@$VERSION"
+      - name: Set version from tag
+        run: pnpm -r exec npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Verify repository
+        run: pnpm release:check
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
 
-      - name: Set package version from tag
-        run: npm version "${{ steps.release.outputs.version }}" --no-git-tag-version
-        working-directory: packages/${{ steps.release.outputs.package }}
+      - name: Set version from tag
+        run: pnpm -r exec npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
 
-      - name: Verify repository
-        run: pnpm release:check
+      - name: Build
+        run: pnpm build
 
-      - name: Publish package
+      - name: Publish all packages
         shell: bash
         run: |
-          PACKAGE="${{ steps.release.outputs.package }}"
-          VERSION="${{ steps.release.outputs.version }}"
-
+          VERSION="${GITHUB_REF_NAME#v}"
           if [[ "$VERSION" =~ -(alpha|beta|dev|rc|next) ]]; then
-            DIST_TAG="${BASH_REMATCH[1]}"
-            pnpm --filter "@loykin/$PACKAGE" publish --no-git-checks --tag "$DIST_TAG"
+            pnpm -r publish --no-git-checks --tag "${BASH_REMATCH[1]}"
           else
-            pnpm --filter "@loykin/$PACKAGE" publish --no-git-checks
+            pnpm -r publish --no-git-checks
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Pack release artifact
+      - name: Pack release artifacts
         shell: bash
         run: |
-          PACKAGE="${{ steps.release.outputs.package }}"
           mkdir -p release-artifacts
-          npm pack "./packages/$PACKAGE" --pack-destination release-artifacts
-          cd release-artifacts
-          shasum -a 256 ./*.tgz > checksums.txt
+          for pkg_dir in packages/*/; do
+            npm pack "$pkg_dir" --pack-destination release-artifacts
+          done
+          cd release-artifacts && shasum -a 256 ./*.tgz > checksums.txt
 
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v3
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-artifacts
+          path: release-artifacts/
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: release-artifacts
+          path: release-artifacts/
+
+      - uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
           files: |
