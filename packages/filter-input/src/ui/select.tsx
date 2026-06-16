@@ -60,7 +60,7 @@ export function FiSelect({
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
-        <Select.Positioner sideOffset={4} className="isolate z-50">
+        <Select.Positioner sideOffset={4} className="fi-positioner">
           <Select.Popup className={cn('fi-select-popup', classNames?.popup)}>
             {(searchable || onReload) && (
               <div className="fi-popup-header">

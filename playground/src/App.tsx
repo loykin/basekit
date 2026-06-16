@@ -15,6 +15,7 @@ import {
   SidebarSeparator,
 } from '@/components/ui/sidebar'
 import { DatetimeRangeTab, DatetimeRangePreview, TOKEN_GROUPS as DR_TOKENS } from './tabs/DatetimeRangeTab'
+import { DatetimeRangeComposableTab } from './tabs/DatetimeRangeComposableTab'
 import { FilterInputTab, FilterInputPreview, TOKEN_GROUPS as FI_TOKENS } from './tabs/FilterInputTab'
 import { SidePanelTab, SidePanelPreview, TOKEN_GROUPS as SP_TOKENS } from './tabs/SidePanelTab'
 import { UnitTab } from './tabs/UnitTab'
@@ -24,13 +25,13 @@ import { THEMES, type Theme } from './themes'
 // ── Nav config ────────────────────────────────────────────────────────────────
 
 type PackageId = 'datetime-range' | 'filter-input' | 'unit' | 'side-panel'
-type Section   = 'usage' | 'tokens'
+type Section   = 'usage' | 'tokens' | 'composable'
 
 const NAV_GROUPS = [
-  { id: 'datetime-range' as PackageId, label: 'Datetime Range', pkg: '@loykin/datetime-range', hasTokens: true },
-  { id: 'filter-input'   as PackageId, label: 'Filter Input',   pkg: '@loykin/filter-input',   hasTokens: true },
-  { id: 'unit'           as PackageId, label: 'Unit',           pkg: '@loykin/unit',           hasTokens: false },
-  { id: 'side-panel'     as PackageId, label: 'Side Panel',     pkg: '@loykin/side-panel',     hasTokens: true },
+  { id: 'datetime-range' as PackageId, label: 'Datetime Range', pkg: '@loykin/datetime-range', hasTokens: true, hasComposable: true },
+  { id: 'filter-input'   as PackageId, label: 'Filter Input',   pkg: '@loykin/filter-input',   hasTokens: true, hasComposable: false },
+  { id: 'unit'           as PackageId, label: 'Unit',           pkg: '@loykin/unit',           hasTokens: false, hasComposable: false },
+  { id: 'side-panel'     as PackageId, label: 'Side Panel',     pkg: '@loykin/side-panel',     hasTokens: true, hasComposable: false },
 ]
 
 // ── Theme / Radius controls ───────────────────────────────────────────────────
@@ -48,8 +49,8 @@ type RadiusValue = (typeof RADIUS_PRESETS)[number]['value']
 const ALL_THEME_VAR_KEYS = [...new Set(THEMES.flatMap(t => Object.keys(t.vars)))]
 
 function ThemeSwatch({ theme, active, onClick }: { theme: Theme; active: boolean; onClick: () => void }) {
-  const primary = theme.vars['--bk-primary'] ?? (theme.dark ? 'oklch(0.424 0.199 265.638)' : 'oklch(0.488 0.243 264.376)')
-  const bg      = theme.vars['--bk-background'] ?? (theme.dark ? 'oklch(0.145 0 0)' : 'oklch(1 0 0)')
+  const primary = theme.vars['--basekit-primary'] ?? (theme.dark ? 'oklch(0.424 0.199 265.638)' : 'oklch(0.488 0.243 264.376)')
+  const bg      = theme.vars['--basekit-background'] ?? (theme.dark ? 'oklch(0.145 0 0)' : 'oklch(1 0 0)')
   return (
     <button
       onClick={onClick}
@@ -102,6 +103,8 @@ function PageContent({ pkg, section }: { pkg: PackageId; section: Section }) {
     )
   }
 
+  if (section === 'composable' && pkg === 'datetime-range') return <DatetimeRangeComposableTab />
+
   if (pkg === 'datetime-range') return <DatetimeRangeTab />
   if (pkg === 'filter-input')   return <FilterInputTab />
   if (pkg === 'unit')           return <UnitTab />
@@ -121,7 +124,7 @@ function PlaygroundApp() {
   const { pkgId = 'datetime-range', sectionId } = useParams<{ pkgId: string; sectionId?: string }>()
   const navigate = useNavigate()
   const pkg = isPackageId(pkgId) ? pkgId : 'datetime-range'
-  const section: Section = sectionId === 'tokens' ? 'tokens' : 'usage'
+  const section: Section = sectionId === 'tokens' ? 'tokens' : sectionId === 'composable' ? 'composable' : 'usage'
 
   const [theme, setTheme] = useState<Theme>(THEMES[0]!)
   const [radius, setRadius] = useState<RadiusValue>('0rem')
@@ -130,13 +133,13 @@ function PlaygroundApp() {
     const root = document.documentElement
     root.classList.toggle('dark', !!theme.dark)
     ALL_THEME_VAR_KEYS.forEach(k => root.style.removeProperty(k))
-    root.style.removeProperty('--bk-radius')
+    root.style.removeProperty('--basekit-radius')
     Object.entries(theme.vars).forEach(([k, v]) => root.style.setProperty(k, v))
-    root.style.setProperty('--bk-radius', radius)
+    root.style.setProperty('--basekit-radius', radius)
     return () => {
       root.classList.remove('dark')
       ALL_THEME_VAR_KEYS.forEach(k => root.style.removeProperty(k))
-      root.style.removeProperty('--bk-radius')
+      root.style.removeProperty('--basekit-radius')
     }
   }, [theme, radius])
 
@@ -176,6 +179,16 @@ function PlaygroundApp() {
                       onClick={() => navigate(`/${group.id}/tokens`)}
                     >
                       Theme Tokens
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
+                {group.hasComposable && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      isActive={pkg === group.id && section === 'composable'}
+                      onClick={() => navigate(`/${group.id}/composable`)}
+                    >
+                      Composable
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 )}

@@ -13,13 +13,13 @@ function ScrollArea({
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
       style={{ position: 'relative', ...style }}
-      className={cn('w-full', className)}
+      className={cn('dr-scroll-area', className)}
       {...props}
     >
       <ScrollAreaPrimitive.Viewport
         ref={viewportRef}
         data-slot="scroll-area-viewport"
-        className="size-full outline-none rounded-[inherit]"
+        className="dr-scroll-area-viewport"
       >
         {children}
       </ScrollAreaPrimitive.Viewport>
@@ -39,17 +39,12 @@ function ScrollBar({
     <ScrollAreaPrimitive.Scrollbar
       data-slot="scroll-area-scrollbar"
       orientation={orientation}
-      className={cn(
-        'flex touch-none select-none p-px transition-opacity z-[11]',
-        orientation === 'vertical' && 'h-full w-2.5',
-        orientation === 'horizontal' && 'h-2.5 flex-col',
-        className,
-      )}
+      className={cn('dr-scrollbar', className)}
       {...props}
     >
       <ScrollAreaPrimitive.Thumb
         data-slot="scroll-area-thumb"
-        className="relative flex-1 rounded-full bg-[var(--bk-muted-foreground)]/30 hover:bg-[var(--bk-muted-foreground)]/50 transition-colors"
+        className="dr-scrollbar-thumb"
       />
     </ScrollAreaPrimitive.Scrollbar>
   )

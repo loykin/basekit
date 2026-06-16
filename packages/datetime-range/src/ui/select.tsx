@@ -15,7 +15,7 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   return (
     <SelectPrimitive.Value
       data-slot="select-value"
-      className={cn('flex flex-1 text-left', className)}
+      className={cn('dr-select-value', className)}
       {...props}
     />
   )
@@ -31,10 +31,7 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
-      className={cn(
-        'flex w-fit items-center justify-between gap-1.5 rounded-[var(--bk-radius)] border border-[var(--bk-input)] bg-transparent py-2 pr-2 pl-2.5 text-xs whitespace-nowrap transition-colors outline-none select-none focus-visible:border-[var(--bk-ring)] focus-visible:ring-1 focus-visible:ring-[var(--bk-ring)]/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-[var(--bk-destructive)] aria-invalid:ring-1 aria-invalid:ring-[var(--bk-destructive)]/20 data-placeholder:text-[var(--bk-muted-foreground)] data-[size=default]:h-8 data-[size=sm]:h-7 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4',
-        className,
-      )}
+      className={cn('dr-select-trigger', className)}
       {...props}
     >
       {children}
@@ -43,7 +40,7 @@ function SelectTrigger({
           <HugeiconsIcon
             icon={UnfoldMoreIcon}
             strokeWidth={2}
-            className="pointer-events-none size-4 text-[var(--bk-muted-foreground)]"
+            className="dr-select-icon"
           />
         }
       />
@@ -73,15 +70,12 @@ function SelectContent({
         align={align}
         alignOffset={alignOffset}
         alignItemWithTrigger={alignItemWithTrigger}
-        className="isolate z-50"
+        className="dr-positioner"
       >
         <SelectPrimitive.Popup
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
-          className={cn(
-            'isolate z-50 max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-[var(--bk-radius)] bg-[var(--bk-popover)] text-[var(--bk-popover-foreground)] shadow-md ring-1 ring-[var(--bk-foreground)]/10 duration-100 data-[align-trigger=true]:animate-none data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 animate-none!',
-            className,
-          )}
+          className={cn('dr-select-content', className)}
           {...props}
         >
           <SelectScrollUpButton />
@@ -101,21 +95,16 @@ function SelectItem({
   return (
     <SelectPrimitive.Item
       data-slot="select-item"
-      className={cn(
-        'relative flex w-full cursor-default items-center gap-2 rounded-none py-2 pr-8 pl-2 text-xs outline-hidden select-none focus:bg-[var(--bk-accent)] focus:text-[var(--bk-accent-foreground)] data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2',
-        className,
-      )}
+      className={cn('dr-select-item', className)}
       {...props}
     >
-      <SelectPrimitive.ItemText className="flex flex-1 shrink-0 gap-2 whitespace-nowrap">
+      <SelectPrimitive.ItemText className="dr-select-item-text">
         {children}
       </SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator
-        render={
-          <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center" />
-        }
+        render={<span className="dr-select-item-indicator" />}
       >
-        <HugeiconsIcon icon={Tick02Icon} strokeWidth={2} className="pointer-events-none" />
+        <HugeiconsIcon icon={Tick02Icon} strokeWidth={2} style={{ pointerEvents: 'none' }} />
       </SelectPrimitive.ItemIndicator>
     </SelectPrimitive.Item>
   )
@@ -128,10 +117,7 @@ function SelectScrollUpButton({
   return (
     <SelectPrimitive.ScrollUpArrow
       data-slot="select-scroll-up-button"
-      className={cn(
-        "top-0 z-10 flex w-full cursor-default items-center justify-center bg-[var(--bk-popover)] py-1 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
+      className={cn('dr-select-scroll-btn dr-select-scroll-btn--up', className)}
       {...props}
     >
       <HugeiconsIcon icon={ArrowUp01Icon} strokeWidth={2} />
@@ -146,10 +132,7 @@ function SelectScrollDownButton({
   return (
     <SelectPrimitive.ScrollDownArrow
       data-slot="select-scroll-down-button"
-      className={cn(
-        "bottom-0 z-10 flex w-full cursor-default items-center justify-center bg-[var(--bk-popover)] py-1 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
+      className={cn('dr-select-scroll-btn dr-select-scroll-btn--down', className)}
       {...props}
     >
       <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={2} />

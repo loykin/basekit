@@ -4,6 +4,10 @@ export { DateTimePanel } from './DatetimePanel';
 export type { DateTimePanelProps, CalendarProps } from './DatetimePanel';
 export { DatetimeSegmentInput } from './DatetimeSegmentInput';
 export type { DatetimeSegmentInputProps } from './DatetimeSegmentInput';
+export { SidePanel } from './DatetimeRangeSidePanel';
+export type { SidePanelProps } from './DatetimeRangeSidePanel';
+export { useDatetimeRange } from './useDatetimeRange';
+export type { UseDatetimeRangeOptions, UseDatetimeRangeReturn } from './useDatetimeRange';
 export type { DateTimeRangeValue, DateTimeRelativeFormat, QuickPreset, ValidationErrorType, DatetimePrecision, DatetimeRangeLabels } from './types';
 export {
   toDate,

@@ -201,7 +201,7 @@ export function TokensPanel({ groups }: { groups: TokenGroupDef[] }) {
         <div>
           <h2 className="text-xs font-semibold">Theme Tokens</h2>
           <p className="mt-0.5 text-[11px] text-muted-foreground">
-            Swatch(색상 토큰) 클릭 → 컬러 피커. 텍스트 입력으로 oklch 등 직접 입력 가능. 사이드바 테마 전환 시 초기화됨.
+            Click a color swatch to open the color picker. Type oklch values directly. Resets when switching themes in the sidebar.
           </p>
         </div>
         <button

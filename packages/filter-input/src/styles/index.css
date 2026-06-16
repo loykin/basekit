@@ -2,47 +2,47 @@
  * @loykin/filter-input
  *
  * Plain CSS, no Tailwind dependency. Consumers can override with:
- *   - CSS custom properties: --bk-*
+ *   - CSS custom properties: --basekit-*
  *   - Semantic class names: .fi-*
  *   - classNames props
  */
 
 :root {
-  --bk-background:           oklch(1 0 0);
-  --bk-foreground:           oklch(0.145 0 0);
-  --bk-popover:              oklch(1 0 0);
-  --bk-popover-foreground:   oklch(0.145 0 0);
-  --bk-muted:                oklch(0.97 0 0);
-  --bk-muted-foreground:     oklch(0.556 0 0);
-  --bk-border:               oklch(0.922 0 0);
-  --bk-input:                oklch(0.922 0 0);
-  --bk-ring:                 oklch(0.708 0 0);
-  --bk-primary:              oklch(0.205 0 0);
-  --bk-primary-foreground:   oklch(0.985 0 0);
-  --bk-destructive:          oklch(0.577 0.245 27.325);
-  --bk-radius:               6px;
-  /* filter-input 고유 토큰 */
-  --bk-fi-control-background:   var(--bk-background);
-  --bk-fi-control-foreground:   var(--bk-foreground);
-  --bk-fi-control-border:       var(--bk-input);
-  --bk-fi-control-placeholder:  var(--bk-muted-foreground);
-  --bk-fi-separator:            var(--bk-border);
+  --basekit-background:           var(--background,           oklch(1 0 0));
+  --basekit-foreground:           var(--foreground,           oklch(0.145 0 0));
+  --basekit-popover:              var(--popover,              oklch(1 0 0));
+  --basekit-popover-foreground:   var(--popover-foreground,   oklch(0.145 0 0));
+  --basekit-muted:                var(--muted,                oklch(0.97 0 0));
+  --basekit-muted-foreground:     var(--muted-foreground,     oklch(0.556 0 0));
+  --basekit-border:               var(--border,               oklch(0.922 0 0));
+  --basekit-input:                var(--input,                oklch(0.922 0 0));
+  --basekit-ring:                 var(--ring,                 oklch(0.708 0 0));
+  --basekit-primary:              var(--primary,              oklch(0.205 0 0));
+  --basekit-primary-foreground:   var(--primary-foreground,   oklch(0.985 0 0));
+  --basekit-destructive:          var(--destructive,          oklch(0.577 0.245 27.325));
+  --basekit-radius:               var(--radius,               6px);
+  /* filter-input component tokens */
+  --basekit-fi-control-background:   var(--basekit-background);
+  --basekit-fi-control-foreground:   var(--basekit-foreground);
+  --basekit-fi-control-border:       var(--basekit-input);
+  --basekit-fi-control-placeholder:  var(--basekit-muted-foreground);
+  --basekit-fi-separator:            var(--basekit-border);
 }
 
 .dark {
-  --bk-background:           oklch(0.145 0 0);
-  --bk-foreground:           oklch(0.985 0 0);
-  --bk-popover:              oklch(0.205 0 0);
-  --bk-popover-foreground:   oklch(0.985 0 0);
-  --bk-muted:                oklch(0.269 0 0);
-  --bk-muted-foreground:     oklch(0.708 0 0);
-  --bk-border:               oklch(1 0 0 / 10%);
-  --bk-input:                oklch(1 0 0 / 15%);
-  --bk-ring:                 oklch(0.556 0 0);
-  --bk-primary:              oklch(0.985 0 0);
-  --bk-primary-foreground:   oklch(0.205 0 0);
-  --bk-destructive:          oklch(0.704 0.191 22.216);
-  --bk-fi-separator:         oklch(1 0 0 / 20%);
+  --basekit-background:           var(--background,           oklch(0.145 0 0));
+  --basekit-foreground:           var(--foreground,           oklch(0.985 0 0));
+  --basekit-popover:              var(--popover,              oklch(0.205 0 0));
+  --basekit-popover-foreground:   var(--popover-foreground,   oklch(0.985 0 0));
+  --basekit-muted:                var(--muted,                oklch(0.269 0 0));
+  --basekit-muted-foreground:     var(--muted-foreground,     oklch(0.708 0 0));
+  --basekit-border:               var(--border,               oklch(1 0 0 / 10%));
+  --basekit-input:                var(--input,                oklch(1 0 0 / 15%));
+  --basekit-ring:                 var(--ring,                 oklch(0.556 0 0));
+  --basekit-primary:              var(--primary,              oklch(0.985 0 0));
+  --basekit-primary-foreground:   var(--primary-foreground,   oklch(0.205 0 0));
+  --basekit-destructive:          var(--destructive,          oklch(0.704 0.191 22.216));
+  --basekit-fi-separator:         oklch(1 0 0 / 20%);
 }
 
 .fi-variable {
@@ -51,18 +51,18 @@
   min-height: 32px;
   min-width: 0;
   overflow: visible;
-  border: 1px solid var(--bk-fi-control-border);
-  border-radius: var(--bk-radius);
-  background: var(--bk-fi-control-background);
-  color: var(--bk-fi-control-foreground);
+  border: 1px solid var(--basekit-fi-control-border);
+  border-radius: var(--basekit-radius);
+  background: var(--basekit-fi-control-background);
+  color: var(--basekit-fi-control-foreground);
 }
 
 .fi-variable:hover {
-  border-color: var(--bk-fi-control-border);
+  border-color: var(--basekit-fi-control-border);
 }
 
 .fi-variable:focus-within {
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bk-ring) 50%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--basekit-ring) 50%, transparent);
 }
 
 .fi-variable[data-disabled="true"] {
@@ -76,7 +76,7 @@
   flex-shrink: 0;
   gap: 6px;
   padding: 0 12px;
-  border-right: 1px solid var(--bk-fi-separator);
+  border-right: 1px solid var(--basekit-fi-separator);
   font-size: 13px;
   font-weight: 600;
 }
@@ -96,13 +96,13 @@
 
 .fi-field-label {
   margin-bottom: 6px;
-  color: var(--bk-muted-foreground);
+  color: var(--basekit-muted-foreground);
   font-size: 11px;
   font-weight: 500;
 }
 
 .fi-field-required {
-  color: var(--bk-destructive);
+  color: var(--basekit-destructive);
 }
 
 .fi-control,
@@ -110,10 +110,10 @@
 .fi-textarea {
   width: 100%;
   min-width: 0;
-  border: 1px solid var(--bk-fi-control-border);
-  border-radius: var(--bk-radius);
-  background: var(--bk-fi-control-background);
-  color: var(--bk-fi-control-foreground);
+  border: 1px solid var(--basekit-fi-control-border);
+  border-radius: var(--basekit-radius);
+  background: var(--basekit-fi-control-background);
+  color: var(--basekit-fi-control-foreground);
   outline: none;
   font-size: 12px;
 }
@@ -132,14 +132,14 @@
 
 .fi-control::placeholder,
 .fi-textarea::placeholder {
-  color: var(--bk-fi-control-placeholder);
+  color: var(--basekit-fi-control-placeholder);
 }
 
 .fi-control:focus-visible,
 .fi-select:focus-visible,
 .fi-textarea:focus-visible {
-  border-color: var(--bk-ring);
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bk-ring) 50%, transparent);
+  border-color: var(--basekit-ring);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--basekit-ring) 50%, transparent);
 }
 
 .fi-control:disabled,
@@ -183,18 +183,18 @@
 
 .fi-clear-button {
   height: 32px;
-  border: 1px solid var(--bk-border);
-  border-radius: var(--bk-radius);
-  background: var(--bk-background);
-  color: var(--bk-muted-foreground);
+  border: 1px solid var(--basekit-border);
+  border-radius: var(--basekit-radius);
+  background: var(--basekit-background);
+  color: var(--basekit-muted-foreground);
   padding: 0 8px;
   font-size: 12px;
   cursor: pointer;
 }
 
 .fi-clear-button:hover {
-  background: var(--bk-muted);
-  color: var(--bk-foreground);
+  background: var(--basekit-muted);
+  color: var(--basekit-foreground);
 }
 
 .fi-clear-button:disabled {
@@ -214,7 +214,7 @@
   min-height: 32px;
   border: 0;
   background: transparent;
-  color: var(--bk-fi-control-foreground);
+  color: var(--basekit-fi-control-foreground);
   padding: 4px 8px;
   text-align: left;
   cursor: pointer;
@@ -228,7 +228,7 @@
 .fi-chevron {
   display: flex;
   align-items: center;
-  color: var(--bk-muted-foreground);
+  color: var(--basekit-muted-foreground);
   padding-left: 8px;
   flex-shrink: 0;
 }
@@ -241,17 +241,17 @@
   margin-top: 4px;
   max-height: 256px;
   overflow: auto;
-  border: 1px solid var(--bk-border);
-  border-radius: var(--bk-radius);
-  background: var(--bk-popover);
-  color: var(--bk-popover-foreground);
+  border: 1px solid var(--basekit-border);
+  border-radius: var(--basekit-radius);
+  background: var(--basekit-popover);
+  color: var(--basekit-popover-foreground);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 /* legacy alias kept for external use */
 .fi-popover-search {
   padding: 6px;
-  border-bottom: 1px solid var(--bk-border);
+  border-bottom: 1px solid var(--basekit-border);
 }
 
 /* Header row: search input + reload button */
@@ -260,7 +260,7 @@
   align-items: center;
   gap: 6px;
   padding: 6px;
-  border-bottom: 1px solid var(--bk-border);
+  border-bottom: 1px solid var(--basekit-border);
 }
 
 .fi-popup-header .fi-control {
@@ -274,7 +274,7 @@
   align-items: center;
   gap: 6px;
   padding: 6px 8px;
-  border-bottom: 1px solid var(--bk-border);
+  border-bottom: 1px solid var(--basekit-border);
   font-size: 12px;
   min-height: 32px;
 }
@@ -291,7 +291,7 @@
   align-items: center;
   justify-content: flex-end;
   padding: 4px 6px;
-  border-top: 1px solid var(--bk-border);
+  border-top: 1px solid var(--basekit-border);
 }
 
 .fi-reload-button {
@@ -301,17 +301,17 @@
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  border: 1px solid var(--bk-border);
-  border-radius: var(--bk-radius);
+  border: 1px solid var(--basekit-border);
+  border-radius: var(--basekit-radius);
   background: transparent;
-  color: var(--bk-muted-foreground);
+  color: var(--basekit-muted-foreground);
   cursor: pointer;
   padding: 0;
 }
 
 .fi-reload-button:hover {
-  background: var(--bk-muted);
-  color: var(--bk-foreground);
+  background: var(--basekit-muted);
+  color: var(--basekit-foreground);
 }
 
 .fi-reload-button:disabled {
@@ -334,7 +334,7 @@
 }
 
 .fi-option:hover {
-  background: var(--bk-muted);
+  background: var(--basekit-muted);
 }
 
 .fi-option:disabled {
@@ -348,15 +348,15 @@
   width: 14px;
   height: 14px;
   flex-shrink: 0;
-  border: 1px solid var(--bk-border);
+  border: 1px solid var(--basekit-border);
   border-radius: 2px;
-  color: var(--bk-primary);
+  color: var(--basekit-primary);
 }
 
 .fi-option-check[data-checked] {
-  background: var(--bk-primary);
-  border-color: var(--bk-primary);
-  color: var(--bk-primary-foreground);
+  background: var(--basekit-primary);
+  border-color: var(--basekit-primary);
+  color: var(--basekit-primary-foreground);
 }
 
 .fi-option-label {
@@ -374,12 +374,12 @@
 .fi-selected-empty,
 .fi-selected-count,
 .fi-selected-summary {
-  color: var(--bk-muted-foreground);
+  color: var(--basekit-muted-foreground);
   font-size: 12px;
 }
 
 .fi-error {
-  color: var(--bk-destructive);
+  color: var(--basekit-destructive);
 }
 
 .fi-selected-list,
@@ -408,9 +408,9 @@
   gap: 4px;
   max-width: 176px;
   height: 20px;
-  border: 1px solid var(--bk-border);
-  background: var(--bk-muted);
-  color: var(--bk-foreground);
+  border: 1px solid var(--basekit-border);
+  background: var(--basekit-muted);
+  color: var(--basekit-foreground);
   padding: 0 6px;
   font-size: 11px;
 }
@@ -426,23 +426,23 @@
   align-items: center;
   border: 0;
   background: none;
-  color: var(--bk-muted-foreground);
+  color: var(--basekit-muted-foreground);
   padding: 0;
   cursor: pointer;
   line-height: 1;
 }
 
 .fi-tag-remove:hover {
-  color: var(--bk-foreground);
+  color: var(--basekit-foreground);
 }
 
 .fi-tag-overflow {
   display: inline-flex;
   align-items: center;
   height: 20px;
-  border: 1px solid var(--bk-border);
-  background: var(--bk-background);
-  color: var(--bk-muted-foreground);
+  border: 1px solid var(--basekit-border);
+  background: var(--basekit-background);
+  color: var(--basekit-muted-foreground);
   padding: 0 6px;
   font-size: 11px;
 }
@@ -453,14 +453,14 @@
   flex: 1 1 auto;
   border: 0;
   background: transparent;
-  color: var(--bk-foreground);
+  color: var(--basekit-foreground);
   outline: none;
   padding: 0 4px;
   font-size: 12px;
 }
 
 .fi-tag-text-input::placeholder {
-  color: var(--bk-muted-foreground);
+  color: var(--basekit-muted-foreground);
 }
 
 /* ── Custom Select ───────────────────────────────────── */
@@ -470,10 +470,10 @@
   align-items: center;
   width: 100%;
   height: 32px;
-  border: 1px solid var(--bk-fi-control-border);
-  border-radius: var(--bk-radius);
-  background: var(--bk-fi-control-background);
-  color: var(--bk-fi-control-foreground);
+  border: 1px solid var(--basekit-fi-control-border);
+  border-radius: var(--basekit-radius);
+  background: var(--basekit-fi-control-background);
+  color: var(--basekit-fi-control-foreground);
   padding: 0 8px;
   font-size: 12px;
   gap: 4px;
@@ -484,8 +484,8 @@
 }
 
 .fi-select-trigger:focus-visible {
-  border-color: var(--bk-ring);
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bk-ring) 50%, transparent);
+  border-color: var(--basekit-ring);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--basekit-ring) 50%, transparent);
 }
 
 .fi-select-trigger[data-disabled] {
@@ -502,13 +502,13 @@
 }
 
 .fi-select-value[data-placeholder] {
-  color: var(--bk-fi-control-placeholder);
+  color: var(--basekit-fi-control-placeholder);
 }
 
 .fi-select-icon {
   display: flex;
   align-items: center;
-  color: var(--bk-muted-foreground);
+  color: var(--basekit-muted-foreground);
   flex-shrink: 0;
 }
 
@@ -516,10 +516,10 @@
   min-width: var(--anchor-width, 120px);
   max-height: 256px;
   overflow-y: auto;
-  border: 1px solid var(--bk-border);
-  border-radius: var(--bk-radius);
-  background: var(--bk-popover);
-  color: var(--bk-popover-foreground);
+  border: 1px solid var(--basekit-border);
+  border-radius: var(--basekit-radius);
+  background: var(--basekit-popover);
+  color: var(--basekit-popover-foreground);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   outline: none;
 }
@@ -542,7 +542,7 @@
 
 .fi-select-item:hover,
 .fi-select-item[data-highlighted] {
-  background: var(--bk-muted);
+  background: var(--basekit-muted);
 }
 
 .fi-select-item[data-disabled] {
@@ -569,7 +569,21 @@
   width: 16px;
   height: 16px;
   flex-shrink: 0;
-  color: var(--bk-primary);
+  color: var(--basekit-primary);
+}
+
+/* ── Positioner wrapper (portal-based dropdowns) ──────── */
+
+.fi-positioner {
+  isolation: isolate;
+  z-index: 50;
+}
+
+/* ── Flex fill helper ────────────────────────────────── */
+
+.fi-flex-1 {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 /* ── Multi-select popup (portal-based) ───────────────── */
@@ -578,10 +592,10 @@
   min-width: var(--anchor-width, 160px);
   max-height: 256px;
   overflow-y: auto;
-  border: 1px solid var(--bk-border);
-  border-radius: var(--bk-radius);
-  background: var(--bk-popover);
-  color: var(--bk-popover-foreground);
+  border: 1px solid var(--basekit-border);
+  border-radius: var(--basekit-radius);
+  background: var(--basekit-popover);
+  color: var(--basekit-popover-foreground);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   outline: none;
 }

@@ -10,10 +10,7 @@ function Separator({
     <SeparatorPrimitive
       data-slot="separator"
       orientation={orientation}
-      className={cn(
-        'shrink-0 bg-[var(--bk-border)] data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch',
-        className,
-      )}
+      className={cn('dr-separator', className)}
       {...props}
     />
   )

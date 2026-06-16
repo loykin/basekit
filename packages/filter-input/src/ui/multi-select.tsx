@@ -63,7 +63,7 @@ export function FiMultiSelect({
         </span>
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Positioner sideOffset={4} align="start" className="isolate z-50">
+        <Popover.Positioner sideOffset={4} align="start" className="fi-positioner">
           <Popover.Popup className={cn('fi-multi-popup', classNames?.popup)}>
             {(searchable || onReload) && (
               <div className="fi-popup-header">

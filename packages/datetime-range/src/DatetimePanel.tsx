@@ -5,7 +5,7 @@ import { format, getYear, setYear, addMonths, subMonths } from 'date-fns';
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
 import { DayPicker, Matcher, TZDate } from 'react-day-picker';
 import { cn } from './lib/utils';
-import { Button, buttonVariants } from './ui/button';
+import { Button } from './ui/button';
 import { MonthYearPicker, TimePicker } from './DatetimeUtil';
 import type { DatetimePrecision } from './types';
 
@@ -132,45 +132,35 @@ export function DateTimePanel({
 
   return (
     <div>
-      <div className="flex items-center justify-between px-3 pt-3">
-        <div className="text-md font-bold flex gap-2 items-center cursor-pointer">
+      <div className="dr-panel-header">
+        <div className="dr-panel-nav-label">
           <div>
             <span onClick={() => setMonthYearPicker(monthYearPicker === 'month' ? false : 'month')}>
               {format(month, 'MMMM')}
             </span>
-            <span className="ms-1" onClick={() => setMonthYearPicker(monthYearPicker === 'year' ? false : 'year')}>
+            <span onClick={() => setMonthYearPicker(monthYearPicker === 'year' ? false : 'year')}>
               {format(month, 'yyyy')}
             </span>
           </div>
-          <Button variant="ghost" size="icon" className="w-7 h-7" onClick={() => setMonthYearPicker(monthYearPicker ? false : 'year')}>
+          <Button variant="ghost" size="icon" onClick={() => setMonthYearPicker(monthYearPicker ? false : 'year')}>
             {monthYearPicker
-              ? <ChevronUpIcon className="w-4 h-4 stroke-muted-foreground" />
-              : <ChevronDownIcon className="w-4 h-4 stroke-muted-foreground" />}
+              ? <ChevronUpIcon style={{ width: 16, height: 16 }} />
+              : <ChevronDownIcon style={{ width: 16, height: 16 }} />}
           </Button>
         </div>
-        <div className={cn('flex space-x-2', monthYearPicker ? 'hidden' : '')}>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-7 h-7"
-            aria-label="Previous month"
-            onClick={onPrevMonth}
-          >
-            <ChevronLeftIcon className="w-4 h-4 stroke-muted-foreground" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-7 h-7"
-            aria-label="Next month"
-            onClick={onNextMonth}
-          >
-            <ChevronRightIcon className="w-4 h-4 stroke-muted-foreground" />
-          </Button>
-        </div>
+        {!monthYearPicker && (
+          <div className="dr-panel-nav-btn">
+            <Button variant="ghost" size="icon" aria-label="Previous month" onClick={onPrevMonth}>
+              <ChevronLeftIcon style={{ width: 16, height: 16 }} />
+            </Button>
+            <Button variant="ghost" size="icon" aria-label="Next month" onClick={onNextMonth}>
+              <ChevronRightIcon style={{ width: 16, height: 16 }} />
+            </Button>
+          </div>
+        )}
       </div>
 
-      <div className="relative overflow-hidden px-3">
+      <div className="dr-panel-calendar">
         <DayPicker
           timeZone={timezone}
           mode="single"
@@ -191,43 +181,43 @@ export function DateTimePanel({
           disabled={[max ? { after: max } : null, min ? { before: min } : null].filter(Boolean) as Matcher[]}
           onMonthChange={setMonth}
           classNames={{
-            dropdowns: 'flex w-full gap-2',
-            months: 'flex w-full h-fit',
-            month: 'flex flex-col w-full',
+            dropdowns: 'dr-cal-dropdowns',
+            months: 'dr-cal-months',
+            month: 'dr-cal-month',
             month_caption: 'hidden',
             button_previous: 'hidden',
             button_next: 'hidden',
-            month_grid: 'w-full border-collapse',
-            weekdays: 'flex justify-between mt-2',
-            weekday: 'text-[var(--bk-muted-foreground)] rounded-md w-9 font-normal text-[0.8rem]',
-            week: 'flex w-full justify-between mt-2',
-            day: 'h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center focus-within:relative focus-within:z-20 [&[aria-selected]>button:hover]:bg-[var(--bk-primary)] [&[aria-selected]>button:hover]:text-[var(--bk-primary-foreground)]',
-            day_button: cn(buttonVariants({ variant: 'ghost' }), 'size-9 p-0 font-normal'),
-            range_end: 'day-range-end bg-[var(--bk-primary)]',
-            selected: 'bg-[var(--bk-primary)] text-[var(--bk-primary-foreground)] hover:bg-[var(--bk-primary)] hover:text-[var(--bk-primary-foreground)] focus:bg-[var(--bk-primary)] focus:text-[var(--bk-primary-foreground)]',
-            today: 'bg-[var(--bk-accent)] text-[var(--bk-accent-foreground)]',
-            outside: 'day-outside text-[var(--bk-muted-foreground)]/80 aria-selected:bg-[var(--bk-primary)] aria-selected:text-[var(--bk-primary-foreground)]',
-            disabled: 'text-[var(--bk-muted-foreground)] opacity-50',
-            range_middle: 'w-full bg-[var(--bk-secondary)] aria-selected:bg-[var(--bk-primary)] aria-selected:text-[var(--bk-primary-foreground)]',
-            hidden: 'invisible',
+            month_grid: 'dr-cal-month-grid',
+            weekdays: 'dr-cal-weekdays',
+            weekday: 'dr-cal-weekday',
+            week: 'dr-cal-week',
+            day: 'dr-cal-day',
+            day_button: 'dr-cal-day-btn',
+            range_end: 'dr-cal-day-range-end',
+            selected: 'dr-cal-day-selected',
+            today: 'dr-cal-day-today',
+            outside: 'dr-cal-day-outside',
+            disabled: 'dr-cal-day-disabled',
+            range_middle: 'dr-cal-day-range-middle',
+            hidden: 'dr-cal-day-hidden',
           }}
           showOutsideDays={true}
           {...props}
         />
-        <div className={cn('absolute top-0 left-0 bottom-0 right-0', monthYearPicker ? 'bg-[var(--bk-popover)]' : 'hidden')} />
+        <div className={cn('dr-panel-overlay', !monthYearPicker && 'dr-panel-overlay--hidden')} />
         <MonthYearPicker
           value={month}
           mode={monthYearPicker as 'month' | 'year'}
           onChange={onMonthYearChanged}
           minDate={minDate}
           maxDate={maxDate}
-          className={cn('absolute top-0 left-0 bottom-0 right-0', monthYearPicker ? '' : 'hidden')}
+          className={cn('dr-panel-monthyear', !monthYearPicker && 'dr-panel-monthyear--hidden')}
         />
       </div>
 
-      <div className="flex flex-col gap-3 px-3 pb-2">
+      <div className="dr-panel-footer">
         {precision !== 'date' && (
-          <div className="mt-2 border-t border-[var(--bk-border)] pt-2">
+          <div className="dr-panel-time">
             <TimePicker
               timePicker={precisionToTimePicker(precision)}
               value={date}
@@ -239,14 +229,14 @@ export function DateTimePanel({
           </div>
         )}
         {(isError || errorType !== null) && (
-          <div className="py-3 px-4 border border-[var(--bk-destructive)] max-w-full">
-            <span className="text-xs text-[var(--bk-destructive)] leading-snug block">
+          <div className="dr-panel-error">
+            <span className="dr-panel-error-msg">
               {getRangeErrorMessage?.(errorType, title) ?? 'Invalid date range.'}
             </span>
           </div>
         )}
         {!immediate && (
-          <div className="flex items-center justify-end gap-2">
+          <div className="dr-panel-buttons">
             <Button variant="outline" size="sm" onClick={onCancel}>Cancel</Button>
             <Button size="sm" onClick={onSubmit}>Done</Button>
           </div>

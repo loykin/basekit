@@ -296,7 +296,7 @@ export function FilterInput<TMeta = unknown>({
         return (
           <div className={cn('fi-row', classNames?.row)}>
             <FiSelect
-              className="flex-1"
+              className="fi-flex-1"
               options={[
                 { label: 'True', value: 'true' },
                 { label: 'False', value: 'false' },
@@ -362,7 +362,7 @@ export function FilterInput<TMeta = unknown>({
         return (
           <div className={cn('fi-row', classNames?.row)}>
             <FiSelect
-              className="flex-1"
+              className="fi-flex-1"
               options={filteredOptions.map((o) => ({ label: o.label, value: stringifyValue(o.value), disabled: o.disabled }))}
               value={value === null || value === undefined ? '' : normalizeText(value)}
               placeholder={config.placeholder ?? 'Select...'}
