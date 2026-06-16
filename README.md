@@ -91,6 +91,52 @@ import '@loykin/side-panel/styles'
 
 ---
 
+### [`@loykin/control-bar`](./packages/control-bar)
+
+Persistent resizable bottom bar for React. Renders tab-based panels at the bottom of the viewport — like a VS Code terminal or browser DevTools.
+
+- Tab management — open, close, activate tabs programmatically via `useControlBar`
+- Resizable — drag the top edge; configurable snap points and gap
+- Collapse / fullscreen — built-in states, persisted via `localStorage` (fullscreen excluded)
+- Scroll buttons — auto-shown when tabs overflow the header
+- Tab type registry — `registerTabType(type, { label, render })` wires any React content to a tab type
+- Customizable actions — `renderActions` prop replaces default collapse/fullscreen buttons with any UI
+- `ControlBarBody` — wraps page content and auto-applies `padding-bottom: var(--cb-height)` so the bar never overlaps content
+
+```tsx
+// 1. Register tab types once (e.g. in your app entry)
+registerTabType('log', { label: 'Logs', render: (data) => <LogViewer {...data} /> })
+
+// 2. Wrap your app
+<ControlBarProvider>
+  <ControlBarBody>{/* page content */}</ControlBarBody>
+  <ControlBar onRequestOpen={() => {/* open dialog */}} />
+</ControlBarProvider>
+
+// 3. Open tabs from anywhere
+const { open } = useControlBar()
+open({ type: 'log', data: { level: 'error' } })
+```
+
+Custom actions:
+```tsx
+<ControlBar
+  renderActions={({ isCollapsed, isFullscreen, collapse, expand, fullscreen, exitFullscreen }) => (
+    <>
+      <button onClick={isFullscreen ? exitFullscreen : fullscreen}>⤢</button>
+      <button onClick={isCollapsed ? expand : collapse}>▼</button>
+    </>
+  )}
+/>
+```
+
+**CSS import:**
+```ts
+import '@loykin/control-bar/styles'
+```
+
+---
+
 ### [`@loykin/unit`](./packages/unit)
 
 Unit formatter covering every common metric category. Designed for dashboards and monitoring UIs.
@@ -118,22 +164,29 @@ fmt(1_024_000_000)  // "1024.00 MB"
 
 ## Theming
 
-All visual packages (`datetime-range`, `filter-input`, `side-panel`) share a unified `--bk-*` CSS custom property namespace. Override them in your app's CSS to apply a custom theme:
+### `--basekit-*` (datetime-range, filter-input, side-panel)
+
+These three packages share a unified CSS custom property namespace. Each token falls back to the shadcn/base-ui conventional name if present:
 
 ```css
 :root {
-  --bk-background:           oklch(1 0 0);
-  --bk-foreground:           oklch(0.145 0 0);
-  --bk-primary:              oklch(0.488 0.243 264.376);
-  --bk-primary-foreground:   oklch(0.97 0.014 254.604);
-  --bk-muted:                oklch(0.97 0 0);
-  --bk-muted-foreground:     oklch(0.556 0 0);
-  --bk-border:               oklch(0.922 0 0);
-  --bk-input:                oklch(0.922 0 0);
-  --bk-ring:                 oklch(0.708 0 0);
-  --bk-popover:              oklch(1 0 0);
-  --bk-popover-foreground:   oklch(0.145 0 0);
-  --bk-radius:               6px;
+  --basekit-background:           oklch(1 0 0);
+  --basekit-foreground:           oklch(0.145 0 0);
+  --basekit-primary:              oklch(0.488 0.243 264.376);
+  --basekit-primary-foreground:   oklch(0.97 0.014 254.604);
+  --basekit-secondary:            oklch(0.967 0.001 286.375);
+  --basekit-secondary-foreground: oklch(0.21 0.006 285.885);
+  --basekit-muted:                oklch(0.97 0 0);
+  --basekit-muted-foreground:     oklch(0.556 0 0);
+  --basekit-border:               oklch(0.922 0 0);
+  --basekit-input:                oklch(0.922 0 0);
+  --basekit-ring:                 oklch(0.708 0 0);
+  --basekit-popover:              oklch(1 0 0);
+  --basekit-popover-foreground:   oklch(0.145 0 0);
+  --basekit-accent:               oklch(0.97 0 0);
+  --basekit-accent-foreground:    oklch(0.205 0 0);
+  --basekit-destructive:          oklch(0.577 0.245 27.325);
+  --basekit-radius:               0px;
 }
 ```
 
@@ -141,11 +194,27 @@ All visual packages (`datetime-range`, `filter-input`, `side-panel`) share a uni
 
 | Token | Default |
 |---|---|
-| `--bk-fi-control-background` | `--bk-background` |
-| `--bk-fi-control-foreground` | `--bk-foreground` |
-| `--bk-fi-control-border` | `--bk-input` |
-| `--bk-fi-control-placeholder` | `--bk-muted-foreground` |
-| `--bk-fi-separator` | `--bk-border` |
+| `--basekit-fi-control-background` | `--basekit-background` |
+| `--basekit-fi-control-foreground` | `--basekit-foreground` |
+| `--basekit-fi-control-border` | `--basekit-input` |
+| `--basekit-fi-control-placeholder` | `--basekit-muted-foreground` |
+| `--basekit-fi-separator` | `--basekit-border` |
+
+### `--cb-*` (control-bar)
+
+`control-bar` uses its own namespace and falls back to shadcn/base-ui conventional variable names if present:
+
+| Token | Fallback | Default |
+|---|---|---|
+| `--cb-background` | `--background` | `oklch(1 0 0)` |
+| `--cb-foreground` | `--foreground` | `oklch(0.145 0 0)` |
+| `--cb-border` | `--border` | `oklch(0.922 0 0)` |
+| `--cb-muted` | `--muted` | `oklch(0.97 0 0)` |
+| `--cb-muted-foreground` | `--muted-foreground` | `oklch(0.556 0 0)` |
+| `--cb-primary` | `--primary` | `oklch(0.488 0.243 264.376)` |
+| `--cb-primary-foreground` | `--primary-foreground` | `oklch(0.97 0.014 254.604)` |
+| `--cb-radius` | `--radius` | `0px` |
+| `--cb-header-height` | — | `36px` |
 
 The **playground** includes a live Theme Tokens editor for each package where you can pick colors, adjust radius, and copy the generated CSS.
 
@@ -156,6 +225,7 @@ The **playground** includes a live Theme Tokens editor for each package where yo
 ```
 basekit/
 ├── packages/
+│   ├── control-bar/      # @loykin/control-bar
 │   ├── datetime-range/   # @loykin/datetime-range
 │   ├── filter-input/     # @loykin/filter-input
 │   ├── side-panel/       # @loykin/side-panel
@@ -181,6 +251,7 @@ pnpm dev
 Or run a specific package:
 
 ```bash
+pnpm --filter @loykin/control-bar dev
 pnpm --filter @loykin/datetime-range dev
 pnpm --filter @loykin/filter-input dev
 pnpm --filter @loykin/side-panel dev
@@ -207,20 +278,21 @@ pnpm test
 pnpm test:consumer
 ```
 
-`test:consumer` packs all four publishable packages, installs the tarballs in
+`test:consumer` packs all five publishable packages, installs the tarballs in
 a temporary Vite application, then runs TypeScript and production builds.
 
 ## Releases
 
-This repository uses Changesets with independent package versions.
+All packages share a single version and are released together with one tag:
 
 ```bash
-pnpm changeset
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
-Commit the generated changeset with the package change. Merges to `master`
-update the release pull request. Merging that pull request publishes the
-changed npm packages, updates package-specific changelogs, and creates tags.
+- Pre-release: `v1.0.0-dev.0`, `v1.0.0-alpha.1`, etc. → publishes to npm with that dist-tag
+- GitHub Actions (`release.yml`) handles build → publish → GitHub Release automatically
+- New packages are picked up automatically — no changes needed in the workflow
 
 ## License
 

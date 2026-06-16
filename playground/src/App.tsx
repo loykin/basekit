@@ -19,12 +19,13 @@ import { DatetimeRangeComposableTab } from './tabs/DatetimeRangeComposableTab'
 import { FilterInputTab, FilterInputPreview, TOKEN_GROUPS as FI_TOKENS } from './tabs/FilterInputTab'
 import { SidePanelTab, SidePanelPreview, TOKEN_GROUPS as SP_TOKENS } from './tabs/SidePanelTab'
 import { UnitTab } from './tabs/UnitTab'
+import { ControlBarTab } from './tabs/ControlBarTab'
 import { TokensPanel } from './components/TokensPanel'
 import { THEMES, type Theme } from './themes'
 
 // ── Nav config ────────────────────────────────────────────────────────────────
 
-type PackageId = 'datetime-range' | 'filter-input' | 'unit' | 'side-panel'
+type PackageId = 'datetime-range' | 'filter-input' | 'unit' | 'side-panel' | 'control-bar'
 type Section   = 'usage' | 'tokens' | 'composable'
 
 const NAV_GROUPS = [
@@ -32,6 +33,7 @@ const NAV_GROUPS = [
   { id: 'filter-input'   as PackageId, label: 'Filter Input',   pkg: '@loykin/filter-input',   hasTokens: true, hasComposable: false },
   { id: 'unit'           as PackageId, label: 'Unit',           pkg: '@loykin/unit',           hasTokens: false, hasComposable: false },
   { id: 'side-panel'     as PackageId, label: 'Side Panel',     pkg: '@loykin/side-panel',     hasTokens: true, hasComposable: false },
+  { id: 'control-bar'   as PackageId, label: 'Control Bar',    pkg: '@loykin/control-bar',    hasTokens: false, hasComposable: false },
 ]
 
 // ── Theme / Radius controls ───────────────────────────────────────────────────
@@ -109,12 +111,13 @@ function PageContent({ pkg, section }: { pkg: PackageId; section: Section }) {
   if (pkg === 'filter-input')   return <FilterInputTab />
   if (pkg === 'unit')           return <UnitTab />
   if (pkg === 'side-panel')     return <SidePanelTab />
+  if (pkg === 'control-bar')   return <ControlBarTab />
   return null
 }
 
 // ── Shell (sidebar + layout) ──────────────────────────────────────────────────
 
-const VALID_PKGS: PackageId[] = ['datetime-range', 'filter-input', 'unit', 'side-panel']
+const VALID_PKGS: PackageId[] = ['datetime-range', 'filter-input', 'unit', 'side-panel', 'control-bar']
 
 function isPackageId(s: string | undefined): s is PackageId {
   return VALID_PKGS.includes(s as PackageId)

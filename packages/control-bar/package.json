@@ -1,0 +1,53 @@
+{
+  "name": "@loykin/control-bar",
+  "version": "0.0.1",
+  "description": "Persistent bottom control bar with typed tabs, resize, and Zustand state management.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles": {
+      "types": "./dist/styles.d.ts",
+      "default": "./dist/styles.css"
+    }
+  },
+  "files": ["dist"],
+  "sideEffects": ["./dist/styles.css"],
+  "publishConfig": { "access": "public" },
+  "scripts": {
+    "build": "tsc --noEmit && tsup && node scripts/build-css.mjs && echo 'declare const styles: string; export default styles;' > dist/styles.d.ts",
+    "build:css": "node scripts/build-css.mjs",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "re-resizable": "^6.11.2",
+    "zustand": "^5.0.9"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.9.3"
+  },
+  "keywords": ["react", "control-bar", "tabs", "zustand", "resizable"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loykin/basekit.git",
+    "directory": "packages/control-bar"
+  },
+  "homepage": "https://loykin.github.io/basekit/playground/",
+  "bugs": { "url": "https://github.com/loykin/basekit/issues" },
+  "license": "MIT"
+}

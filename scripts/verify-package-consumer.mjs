@@ -5,7 +5,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const packages = ['datetime-range', 'filter-input', 'side-panel', 'unit']
+const packages = ['datetime-range', 'filter-input', 'side-panel', 'unit', 'control-bar']
 const workDir = mkdtempSync(join(tmpdir(), 'basekit-consumer-'))
 const appDir = join(workDir, 'app')
 
@@ -91,20 +91,27 @@ import { FilterInput } from '@loykin/filter-input'
 import '@loykin/filter-input/styles'
 import { SidePanelProvider } from '@loykin/side-panel'
 import '@loykin/side-panel/styles'
+import { ControlBarProvider, ControlBarBody, ControlBar } from '@loykin/control-bar'
+import '@loykin/control-bar/styles'
 import { formatUnit } from '@loykin/unit'
 import { createRoot } from 'react-dom/client'
 
 function App() {
   return (
-    <SidePanelProvider>
-      <div>{formatUnit(1536, { unit: 'bytes' })}</div>
-      <FilterInput
-        config={{ key: 'query', type: 'text', label: 'Query' }}
-        value=""
-        onChange={() => undefined}
-      />
-      <span data-export={DatetimeRange.name} />
-    </SidePanelProvider>
+    <ControlBarProvider>
+      <SidePanelProvider>
+        <ControlBarBody>
+          <div>{formatUnit(1536, { unit: 'bytes' })}</div>
+          <FilterInput
+            config={{ key: 'query', type: 'text', label: 'Query' }}
+            value=""
+            onChange={() => undefined}
+          />
+          <span data-export={DatetimeRange.name} />
+        </ControlBarBody>
+      </SidePanelProvider>
+      <ControlBar />
+    </ControlBarProvider>
   )
 }
 
