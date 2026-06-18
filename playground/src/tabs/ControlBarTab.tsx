@@ -7,6 +7,7 @@ import {
   registerTabType,
 } from '@loykin/control-bar'
 import '@loykin/control-bar/styles'
+import type { TokenGroupDef } from '../components/TokensPanel'
 
 // ── Register tab types once ───────────────────────────────────────────────────
 
@@ -116,6 +117,82 @@ function DemoControls() {
       <p style={{ fontSize: 11, color: 'var(--basekit-muted-foreground)' }}>
         The bar at the bottom is fixed-position. Drag the top edge to resize. Click a tab to toggle collapse.
       </p>
+    </div>
+  )
+}
+
+// ── Token groups ──────────────────────────────────────────────────────────────
+
+export const TOKEN_GROUPS: TokenGroupDef[] = [
+  {
+    title: 'Base',
+    description: 'Shared with other packages',
+    tokens: [
+      { key: '--basekit-background',        type: 'color' },
+      { key: '--basekit-foreground',        type: 'color' },
+      { key: '--basekit-muted',             type: 'color' },
+      { key: '--basekit-muted-foreground',  type: 'color', description: 'De-emphasized text' },
+      { key: '--basekit-border',            type: 'color' },
+      { key: '--basekit-primary',           type: 'color', description: 'Active tab indicator' },
+      { key: '--basekit-primary-foreground',type: 'color' },
+      { key: '--basekit-radius',            type: 'dimension', rangeMin: 0, rangeMax: 16 },
+    ],
+  },
+  {
+    title: 'Control Bar overrides',
+    description: '--cb-* tokens override independently of base theme',
+    tokens: [
+      { key: '--cb-background',        type: 'color', description: '↳ --basekit-background' },
+      { key: '--cb-foreground',        type: 'color', description: '↳ --basekit-foreground' },
+      { key: '--cb-muted',             type: 'color', description: '↳ --basekit-muted' },
+      { key: '--cb-muted-foreground',  type: 'color', description: '↳ --basekit-muted-foreground' },
+      { key: '--cb-border',            type: 'color', description: '↳ --basekit-border' },
+      { key: '--cb-primary',           type: 'color', description: '↳ --basekit-primary' },
+      { key: '--cb-primary-foreground',type: 'color', description: '↳ --basekit-primary-foreground' },
+      { key: '--cb-radius',            type: 'dimension', rangeMin: 0, rangeMax: 16, description: '↳ --basekit-radius' },
+    ],
+  },
+]
+
+// ── Token preview ─────────────────────────────────────────────────────────────
+
+const PREVIEW_TABS = ['Terminal', 'Log', 'Output']
+
+export function ControlBarPreview() {
+  return (
+    <div className="relative h-24 overflow-hidden rounded border border-border">
+      <div
+        className="absolute bottom-0 left-0 right-0"
+        style={{ background: 'var(--cb-background)', borderTop: '1px solid var(--cb-border)' }}
+      >
+        <div
+          className="flex items-center overflow-hidden"
+          style={{ height: 'var(--cb-header-height, 36px)', background: 'var(--cb-muted)', borderBottom: '1px solid var(--cb-border)' }}
+        >
+          {PREVIEW_TABS.map((label, i) => (
+            <div
+              key={label}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                height: 'var(--cb-header-height, 36px)',
+                padding: '0 12px',
+                borderRight: '1px solid var(--cb-border)',
+                background: i === 0 ? 'var(--cb-background)' : 'transparent',
+                color: i === 0 ? 'var(--cb-foreground)' : 'var(--cb-muted-foreground)',
+                fontSize: 12,
+                borderTop: i === 0 ? '2px solid var(--cb-primary)' : undefined,
+                flexShrink: 0,
+              }}
+            >
+              {label}
+            </div>
+          ))}
+        </div>
+        <div style={{ padding: '6px 14px', fontFamily: 'monospace', fontSize: 11, color: 'var(--cb-foreground)' }}>
+          <span style={{ color: 'var(--cb-muted-foreground)' }}>$ </span>terminal — my-pod_
+        </div>
+      </div>
     </div>
   )
 }

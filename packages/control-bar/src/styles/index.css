@@ -7,25 +7,34 @@
  */
 
 :root {
-  --cb-background:        var(--background,        oklch(1 0 0));
-  --cb-foreground:        var(--foreground,        oklch(0.145 0 0));
-  --cb-border:            var(--border,            oklch(0.922 0 0));
-  --cb-muted:             var(--muted,             oklch(0.97 0 0));
-  --cb-muted-foreground:  var(--muted-foreground,  oklch(0.556 0 0));
-  --cb-primary:           var(--primary,           oklch(0.488 0.243 264.376));
-  --cb-primary-foreground:var(--primary-foreground,oklch(0.97 0.014 254.604));
-  --cb-radius:            var(--radius,            0px);
+  --basekit-background:        var(--background,        oklch(1 0 0));
+  --basekit-foreground:        var(--foreground,        oklch(0.145 0 0));
+  --basekit-border:            var(--border,            oklch(0.922 0 0));
+  --basekit-muted:             var(--muted,             oklch(0.97 0 0));
+  --basekit-muted-foreground:  var(--muted-foreground,  oklch(0.556 0 0));
+  --basekit-primary:           var(--primary,           oklch(0.488 0.243 264.376));
+  --basekit-primary-foreground:var(--primary-foreground,oklch(0.97 0.014 254.604));
+  --basekit-radius:            var(--radius,            0px);
+
+  --cb-background:        var(--basekit-background);
+  --cb-foreground:        var(--basekit-foreground);
+  --cb-border:            var(--basekit-border);
+  --cb-muted:             var(--basekit-muted);
+  --cb-muted-foreground:  var(--basekit-muted-foreground);
+  --cb-primary:           var(--basekit-primary);
+  --cb-primary-foreground:var(--basekit-primary-foreground);
+  --cb-radius:            var(--basekit-radius);
   --cb-header-height:     36px;
 }
 
 .dark {
-  --cb-background:        var(--background,        oklch(0.145 0 0));
-  --cb-foreground:        var(--foreground,        oklch(0.985 0 0));
-  --cb-border:            var(--border,            oklch(1 0 0 / 10%));
-  --cb-muted:             var(--muted,             oklch(0.269 0 0));
-  --cb-muted-foreground:  var(--muted-foreground,  oklch(0.708 0 0));
-  --cb-primary:           var(--primary,           oklch(0.424 0.199 265.638));
-  --cb-primary-foreground:var(--primary-foreground,oklch(0.97 0.014 254.604));
+  --basekit-background:        var(--background,        oklch(0.145 0 0));
+  --basekit-foreground:        var(--foreground,        oklch(0.985 0 0));
+  --basekit-border:            var(--border,            oklch(1 0 0 / 10%));
+  --basekit-muted:             var(--muted,             oklch(0.269 0 0));
+  --basekit-muted-foreground:  var(--muted-foreground,  oklch(0.708 0 0));
+  --basekit-primary:           var(--primary,           oklch(0.424 0.199 265.638));
+  --basekit-primary-foreground:var(--primary-foreground,oklch(0.97 0.014 254.604));
 }
 
 /* ── Root ────────────────────────────────────────────────────────────────────── */

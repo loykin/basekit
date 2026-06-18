@@ -102,6 +102,7 @@ Persistent resizable bottom bar for React. Renders tab-based panels at the botto
 - Tab type registry — `registerTabType(type, { label, render })` wires any React content to a tab type
 - Customizable actions — `renderActions` prop replaces default collapse/fullscreen buttons with any UI
 - `ControlBarBody` — wraps page content and auto-applies `padding-bottom: var(--cb-height)` so the bar never overlaps content
+- **Headless** — use `useControlBar()` directly to build any custom UI (top tabs, sidebar list, VS Code-style, etc.) while the hook manages all tab/collapse/fullscreen state
 
 ```tsx
 // 1. Register tab types once (e.g. in your app entry)
@@ -118,19 +119,24 @@ const { open } = useControlBar()
 open({ type: 'log', data: { level: 'error' } })
 ```
 
-Custom actions:
+Or build a fully custom UI using just the hook:
 ```tsx
-<ControlBar
-  renderActions={({ isCollapsed, isFullscreen, collapse, expand, fullscreen, exitFullscreen }) => (
-    <>
-      <button onClick={isFullscreen ? exitFullscreen : fullscreen}>⤢</button>
-      <button onClick={isCollapsed ? expand : collapse}>▼</button>
-    </>
-  )}
-/>
+function MyTabBar() {
+  const { tabs, activeTabId, activate, close } = useControlBar()
+  return (
+    <div className="my-tab-bar">
+      {tabs.map(tab => (
+        <button key={tab.id} onClick={() => activate(tab.id)}
+          className={tab.id === activeTabId ? 'active' : ''}>
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  )
+}
 ```
 
-**CSS import:**
+**CSS import** (only needed when using the default `ControlBar` component):
 ```ts
 import '@loykin/control-bar/styles'
 ```
@@ -164,33 +170,29 @@ fmt(1_024_000_000)  // "1024.00 MB"
 
 ## Theming
 
-### `--basekit-*` (datetime-range, filter-input, side-panel)
-
-These three packages share a unified CSS custom property namespace. Each token falls back to the shadcn/base-ui conventional name if present:
+All four styled packages (`datetime-range`, `filter-input`, `side-panel`, `control-bar`) share the same `--basekit-*` token namespace. Each token falls back to the shadcn/base-ui conventional name so existing themes are picked up automatically:
 
 ```css
 :root {
-  --basekit-background:           oklch(1 0 0);
-  --basekit-foreground:           oklch(0.145 0 0);
-  --basekit-primary:              oklch(0.488 0.243 264.376);
-  --basekit-primary-foreground:   oklch(0.97 0.014 254.604);
-  --basekit-secondary:            oklch(0.967 0.001 286.375);
-  --basekit-secondary-foreground: oklch(0.21 0.006 285.885);
-  --basekit-muted:                oklch(0.97 0 0);
-  --basekit-muted-foreground:     oklch(0.556 0 0);
-  --basekit-border:               oklch(0.922 0 0);
-  --basekit-input:                oklch(0.922 0 0);
-  --basekit-ring:                 oklch(0.708 0 0);
-  --basekit-popover:              oklch(1 0 0);
-  --basekit-popover-foreground:   oklch(0.145 0 0);
-  --basekit-accent:               oklch(0.97 0 0);
-  --basekit-accent-foreground:    oklch(0.205 0 0);
-  --basekit-destructive:          oklch(0.577 0.245 27.325);
-  --basekit-radius:               0px;
+  --basekit-background:           var(--background,        oklch(1 0 0));
+  --basekit-foreground:           var(--foreground,        oklch(0.145 0 0));
+  --basekit-primary:              var(--primary,           oklch(0.488 0.243 264.376));
+  --basekit-primary-foreground:   var(--primary-foreground,oklch(0.97 0.014 254.604));
+  --basekit-muted:                var(--muted,             oklch(0.97 0 0));
+  --basekit-muted-foreground:     var(--muted-foreground,  oklch(0.556 0 0));
+  --basekit-border:               var(--border,            oklch(0.922 0 0));
+  --basekit-input:                var(--input,             oklch(0.922 0 0));
+  --basekit-ring:                 var(--ring,              oklch(0.708 0 0));
+  --basekit-popover:              var(--popover,           oklch(1 0 0));
+  --basekit-popover-foreground:   var(--popover-foreground,oklch(0.145 0 0));
+  --basekit-destructive:          var(--destructive,       oklch(0.577 0.245 27.325));
+  --basekit-radius:               var(--radius,            0px);
 }
 ```
 
-`filter-input` also exposes control-specific overrides that fall back to the base tokens:
+### Package-specific overrides
+
+`filter-input` exposes control-specific tokens that fall back to the base tokens:
 
 | Token | Default |
 |---|---|
@@ -200,23 +202,21 @@ These three packages share a unified CSS custom property namespace. Each token f
 | `--basekit-fi-control-placeholder` | `--basekit-muted-foreground` |
 | `--basekit-fi-separator` | `--basekit-border` |
 
-### `--cb-*` (control-bar)
+`control-bar` exposes `--cb-*` tokens that fall back to `--basekit-*`, allowing independent override per component:
 
-`control-bar` uses its own namespace and falls back to shadcn/base-ui conventional variable names if present:
+| Token | Default |
+|---|---|
+| `--cb-background` | `--basekit-background` |
+| `--cb-foreground` | `--basekit-foreground` |
+| `--cb-border` | `--basekit-border` |
+| `--cb-muted` | `--basekit-muted` |
+| `--cb-muted-foreground` | `--basekit-muted-foreground` |
+| `--cb-primary` | `--basekit-primary` |
+| `--cb-primary-foreground` | `--basekit-primary-foreground` |
+| `--cb-radius` | `--basekit-radius` |
+| `--cb-header-height` | `36px` |
 
-| Token | Fallback | Default |
-|---|---|---|
-| `--cb-background` | `--background` | `oklch(1 0 0)` |
-| `--cb-foreground` | `--foreground` | `oklch(0.145 0 0)` |
-| `--cb-border` | `--border` | `oklch(0.922 0 0)` |
-| `--cb-muted` | `--muted` | `oklch(0.97 0 0)` |
-| `--cb-muted-foreground` | `--muted-foreground` | `oklch(0.556 0 0)` |
-| `--cb-primary` | `--primary` | `oklch(0.488 0.243 264.376)` |
-| `--cb-primary-foreground` | `--primary-foreground` | `oklch(0.97 0.014 254.604)` |
-| `--cb-radius` | `--radius` | `0px` |
-| `--cb-header-height` | — | `36px` |
-
-The **playground** includes a live Theme Tokens editor for each package where you can pick colors, adjust radius, and copy the generated CSS.
+The **playground** includes a live Theme Tokens editor for each package — pick colors, adjust radius, and copy the generated CSS.
 
 ---
 

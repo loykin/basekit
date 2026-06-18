@@ -19,7 +19,8 @@ import { DatetimeRangeComposableTab } from './tabs/DatetimeRangeComposableTab'
 import { FilterInputTab, FilterInputPreview, TOKEN_GROUPS as FI_TOKENS } from './tabs/FilterInputTab'
 import { SidePanelTab, SidePanelPreview, TOKEN_GROUPS as SP_TOKENS } from './tabs/SidePanelTab'
 import { UnitTab } from './tabs/UnitTab'
-import { ControlBarTab } from './tabs/ControlBarTab'
+import { ControlBarTab, ControlBarPreview, TOKEN_GROUPS as CB_TOKENS } from './tabs/ControlBarTab'
+import { ControlBarCustomTab } from './tabs/ControlBarCustomTab'
 import { TokensPanel } from './components/TokensPanel'
 import { THEMES, type Theme } from './themes'
 
@@ -29,11 +30,11 @@ type PackageId = 'datetime-range' | 'filter-input' | 'unit' | 'side-panel' | 'co
 type Section   = 'usage' | 'tokens' | 'composable'
 
 const NAV_GROUPS = [
-  { id: 'datetime-range' as PackageId, label: 'Datetime Range', pkg: '@loykin/datetime-range', hasTokens: true, hasComposable: true },
-  { id: 'filter-input'   as PackageId, label: 'Filter Input',   pkg: '@loykin/filter-input',   hasTokens: true, hasComposable: false },
-  { id: 'unit'           as PackageId, label: 'Unit',           pkg: '@loykin/unit',           hasTokens: false, hasComposable: false },
-  { id: 'side-panel'     as PackageId, label: 'Side Panel',     pkg: '@loykin/side-panel',     hasTokens: true, hasComposable: false },
-  { id: 'control-bar'   as PackageId, label: 'Control Bar',    pkg: '@loykin/control-bar',    hasTokens: false, hasComposable: false },
+  { id: 'datetime-range' as PackageId, label: 'Datetime Range', pkg: '@loykin/datetime-range', hasTokens: true,  hasComposable: true,  composableLabel: 'Composable' },
+  { id: 'filter-input'   as PackageId, label: 'Filter Input',   pkg: '@loykin/filter-input',   hasTokens: true,  hasComposable: false, composableLabel: 'Composable' },
+  { id: 'unit'           as PackageId, label: 'Unit',           pkg: '@loykin/unit',           hasTokens: false, hasComposable: false, composableLabel: 'Composable' },
+  { id: 'side-panel'     as PackageId, label: 'Side Panel',     pkg: '@loykin/side-panel',     hasTokens: true,  hasComposable: false, composableLabel: 'Composable' },
+  { id: 'control-bar'    as PackageId, label: 'Control Bar',    pkg: '@loykin/control-bar',    hasTokens: true,  hasComposable: true,  composableLabel: 'Custom'      },
 ]
 
 // ── Theme / Radius controls ───────────────────────────────────────────────────
@@ -77,14 +78,16 @@ function PageContent({ pkg, section }: { pkg: PackageId; section: Section }) {
     const groups =
       pkg === 'datetime-range' ? DR_TOKENS :
       pkg === 'filter-input'   ? FI_TOKENS :
-      pkg === 'side-panel'     ? SP_TOKENS : null
+      pkg === 'side-panel'     ? SP_TOKENS :
+      pkg === 'control-bar'    ? CB_TOKENS : null
 
     if (!groups) return null
 
     const preview =
       pkg === 'datetime-range' ? <DatetimeRangePreview /> :
       pkg === 'filter-input'   ? <FilterInputPreview /> :
-      pkg === 'side-panel'     ? <SidePanelPreview /> : null
+      pkg === 'side-panel'     ? <SidePanelPreview /> :
+      pkg === 'control-bar'    ? <ControlBarPreview /> : null
 
     return (
       <div className="flex gap-6 items-start">
@@ -106,12 +109,13 @@ function PageContent({ pkg, section }: { pkg: PackageId; section: Section }) {
   }
 
   if (section === 'composable' && pkg === 'datetime-range') return <DatetimeRangeComposableTab />
+  if (section === 'composable' && pkg === 'control-bar')   return <ControlBarCustomTab />
 
   if (pkg === 'datetime-range') return <DatetimeRangeTab />
   if (pkg === 'filter-input')   return <FilterInputTab />
   if (pkg === 'unit')           return <UnitTab />
   if (pkg === 'side-panel')     return <SidePanelTab />
-  if (pkg === 'control-bar')   return <ControlBarTab />
+  if (pkg === 'control-bar')    return <ControlBarTab />
   return null
 }
 
@@ -147,9 +151,10 @@ function PlaygroundApp() {
   }, [theme, radius])
 
   const currentGroup = NAV_GROUPS.find(g => g.id === pkg)!
-  const pageTitle = section === 'tokens'
-    ? `${currentGroup.label} — Theme Tokens`
-    : currentGroup.label
+  const pageTitle =
+    section === 'tokens'     ? `${currentGroup.label} — Theme Tokens` :
+    section === 'composable' ? `${currentGroup.label} — ${currentGroup.composableLabel}` :
+    currentGroup.label
 
   return (
     <SidebarProvider>
@@ -191,7 +196,7 @@ function PlaygroundApp() {
                       isActive={pkg === group.id && section === 'composable'}
                       onClick={() => navigate(`/${group.id}/composable`)}
                     >
-                      Composable
+                      {group.composableLabel}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 )}
