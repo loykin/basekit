@@ -46,7 +46,9 @@ git push origin v1.0.0
 **When adding or removing a package:**
 1. Create or delete the directory under `packages/`
 2. Update `const packages` array in `scripts/verify-package-consumer.mjs`
-3. No changes needed in the release workflow — it picks up packages automatically
+3. Add or remove the package's `README.md` — install command, minimal usage example, link back to the GitHub repo (see existing packages for the pattern)
+4. Update the root `README.md` — add or remove the package section with an npm badge and install command
+5. No changes needed in the release workflow — it picks up packages automatically
 
 ## Testing Conventions
 

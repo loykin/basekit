@@ -4,7 +4,11 @@ Personal React component and utility library monorepo, built with pnpm workspace
 
 ## Packages
 
-### [`@loykin/datetime-range`](./packages/datetime-range)
+### [`@loykin/datetime-range`](./packages/datetime-range) [![npm](https://img.shields.io/npm/v/@loykin/datetime-range)](https://www.npmjs.com/package/@loykin/datetime-range)
+
+```bash
+npm install @loykin/datetime-range
+```
 
 Datetime range picker that supports both absolute dates and relative time expressions.
 
@@ -32,7 +36,11 @@ import '@loykin/datetime-range/styles'
 
 ---
 
-### [`@loykin/filter-input`](./packages/filter-input)
+### [`@loykin/filter-input`](./packages/filter-input) [![npm](https://img.shields.io/npm/v/@loykin/filter-input)](https://www.npmjs.com/package/@loykin/filter-input)
+
+```bash
+npm install @loykin/filter-input
+```
 
 Composable filter control for building search / filter UIs. Each field is a typed input that renders differently based on `config.type`.
 
@@ -66,7 +74,11 @@ import '@loykin/filter-input/styles'
 
 ---
 
-### [`@loykin/side-panel`](./packages/side-panel)
+### [`@loykin/side-panel`](./packages/side-panel) [![npm](https://img.shields.io/npm/v/@loykin/side-panel)](https://www.npmjs.com/package/@loykin/side-panel)
+
+```bash
+npm install @loykin/side-panel
+```
 
 Non-blocking resizable side panel for React. The main content stays fully interactive while the panel is open.
 
@@ -91,7 +103,11 @@ import '@loykin/side-panel/styles'
 
 ---
 
-### [`@loykin/control-bar`](./packages/control-bar)
+### [`@loykin/control-bar`](./packages/control-bar) [![npm](https://img.shields.io/npm/v/@loykin/control-bar)](https://www.npmjs.com/package/@loykin/control-bar)
+
+```bash
+npm install @loykin/control-bar
+```
 
 Persistent resizable bottom bar for React. Renders tab-based panels at the bottom of the viewport — like a VS Code terminal or browser DevTools.
 
@@ -143,7 +159,11 @@ import '@loykin/control-bar/styles'
 
 ---
 
-### [`@loykin/unit`](./packages/unit)
+### [`@loykin/unit`](./packages/unit) [![npm](https://img.shields.io/npm/v/@loykin/unit)](https://www.npmjs.com/package/@loykin/unit)
+
+```bash
+npm install @loykin/unit
+```
 
 Unit formatter covering every common metric category. Designed for dashboards and monitoring UIs.
 
