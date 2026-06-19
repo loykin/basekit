@@ -41,7 +41,7 @@
     "url": "https://github.com/loykin/basekit.git",
     "directory": "packages/unit"
   },
-  "homepage": "https://loykin.github.io/basekit/playground/",
+  "homepage": "https://loykin.github.io/basekit/",
   "bugs": {
     "url": "https://github.com/loykin/basekit/issues"
   },
