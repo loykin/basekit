@@ -5,9 +5,37 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const packages = ['datetime-range', 'filter-input', 'side-panel', 'unit', 'control-bar']
+const packages = ['datetime-range', 'filter-input', 'side-panel', 'unit', 'control-bar', 'cron-input']
 const workDir = mkdtempSync(join(tmpdir(), 'basekit-consumer-'))
 const appDir = join(workDir, 'app')
+
+function rollupNativeDependency() {
+  const platform = process.platform
+  const arch = process.arch
+
+  if (platform === 'darwin' && arch === 'x64') return '@rollup/rollup-darwin-x64'
+  if (platform === 'darwin' && arch === 'arm64') return '@rollup/rollup-darwin-arm64'
+  if (platform === 'linux' && arch === 'x64') return '@rollup/rollup-linux-x64-gnu'
+  if (platform === 'linux' && arch === 'arm64') return '@rollup/rollup-linux-arm64-gnu'
+  if (platform === 'win32' && arch === 'x64') return '@rollup/rollup-win32-x64-msvc'
+  if (platform === 'win32' && arch === 'arm64') return '@rollup/rollup-win32-arm64-msvc'
+
+  return undefined
+}
+
+function esbuildNativeDependency() {
+  const platform = process.platform
+  const arch = process.arch
+
+  if (platform === 'darwin' && arch === 'x64') return '@esbuild/darwin-x64'
+  if (platform === 'darwin' && arch === 'arm64') return '@esbuild/darwin-arm64'
+  if (platform === 'linux' && arch === 'x64') return '@esbuild/linux-x64'
+  if (platform === 'linux' && arch === 'arm64') return '@esbuild/linux-arm64'
+  if (platform === 'win32' && arch === 'x64') return '@esbuild/win32-x64'
+  if (platform === 'win32' && arch === 'arm64') return '@esbuild/win32-arm64'
+
+  return undefined
+}
 
 function run(command, args, cwd = repoRoot, capture = false) {
   const result = spawnSync(command, args, {
@@ -36,6 +64,8 @@ try {
     const info = JSON.parse(output)[0]
     return [`@loykin/${name}`, `file:${join(workDir, info.filename)}`]
   }))
+  const nativeRollup = rollupNativeDependency()
+  const nativeEsbuild = esbuildNativeDependency()
 
   writeFileSync(
     join(appDir, 'package.json'),
@@ -51,11 +81,13 @@ try {
         ...tarballs,
         '@types/react': '^19.2.0',
         '@types/react-dom': '^19.2.0',
-        '@vitejs/plugin-react': '^6.0.0',
+        '@vitejs/plugin-react': '5.1.2',
         react: '^19.0.0',
         'react-dom': '^19.0.0',
+        ...(nativeRollup ? { [nativeRollup]: '4.62.2' } : {}),
+        ...(nativeEsbuild ? { [nativeEsbuild]: '0.27.7' } : {}),
         typescript: '^5.9.0',
-        vite: '^8.0.0',
+        vite: '7.3.5',
       },
     }, null, 2)}\n`,
   )
@@ -93,6 +125,8 @@ import { SidePanelProvider } from '@loykin/side-panel'
 import '@loykin/side-panel/styles'
 import { ControlBarProvider, ControlBarBody, ControlBar } from '@loykin/control-bar'
 import '@loykin/control-bar/styles'
+import { CronInput } from '@loykin/cron-input'
+import '@loykin/cron-input/styles'
 import { formatUnit } from '@loykin/unit'
 import { createRoot } from 'react-dom/client'
 
@@ -107,6 +141,7 @@ function App() {
             value=""
             onChange={() => undefined}
           />
+          <CronInput onChange={() => undefined} />
           <span data-export={DatetimeRange.name} />
         </ControlBarBody>
       </SidePanelProvider>

@@ -1,3 +1,4 @@
+import { resolve } from 'path'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
@@ -31,6 +32,22 @@ export default defineConfig({
             'packages/side-panel/**/*.test.tsx',
             'packages/unit/**/*.test.ts',
             'packages/unit/**/*.test.tsx',
+          ],
+        },
+      },
+      {
+        plugins: [react()],
+        resolve: {
+          alias: { '@': resolve(__dirname, 'packages/cron-input/src') },
+        },
+        test: {
+          name: 'cron-input',
+          environment: 'jsdom',
+          globals: true,
+          setupFiles: ['./vitest.setup.ts'],
+          include: [
+            'packages/cron-input/**/*.test.ts',
+            'packages/cron-input/**/*.test.tsx',
           ],
         },
       },

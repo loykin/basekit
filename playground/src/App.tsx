@@ -21,12 +21,13 @@ import { SidePanelTab, SidePanelPreview, TOKEN_GROUPS as SP_TOKENS } from './tab
 import { UnitTab } from './tabs/UnitTab'
 import { ControlBarTab, ControlBarPreview, TOKEN_GROUPS as CB_TOKENS } from './tabs/ControlBarTab'
 import { ControlBarCustomTab } from './tabs/ControlBarCustomTab'
+import { CronInputTab } from './tabs/CronInputTab'
 import { TokensPanel } from './components/TokensPanel'
 import { THEMES, type Theme } from './themes'
 
 // ── Nav config ────────────────────────────────────────────────────────────────
 
-type PackageId = 'datetime-range' | 'filter-input' | 'unit' | 'side-panel' | 'control-bar'
+type PackageId = 'datetime-range' | 'filter-input' | 'unit' | 'side-panel' | 'control-bar' | 'cron-input'
 type Section   = 'usage' | 'tokens' | 'composable'
 
 const NAV_GROUPS = [
@@ -35,6 +36,7 @@ const NAV_GROUPS = [
   { id: 'unit'           as PackageId, label: 'Unit',           pkg: '@loykin/unit',           hasTokens: false, hasComposable: false, composableLabel: 'Composable' },
   { id: 'side-panel'     as PackageId, label: 'Side Panel',     pkg: '@loykin/side-panel',     hasTokens: true,  hasComposable: false, composableLabel: 'Composable' },
   { id: 'control-bar'    as PackageId, label: 'Control Bar',    pkg: '@loykin/control-bar',    hasTokens: true,  hasComposable: true,  composableLabel: 'Custom'      },
+  { id: 'cron-input'     as PackageId, label: 'Cron Input',     pkg: '@loykin/cron-input',     hasTokens: false, hasComposable: false, composableLabel: 'Composable'  },
 ]
 
 // ── Theme / Radius controls ───────────────────────────────────────────────────
@@ -116,12 +118,13 @@ function PageContent({ pkg, section }: { pkg: PackageId; section: Section }) {
   if (pkg === 'unit')           return <UnitTab />
   if (pkg === 'side-panel')     return <SidePanelTab />
   if (pkg === 'control-bar')    return <ControlBarTab />
+  if (pkg === 'cron-input')     return <CronInputTab />
   return null
 }
 
 // ── Shell (sidebar + layout) ──────────────────────────────────────────────────
 
-const VALID_PKGS: PackageId[] = ['datetime-range', 'filter-input', 'unit', 'side-panel', 'control-bar']
+const VALID_PKGS: PackageId[] = ['datetime-range', 'filter-input', 'unit', 'side-panel', 'control-bar', 'cron-input']
 
 function isPackageId(s: string | undefined): s is PackageId {
   return VALID_PKGS.includes(s as PackageId)

@@ -1,0 +1,476 @@
+/*
+ * @loykin/cron-input
+ *
+ * Plain CSS, no Tailwind dependency.
+ * Override with --basekit-* custom properties or .ci-* class names.
+ */
+
+:root {
+  --basekit-background:           var(--background,           oklch(1 0 0));
+  --basekit-foreground:           var(--foreground,           oklch(0.145 0 0));
+  --basekit-popover:              var(--popover,              oklch(1 0 0));
+  --basekit-popover-foreground:   var(--popover-foreground,   oklch(0.145 0 0));
+  --basekit-muted:                var(--muted,                oklch(0.97 0 0));
+  --basekit-muted-foreground:     var(--muted-foreground,     oklch(0.556 0 0));
+  --basekit-border:               var(--border,               oklch(0.922 0 0));
+  --basekit-input:                var(--input,                oklch(0.922 0 0));
+  --basekit-ring:                 var(--ring,                 oklch(0.708 0 0));
+  --basekit-primary:              var(--primary,              oklch(0.488 0.243 264.376));
+  --basekit-primary-foreground:   var(--primary-foreground,   oklch(0.97 0.014 254.604));
+  --basekit-secondary:            var(--secondary,            oklch(0.967 0.001 286.375));
+  --basekit-secondary-foreground: var(--secondary-foreground, oklch(0.21 0.006 285.885));
+  --basekit-accent:               var(--accent,               oklch(0.97 0 0));
+  --basekit-accent-foreground:    var(--accent-foreground,    oklch(0.205 0 0));
+  --basekit-destructive:          var(--destructive,          oklch(0.577 0.245 27.325));
+  --basekit-radius:               var(--radius,               0px);
+}
+
+.dark {
+  --basekit-background:           var(--background,           oklch(0.145 0 0));
+  --basekit-foreground:           var(--foreground,           oklch(0.985 0 0));
+  --basekit-popover:              var(--popover,              oklch(0.205 0 0));
+  --basekit-popover-foreground:   var(--popover-foreground,   oklch(0.985 0 0));
+  --basekit-muted:                var(--muted,                oklch(0.269 0 0));
+  --basekit-muted-foreground:     var(--muted-foreground,     oklch(0.708 0 0));
+  --basekit-border:               var(--border,               oklch(1 0 0 / 10%));
+  --basekit-input:                var(--input,                oklch(1 0 0 / 15%));
+  --basekit-ring:                 var(--ring,                 oklch(0.556 0 0));
+  --basekit-secondary:            var(--secondary,            oklch(0.274 0.006 286.033));
+  --basekit-secondary-foreground: var(--secondary-foreground, oklch(0.985 0 0));
+  --basekit-accent:               var(--accent,               oklch(0.269 0 0));
+  --basekit-accent-foreground:    var(--accent-foreground,    oklch(0.985 0 0));
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────────── */
+
+@keyframes ci-enter {
+  from {
+    opacity: var(--ci-enter-opacity, 1);
+    transform: translate(var(--ci-enter-tx, 0), var(--ci-enter-ty, 0)) scale(var(--ci-enter-scale, 1));
+  }
+}
+@keyframes ci-exit {
+  to {
+    opacity: var(--ci-exit-opacity, 1);
+    transform: translate(var(--ci-exit-tx, 0), var(--ci-exit-ty, 0)) scale(var(--ci-exit-scale, 1));
+  }
+}
+
+/* ── Button ─────────────────────────────────────────────────────────────────── */
+
+.ci-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: var(--basekit-radius);
+  background: transparent;
+  color: inherit;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  flex-shrink: 0;
+}
+.ci-btn:disabled  { pointer-events: none; opacity: 0.5; }
+.ci-btn:focus-visible {
+  border-color: var(--basekit-ring);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--basekit-ring) 50%, transparent);
+}
+.ci-btn[data-variant="default"]  { background: var(--basekit-primary); color: var(--basekit-primary-foreground); }
+.ci-btn[data-variant="outline"]  { border-color: var(--basekit-border); background: var(--basekit-background); color: var(--basekit-foreground); }
+.ci-btn[data-variant="outline"]:hover { background: var(--basekit-muted); }
+.ci-btn[data-variant="ghost"]:hover   { background: var(--basekit-muted); }
+.ci-btn[data-size="sm"]  { height: 26px; padding: 0 8px; font-size: 11px; }
+
+/* ── Positioner / Popover ───────────────────────────────────────────────────── */
+
+.ci-positioner { isolation: isolate; z-index: 50; }
+
+.ci-popover-content {
+  z-index: 50;
+  width: 300px;
+  border-radius: var(--basekit-radius);
+  background: var(--basekit-popover);
+  color: var(--basekit-popover-foreground);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1),
+              0 0 0 1px color-mix(in oklab, var(--basekit-foreground) 10%, transparent);
+  outline: none;
+  overflow: hidden;
+  transform-origin: var(--transform-origin);
+}
+.ci-popover-content[data-open] {
+  --ci-enter-opacity: 0; --ci-enter-scale: 0.97;
+  animation: ci-enter 120ms ease both;
+}
+.ci-popover-content[data-closed] {
+  --ci-exit-opacity: 0; --ci-exit-scale: 0.97;
+  animation: ci-exit 100ms ease both;
+}
+.ci-popover-content[data-open][data-side="bottom"] { --ci-enter-ty: -4px; }
+.ci-popover-content[data-open][data-side="top"]    { --ci-enter-ty:  4px; }
+
+/* ── Tabs ───────────────────────────────────────────────────────────────────── */
+
+.ci-tabs { display: flex; flex-direction: column; }
+
+.ci-tabs-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-bottom: 1px solid var(--basekit-border);
+  background: var(--basekit-muted);
+}
+
+.ci-tabs-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--basekit-muted-foreground);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  outline: none;
+  transition: color 150ms, border-color 150ms, background 150ms;
+  user-select: none;
+}
+.ci-tabs-trigger:hover   { color: var(--basekit-foreground); background: color-mix(in oklab, var(--basekit-foreground) 5%, transparent); }
+.ci-tabs-trigger[data-active] {
+  color: var(--basekit-foreground);
+  border-bottom-color: var(--basekit-primary);
+  background: var(--basekit-background);
+}
+.ci-tabs-trigger:focus-visible {
+  outline: 2px solid var(--basekit-ring);
+  outline-offset: -2px;
+}
+
+.ci-tabs-content { font-size: 12px; outline: none; }
+
+/* ── Tab body ───────────────────────────────────────────────────────────────── */
+
+.ci-tab-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 16px;
+  min-height: 88px;
+}
+
+.ci-label {
+  font-size: 12px;
+  color: var(--basekit-muted-foreground);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ci-field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ci-field-row--col  { flex-direction: column; align-items: flex-start; gap: 6px; }
+.ci-field-row--mt   { margin-top: 12px; }
+
+/* ── NumberStepper ──────────────────────────────────────────────────────────── */
+
+.ci-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--basekit-input);
+  border-radius: var(--basekit-radius);
+  background: var(--basekit-background);
+  overflow: hidden;
+  height: 28px;
+}
+
+.ci-stepper-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 100%;
+  background: none;
+  border: none;
+  color: var(--basekit-muted-foreground);
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  outline: none;
+  transition: background 100ms, color 100ms;
+  user-select: none;
+  line-height: 1;
+}
+.ci-stepper-btn:hover  { background: var(--basekit-muted); color: var(--basekit-foreground); }
+.ci-stepper-btn:active { background: var(--basekit-accent); }
+
+.ci-stepper-input {
+  width: 36px;
+  height: 100%;
+  border: none;
+  border-left: 1px solid var(--basekit-border);
+  border-right: 1px solid var(--basekit-border);
+  background: transparent;
+  color: var(--basekit-foreground);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  outline: none;
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+}
+.ci-stepper-input:focus { background: color-mix(in oklab, var(--basekit-primary) 8%, transparent); }
+
+/* ── TimePicker ─────────────────────────────────────────────────────────────── */
+
+.ci-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ci-time-sep {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--basekit-muted-foreground);
+  line-height: 1;
+  margin-bottom: 1px;
+  user-select: none;
+}
+
+/* ── Interval tab extras ────────────────────────────────────────────────────── */
+
+.ci-interval-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ci-unit-seg {
+  display: flex;
+  border: 1px solid var(--basekit-input);
+  border-radius: var(--basekit-radius);
+  overflow: hidden;
+  height: 28px;
+}
+
+.ci-unit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  height: 100%;
+  font-size: 11px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  border-left: 1px solid var(--basekit-border);
+  color: var(--basekit-muted-foreground);
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  transition: background 100ms, color 100ms;
+  white-space: nowrap;
+}
+.ci-unit-btn:first-child { border-left: none; }
+.ci-unit-btn:hover { background: var(--basekit-muted); color: var(--basekit-foreground); }
+.ci-unit-btn--active {
+  background: var(--basekit-primary);
+  color: var(--basekit-primary-foreground);
+}
+.ci-unit-btn--active:hover {
+  background: var(--basekit-primary);
+  color: var(--basekit-primary-foreground);
+}
+.ci-unit-btn:focus-visible { outline: 2px solid var(--basekit-ring); outline-offset: -2px; }
+
+/* ── DayChips ───────────────────────────────────────────────────────────────── */
+
+.ci-day-chips {
+  display: flex;
+  gap: 4px;
+}
+
+.ci-day-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 28px;
+  border-radius: var(--basekit-radius);
+  border: 1px solid var(--basekit-input);
+  background: var(--basekit-background);
+  color: var(--basekit-muted-foreground);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: background 100ms, color 100ms, border-color 100ms;
+  user-select: none;
+}
+.ci-day-chip:hover { border-color: var(--basekit-ring); color: var(--basekit-foreground); }
+.ci-day-chip--active {
+  background: var(--basekit-primary);
+  border-color: var(--basekit-primary);
+  color: var(--basekit-primary-foreground);
+}
+.ci-day-chip--active:hover {
+  background: var(--basekit-primary);
+  border-color: var(--basekit-primary);
+  color: var(--basekit-primary-foreground);
+}
+.ci-day-chip:focus-visible { outline: 2px solid var(--basekit-ring); outline-offset: 1px; }
+
+/* ── Custom tab ─────────────────────────────────────────────────────────────── */
+
+.ci-custom { gap: 10px; }
+
+.ci-custom-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ci-custom-input {
+  width: 100%;
+  height: 32px;
+  border: 1px solid var(--basekit-input);
+  border-radius: var(--basekit-radius);
+  background: transparent;
+  color: var(--basekit-foreground);
+  padding: 0 32px 0 10px;
+  font-size: 12px;
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  outline: none;
+  transition: border-color 150ms;
+}
+.ci-custom-input:focus {
+  border-color: var(--basekit-ring);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--basekit-ring) 50%, transparent);
+}
+.ci-custom-wrap--error .ci-custom-input {
+  border-color: var(--basekit-destructive);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--basekit-destructive) 20%, transparent);
+}
+.ci-custom-input::placeholder { color: var(--basekit-muted-foreground); }
+
+.ci-custom-badge {
+  position: absolute;
+  right: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+  line-height: 1;
+}
+.ci-custom-badge--ok  { color: oklch(0.6 0.15 145); }
+.ci-custom-badge--err { color: var(--basekit-destructive); }
+
+.ci-custom-desc {
+  font-size: 11px;
+  color: var(--basekit-muted-foreground);
+  margin: 0;
+}
+
+.ci-custom-fields {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.ci-custom-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--basekit-muted);
+  border-radius: var(--basekit-radius);
+  padding: 5px 4px;
+}
+
+.ci-custom-field-val {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  color: var(--basekit-foreground);
+  line-height: 1;
+}
+
+.ci-custom-field-lbl {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--basekit-muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────────── */
+
+.ci-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--basekit-border);
+  background: color-mix(in oklab, var(--basekit-muted) 40%, transparent);
+}
+
+.ci-preview {
+  font-size: 11px;
+  color: var(--basekit-muted-foreground);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.ci-footer-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ── Trigger button ─────────────────────────────────────────────────────────── */
+
+.ci-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--basekit-border);
+  border-radius: var(--basekit-radius);
+  background: var(--basekit-background);
+  color: var(--basekit-foreground);
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 150ms, background 150ms;
+  user-select: none;
+  white-space: nowrap;
+}
+.ci-trigger:hover     { background: var(--basekit-muted); }
+.ci-trigger--open     { border-color: var(--basekit-foreground); }
+.ci-trigger:disabled  { pointer-events: none; opacity: 0.5; }
+.ci-trigger:focus-visible {
+  border-color: var(--basekit-ring);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--basekit-ring) 50%, transparent);
+}
+
+.ci-trigger-icon  { color: var(--basekit-muted-foreground); flex-shrink: 0; }
+.ci-trigger-label { flex: 1; text-align: left; }

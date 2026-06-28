@@ -1,0 +1,67 @@
+{
+  "name": "@loykin/cron-input",
+  "version": "0.0.1",
+  "description": "Cron expression builder component with visual schedule editor and raw expression fallback.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles": {
+      "types": "./dist/styles.d.ts",
+      "default": "./dist/styles.css"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "./dist/styles.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc --noEmit && tsup && node scripts/build-css.mjs && echo 'declare const styles: string; export default styles;' > dist/styles.d.ts",
+    "build:css": "node scripts/build-css.mjs",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.3.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.546.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "react",
+    "cron",
+    "schedule",
+    "cron-expression",
+    "headless"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loykin/basekit.git",
+    "directory": "packages/cron-input"
+  },
+  "homepage": "https://loykin.github.io/basekit/",
+  "bugs": {
+    "url": "https://github.com/loykin/basekit/issues"
+  },
+  "license": "MIT"
+}

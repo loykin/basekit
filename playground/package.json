@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@loykin/control-bar": "workspace:*",
+    "@loykin/cron-input": "workspace:*",
     "@loykin/datetime-range": "workspace:*",
     "@loykin/filter-input": "workspace:*",
     "@loykin/side-panel": "workspace:*",

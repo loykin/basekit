@@ -36,6 +36,37 @@ import '@loykin/datetime-range/styles'
 
 ---
 
+### [`@loykin/cron-input`](./packages/cron-input) [![npm](https://img.shields.io/npm/v/@loykin/cron-input)](https://www.npmjs.com/package/@loykin/cron-input)
+
+```bash
+npm install @loykin/cron-input
+```
+
+Cron expression builder with a visual schedule editor and raw expression fallback.
+
+- **Interval** — "Every N minutes / hours / days" with stepper control
+- **Daily** — time picker for a fixed daily time
+- **Weekly** — day-of-week chip selector + time picker
+- **Monthly** — day-of-month stepper + time picker
+- **Custom** — raw cron expression input with real-time validation, human-readable description, and 5-field breakdown
+- Tab switching preserves time values across modes
+- `fromCronExpression` / `toCronExpression` / `toDisplayString` utilities
+- Headless-friendly — `useCronInput` hook exported separately
+
+```tsx
+<CronInput
+  value={{ type: 'weekly', days: [1, 3, 5], hour: 9, minute: 0 }}
+  onChange={onChange}
+/>
+```
+
+**CSS import:**
+```ts
+import '@loykin/cron-input/styles'
+```
+
+---
+
 ### [`@loykin/filter-input`](./packages/filter-input) [![npm](https://img.shields.io/npm/v/@loykin/filter-input)](https://www.npmjs.com/package/@loykin/filter-input)
 
 ```bash
@@ -190,7 +221,7 @@ fmt(1_024_000_000)  // "1024.00 MB"
 
 ## Theming
 
-All four styled packages (`datetime-range`, `filter-input`, `side-panel`, `control-bar`) share the same `--basekit-*` token namespace. Each token falls back to the shadcn/base-ui conventional name so existing themes are picked up automatically:
+All styled packages (`cron-input`, `datetime-range`, `filter-input`, `side-panel`, `control-bar`) share the same `--basekit-*` token namespace. Each token falls back to the shadcn/base-ui conventional name so existing themes are picked up automatically:
 
 ```css
 :root {
@@ -246,6 +277,7 @@ The **playground** includes a live Theme Tokens editor for each package — pick
 basekit/
 ├── packages/
 │   ├── control-bar/      # @loykin/control-bar
+│   ├── cron-input/       # @loykin/cron-input
 │   ├── datetime-range/   # @loykin/datetime-range
 │   ├── filter-input/     # @loykin/filter-input
 │   ├── side-panel/       # @loykin/side-panel
@@ -298,7 +330,7 @@ pnpm test
 pnpm test:consumer
 ```
 
-`test:consumer` packs all five publishable packages, installs the tarballs in
+`test:consumer` packs all six publishable packages, installs the tarballs in
 a temporary Vite application, then runs TypeScript and production builds.
 
 ## Releases

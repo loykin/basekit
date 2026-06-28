@@ -2,8 +2,8 @@
 
 ## Project Overview
 
-- **Monorepo**: pnpm workspace — 5 published packages + playground
-- **Packages**: `@loykin/control-bar`, `@loykin/datetime-range`, `@loykin/filter-input`, `@loykin/side-panel`, `@loykin/unit`
+- **Monorepo**: pnpm workspace — 6 published packages + playground
+- **Packages**: `@loykin/control-bar`, `@loykin/cron-input`, `@loykin/datetime-range`, `@loykin/filter-input`, `@loykin/side-panel`, `@loykin/unit`
 - **Stack**: React 18/19, TypeScript, tsup, Tailwind CSS, Vitest
 
 ## Commands
@@ -22,6 +22,7 @@ pnpm release:check    # lint + test + build + test:consumer  ← full release ga
 ```
 packages/
   control-bar/      @loykin/control-bar     — resizable bottom bar with tab panels
+  cron-input/       @loykin/cron-input      — cron expression builder with visual schedule editor
   datetime-range/   @loykin/datetime-range  — headless datetime range picker
   filter-input/     @loykin/filter-input    — filter input component
   side-panel/       @loykin/side-panel      — side panel component
