@@ -296,19 +296,19 @@ function VSCodeBar() {
 const CUSTOM_UI_EXAMPLES = [
   {
     label: 'Browser Tabs',
-    description: '탭이 상단, 콘텐츠가 아래 — active 탭이 콘텐츠 영역과 연결됨.',
+    description: 'Tabs on top with content below — the active tab connects to the content area.',
     persistKey: 'cb-demo-browser',
     Bar: BrowserTabsBar,
   },
   {
     label: 'Sidebar',
-    description: '탭이 좌측 수직 목록, 콘텐츠가 오른쪽 — 사이드 패널 / 인스펙터에 적합.',
+    description: 'A vertical tab list on the left with content on the right — ideal for side panels and inspectors.',
     persistKey: 'cb-demo-sidebar',
     Bar: SidebarBar,
   },
   {
     label: 'VS Code',
-    description: '탭이 상단, 다크 팔레트 고정, 파란 top-border on active — --cb-* 토큰 무관.',
+    description: 'Tabs on top with a fixed dark palette and a blue top border when active — independent of --cb-* tokens.',
     persistKey: 'cb-demo-vscode',
     Bar: VSCodeBar,
   },

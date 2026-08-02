@@ -306,27 +306,27 @@ export function DatetimeRangeTab() {
 
       <Demo
         title="Custom Labels (i18n)"
-        description="Override all UI text — Korean example."
+        description="Override all UI text with custom English terminology."
         code={`<DatetimeRange
   labels={{
-    start: '시작', end: '종료',
-    quickRanges: '빠른 선택',
-    apply: '적용', cancel: '취소',
-    absolute: '절대', relative: '상대',
-    now: '현재', nowDescription: '현재 시간으로 설정',
-    amount: '값',
+    start: 'From', end: 'To',
+    quickRanges: 'Presets',
+    apply: 'Confirm', cancel: 'Dismiss',
+    absolute: 'Fixed', relative: 'Offset',
+    now: 'Current time', nowDescription: 'Set to current time',
+    amount: 'Quantity',
   }}
 />`}
       >
         <DatetimeRange
           startTime={i18n.start} endTime={i18n.end} onChange={i18n.onChange}
           labels={{
-            start: '시작', end: '종료',
-            quickRanges: '빠른 선택',
-            apply: '적용', cancel: '취소',
-            absolute: '절대', relative: '상대',
-            now: '현재', nowDescription: '현재 시간으로 설정',
-            amount: '값',
+            start: 'From', end: 'To',
+            quickRanges: 'Presets',
+            apply: 'Confirm', cancel: 'Dismiss',
+            absolute: 'Fixed', relative: 'Offset',
+            now: 'Current time', nowDescription: 'Set to current time',
+            amount: 'Quantity',
           }}
         />
         <Value start={i18n.start} end={i18n.end} />
