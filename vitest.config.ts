@@ -51,6 +51,19 @@ export default defineConfig({
           ],
         },
       },
+      {
+        plugins: [react()],
+        test: {
+          name: 'control-bar',
+          environment: 'jsdom',
+          globals: true,
+          setupFiles: ['./vitest.setup.ts'],
+          include: [
+            'packages/control-bar/**/*.test.ts',
+            'packages/control-bar/**/*.test.tsx',
+          ],
+        },
+      },
     ],
   },
 })

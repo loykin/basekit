@@ -32,6 +32,13 @@ export interface ControlBarProps {
    * Omit to use the default collapse + fullscreen buttons.
    */
   renderActions?: (ctx: ControlBarActionContext) => React.ReactNode
+  /**
+   * Keep the header bar mounted (at `minHeight`) even when there are no open tabs,
+   * instead of returning `null`. @default false
+   */
+  alwaysVisible?: boolean
+  /** Content shown in the tab-strip area when there are no tabs and `alwaysVisible` is set. */
+  emptyState?: React.ReactNode
   className?: string
 }
 
@@ -42,6 +49,8 @@ export function ControlBar({
   snapGap = 20,
   onRequestOpen,
   renderActions,
+  alwaysVisible = false,
+  emptyState,
   className,
 }: ControlBarProps) {
   const store    = useControlBarStore()
@@ -92,7 +101,8 @@ export function ControlBar({
     tabsRef.current?.scrollBy({ left: dir === 'left' ? -120 : 120, behavior: 'smooth' })
   }
 
-  if (tabs.length === 0) return null
+  const isEmpty = tabs.length === 0
+  if (isEmpty && !alwaysVisible) return null
 
   const s = store.getState()
   const actionCtx: ControlBarActionContext = {
@@ -105,9 +115,11 @@ export function ControlBar({
     onRequestOpen,
   }
 
-  const displayHeight = isFullscreen
-    ? (typeof window !== 'undefined' ? window.innerHeight : resolvedMax)
-    : isCollapsed ? minHeight : height
+  const displayHeight = isEmpty
+    ? minHeight
+    : isFullscreen
+      ? (typeof window !== 'undefined' ? window.innerHeight : resolvedMax)
+      : isCollapsed ? minHeight : height
 
   const contentHeight = displayHeight - minHeight
 
@@ -120,7 +132,7 @@ export function ControlBar({
         snap={{ y: resolvedSnaps }}
         snapGap={snapGap}
         enable={{
-          top: !isCollapsed && !isFullscreen,
+          top: !isEmpty && !isCollapsed && !isFullscreen,
           bottom: false, left: false, right: false,
           topLeft: false, topRight: false, bottomLeft: false, bottomRight: false,
         }}
@@ -133,39 +145,43 @@ export function ControlBar({
       >
         {/* Header */}
         <div className="cb-header">
-          {canScrollLeft && (
+          {!isEmpty && canScrollLeft && (
             <button className="cb-scroll-btn cb-scroll-btn--left" onClick={() => scrollTabs('left')} aria-label="Scroll tabs left">‹</button>
           )}
 
-          <div ref={tabsRef} className="cb-tabs">
-            {tabs.map(tab => (
-              <ControlBarTabItem
-                key={tab.id}
-                tab={tab}
-                isActive={tab.id === activeTabId}
-                onActivate={() => {
-                  if (tab.id === activeTabId && !isCollapsed) store.getState()._collapse()
-                  else store.getState()._activate(tab.id)
-                }}
-                onClose={() => store.getState()._close(tab.id)}
-              />
-            ))}
-          </div>
+          {isEmpty ? (
+            <div className="cb-tabs cb-empty" role="status">{emptyState}</div>
+          ) : (
+            <div ref={tabsRef} className="cb-tabs">
+              {tabs.map(tab => (
+                <ControlBarTabItem
+                  key={tab.id}
+                  tab={tab}
+                  isActive={tab.id === activeTabId}
+                  onActivate={() => {
+                    if (tab.id === activeTabId && !isCollapsed) store.getState()._collapse()
+                    else store.getState()._activate(tab.id)
+                  }}
+                  onClose={() => store.getState()._close(tab.id)}
+                />
+              ))}
+            </div>
+          )}
 
-          {canScrollRight && (
+          {!isEmpty && canScrollRight && (
             <button className="cb-scroll-btn cb-scroll-btn--right" onClick={() => scrollTabs('right')} aria-label="Scroll tabs right">›</button>
           )}
 
           <div className="cb-actions">
             {renderActions
               ? renderActions(actionCtx)
-              : <DefaultActions ctx={actionCtx} />
+              : <DefaultActions ctx={actionCtx} isEmpty={isEmpty} />
             }
           </div>
         </div>
 
         {/* Content */}
-        {!isCollapsed && contentHeight > 0 && (
+        {!isEmpty && !isCollapsed && contentHeight > 0 && (
           <div className="cb-content" style={{ height: contentHeight }}>
             <ControlBarContent tabs={tabs} activeTabId={activeTabId} />
           </div>
@@ -175,8 +191,15 @@ export function ControlBar({
   )
 }
 
-function DefaultActions({ ctx }: { ctx: ControlBarActionContext }) {
+function DefaultActions({ ctx, isEmpty }: { ctx: ControlBarActionContext; isEmpty: boolean }) {
   const { isCollapsed, isFullscreen, collapse, expand, fullscreen, exitFullscreen, onRequestOpen } = ctx
+
+  if (isEmpty) {
+    return onRequestOpen
+      ? <button className="cb-action-btn" onClick={onRequestOpen} title="Open tab">+</button>
+      : null
+  }
+
   return (
     <>
       {onRequestOpen && (

@@ -74,6 +74,15 @@
 
 .cb-tabs::-webkit-scrollbar { display: none; }
 
+.cb-empty {
+  padding: 0 12px;
+  color: var(--cb-muted-foreground);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .cb-tab {
   display: inline-flex;
   align-items: center;
