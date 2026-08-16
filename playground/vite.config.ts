@@ -13,6 +13,8 @@ export default defineConfig({
       { find: '@loykin/side-panel/styles', replacement: resolve(__dirname, '../packages/side-panel/src/styles/index.css') },
       { find: '@loykin/control-bar/styles', replacement: resolve(__dirname, '../packages/control-bar/src/styles/index.css') },
       { find: '@loykin/cron-input/styles', replacement: resolve(__dirname, '../packages/cron-input/src/styles/index.css') },
+      { find: '@loykin/datetime-range/adapters/shadcn', replacement: resolve(__dirname, '../packages/datetime-range/src/adapters/shadcn.tsx') },
+      { find: '@loykin/cron-input/adapters/shadcn', replacement: resolve(__dirname, '../packages/cron-input/src/adapters/shadcn.tsx') },
       { find: '@loykin/datetime-range', replacement: resolve(__dirname, '../packages/datetime-range/src/index.ts') },
       { find: '@loykin/filter-input', replacement: resolve(__dirname, '../packages/filter-input/src/index.ts') },
       { find: '@loykin/side-panel', replacement: resolve(__dirname, '../packages/side-panel/src/index.ts') },

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Clock } from 'lucide-react'
 import { cn } from './lib/utils'
-import { Button } from './ui/button'
-import { Popover, PopoverTrigger, PopoverContent } from './ui/popover'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs'
+import { Button, Popover, PopoverTrigger, PopoverContent, Tabs, TabsList, TabsTrigger, TabsContent } from './core/UIComponents'
+import { CronInputProvider } from './core/UIAdapterContext'
+import type { CronInputUIAdapter } from './core/UIAdapterContext'
 import { useCronInput } from './useCronInput'
 import {
   toDisplayString,
@@ -29,10 +29,10 @@ function NumberStepper({ value, min, max, padded = true, onChange }: NumberStepp
   const display = padded ? String(value).padStart(2, '0') : String(value)
 
   return (
-    <div className="ci-stepper">
+    <div className="cron-input-stepper">
       <button
         type="button"
-        className="ci-stepper-btn"
+        className="cron-input-stepper-btn"
         onClick={() => onChange(clamp(value - 1))}
         tabIndex={-1}
         aria-label="Decrease"
@@ -40,7 +40,7 @@ function NumberStepper({ value, min, max, padded = true, onChange }: NumberStepp
       <input
         type="text"
         inputMode="numeric"
-        className="ci-stepper-input"
+        className="cron-input-stepper-input"
         value={display}
         onChange={(e) => {
           const raw = e.target.value.replace(/\D/g, '')
@@ -56,7 +56,7 @@ function NumberStepper({ value, min, max, padded = true, onChange }: NumberStepp
       />
       <button
         type="button"
-        className="ci-stepper-btn"
+        className="cron-input-stepper-btn"
         onClick={() => onChange(clamp(value + 1))}
         tabIndex={-1}
         aria-label="Increase"
@@ -75,9 +75,9 @@ interface TimePickerProps {
 
 function TimePicker({ hour, minute, onChange }: TimePickerProps) {
   return (
-    <div className="ci-time">
+    <div className="cron-input-time">
       <NumberStepper value={hour}   min={0} max={23} onChange={h => onChange(h, minute)} />
-      <span className="ci-time-sep">:</span>
+      <span className="cron-input-time-sep">:</span>
       <NumberStepper value={minute} min={0} max={59} onChange={m => onChange(hour, m)} />
     </div>
   )
@@ -109,12 +109,12 @@ function DayChips({ days, onChange }: DayChipsProps) {
   }
 
   return (
-    <div className="ci-day-chips">
+    <div className="cron-input-day-chips">
       {DAYS.map(d => (
         <button
           key={d.index}
           type="button"
-          className={cn('ci-day-chip', days.includes(d.index) && 'ci-day-chip--active')}
+          className={cn('cron-input-day-chip', days.includes(d.index) && 'cron-input-day-chip--active')}
           onClick={() => toggle(d.index)}
         >
           {d.label}
@@ -136,9 +136,9 @@ function IntervalTab({ every, unit, onChange }: IntervalTabProps) {
   const maxMap = { minute: 59, hour: 23, day: 30 } as const
 
   return (
-    <div className="ci-tab-body">
-      <div className="ci-interval-row">
-        <span className="ci-label">Every</span>
+    <div className="cron-input-tab-body">
+      <div className="cron-input-interval-row">
+        <span className="cron-input-label">Every</span>
         <NumberStepper
           value={every}
           min={1}
@@ -146,12 +146,12 @@ function IntervalTab({ every, unit, onChange }: IntervalTabProps) {
           padded={false}
           onChange={n => onChange(n, unit)}
         />
-        <div className="ci-unit-seg">
+        <div className="cron-input-unit-seg">
           {(['minute', 'hour', 'day'] as const).map(u => (
             <button
               key={u}
               type="button"
-              className={cn('ci-unit-btn', unit === u && 'ci-unit-btn--active')}
+              className={cn('cron-input-unit-btn', unit === u && 'cron-input-unit-btn--active')}
               onClick={() => onChange(Math.min(every, maxMap[u]), u)}
             >
               {u === 'minute' ? 'min' : u === 'hour' ? 'hr' : 'day'}
@@ -173,9 +173,9 @@ interface DailyTabProps {
 
 function DailyTab({ hour, minute, onChange }: DailyTabProps) {
   return (
-    <div className="ci-tab-body">
-      <div className="ci-field-row">
-        <span className="ci-label">Every day at</span>
+    <div className="cron-input-tab-body">
+      <div className="cron-input-field-row">
+        <span className="cron-input-label">Every day at</span>
         <TimePicker hour={hour} minute={minute} onChange={onChange} />
       </div>
     </div>
@@ -193,13 +193,13 @@ interface WeeklyTabProps {
 
 function WeeklyTab({ days, hour, minute, onChange }: WeeklyTabProps) {
   return (
-    <div className="ci-tab-body">
-      <div className="ci-field-row ci-field-row--col">
-        <span className="ci-label">Repeat on</span>
+    <div className="cron-input-tab-body">
+      <div className="cron-input-field-row cron-input-field-row--col">
+        <span className="cron-input-label">Repeat on</span>
         <DayChips days={days} onChange={d => onChange(d, hour, minute)} />
       </div>
-      <div className="ci-field-row ci-field-row--mt">
-        <span className="ci-label">At</span>
+      <div className="cron-input-field-row cron-input-field-row--mt">
+        <span className="cron-input-label">At</span>
         <TimePicker hour={hour} minute={minute} onChange={(h, m) => onChange(days, h, m)} />
       </div>
     </div>
@@ -217,9 +217,9 @@ interface MonthlyTabProps {
 
 function MonthlyTab({ day, hour, minute, onChange }: MonthlyTabProps) {
   return (
-    <div className="ci-tab-body">
-      <div className="ci-field-row">
-        <span className="ci-label">On day</span>
+    <div className="cron-input-tab-body">
+      <div className="cron-input-field-row">
+        <span className="cron-input-label">On day</span>
         <NumberStepper
           value={day}
           min={1}
@@ -227,10 +227,10 @@ function MonthlyTab({ day, hour, minute, onChange }: MonthlyTabProps) {
           padded={false}
           onChange={d => onChange(d, hour, minute)}
         />
-        <span className="ci-label">of every month</span>
+        <span className="cron-input-label">of every month</span>
       </div>
-      <div className="ci-field-row ci-field-row--mt">
-        <span className="ci-label">At</span>
+      <div className="cron-input-field-row cron-input-field-row--mt">
+        <span className="cron-input-label">At</span>
         <TimePicker hour={hour} minute={minute} onChange={(h, m) => onChange(day, h, m)} />
       </div>
     </div>
@@ -255,11 +255,11 @@ function CustomTab({ expression, onChange }: CustomTabProps) {
   const FIELD_LABELS = ['min', 'hour', 'dom', 'mon', 'dow']
 
   return (
-    <div className="ci-tab-body ci-custom">
-      <div className={cn('ci-custom-wrap', input && !isValid && 'ci-custom-wrap--error')}>
+    <div className="cron-input-tab-body cron-input-custom">
+      <div className={cn('cron-input-custom-wrap', input && !isValid && 'cron-input-custom-wrap--error')}>
         <input
           type="text"
-          className="ci-custom-input"
+          className="cron-input-custom-input"
           value={input}
           placeholder="* * * * *"
           spellCheck={false}
@@ -269,22 +269,22 @@ function CustomTab({ expression, onChange }: CustomTabProps) {
           }}
         />
         {input && (
-          <span className={cn('ci-custom-badge', isValid ? 'ci-custom-badge--ok' : 'ci-custom-badge--err')}>
+          <span className={cn('cron-input-custom-badge', isValid ? 'cron-input-custom-badge--ok' : 'cron-input-custom-badge--err')}>
             {isValid ? '✓' : '✗'}
           </span>
         )}
       </div>
 
       {isValid && parsed && parsed.type !== 'custom' && (
-        <p className="ci-custom-desc">{toDisplayString(parsed)}</p>
+        <p className="cron-input-custom-desc">{toDisplayString(parsed)}</p>
       )}
 
       {parts.length === 5 && (
-        <div className="ci-custom-fields">
+        <div className="cron-input-custom-fields">
           {FIELD_LABELS.map((label, i) => (
-            <div key={label} className="ci-custom-field">
-              <span className="ci-custom-field-val">{parts[i]}</span>
-              <span className="ci-custom-field-lbl">{label}</span>
+            <div key={label} className="cron-input-custom-field">
+              <span className="cron-input-custom-field-val">{parts[i]}</span>
+              <span className="cron-input-custom-field-lbl">{label}</span>
             </div>
           ))}
         </div>
@@ -309,6 +309,14 @@ export interface CronInputProps {
   ) => React.ReactElement
   portalContainer?: React.RefObject<HTMLElement | null> | HTMLElement | null
   className?: string
+  /**
+   * Replace the underlying Button/Popover/Tabs implementations — e.g.
+   * `createShadcnAdapter(...)` from `@loykin/cron-input/adapters/shadcn` to render with
+   * your app's own shadcn/ui components instead of the built-in ones.
+   * Must be referentially stable (module-scope constant or memoized) — a new object every
+   * render remounts the affected subtree.
+   */
+  uiAdapter?: CronInputUIAdapter
 }
 
 export function CronInput({
@@ -322,6 +330,7 @@ export function CronInput({
   renderTrigger,
   portalContainer,
   className,
+  uiAdapter,
 }: CronInputProps) {
   const labels = { ...DEFAULT_LABELS, ...labelsProp }
 
@@ -345,7 +354,7 @@ export function CronInput({
 
   const handleDraft = (next: CronValue) => setDraft(next)
 
-  return (
+  const content = (
     <Popover open={isOpen} onOpenChange={disabled ? undefined : setIsOpen}>
       <PopoverTrigger
         disabled={disabled}
@@ -356,10 +365,10 @@ export function CronInput({
             <button
               {...triggerProps}
               disabled={disabled}
-              className={cn('ci-trigger', isOpen && 'ci-trigger--open', className)}
+              className={cn('cron-input-trigger', isOpen && 'cron-input-trigger--open', className)}
             >
-              <Clock size={13} className="ci-trigger-icon" />
-              <span className="ci-trigger-label">{toDisplayString(value)}</span>
+              <Clock size={13} className="cron-input-trigger-icon" />
+              <span className="cron-input-trigger-label">{toDisplayString(value)}</span>
             </button>
           )
         }
@@ -432,9 +441,9 @@ export function CronInput({
           </TabsContent>
         </Tabs>
 
-        <div className="ci-footer">
-          <span className="ci-preview">{toDisplayString(draft)}</span>
-          <div className="ci-footer-actions">
+        <div className="cron-input-footer">
+          <span className="cron-input-preview">{toDisplayString(draft)}</span>
+          <div className="cron-input-footer-actions">
             <Button variant="outline" size="sm" onClick={onCancel}>{labels.cancel}</Button>
             <Button
               size="sm"
@@ -448,4 +457,6 @@ export function CronInput({
       </PopoverContent>
     </Popover>
   )
+
+  return uiAdapter ? <CronInputProvider adapter={uiAdapter}>{content}</CronInputProvider> : content
 }

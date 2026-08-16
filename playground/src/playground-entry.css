@@ -24,7 +24,11 @@
   --color-border:              var(--basekit-border);
   --color-input:               var(--basekit-input);
   --color-ring:                var(--basekit-ring);
-  --radius:                    0rem;
+  --radius:                    0.625rem;
+  --radius-sm:                 calc(var(--radius) - 4px);
+  --radius-md:                 calc(var(--radius) - 2px);
+  --radius-lg:                 var(--radius);
+  --radius-xl:                 calc(var(--radius) + 4px);
   --color-sidebar:                   var(--basekit-card);
   --color-sidebar-foreground:        var(--basekit-foreground);
   --color-sidebar-primary:           var(--basekit-primary);
@@ -35,8 +39,29 @@
   --color-sidebar-ring:              var(--basekit-ring);
 }
 
+/*
+ * The uiAdapter demo's portalContainer is scoped with this class (see
+ * DatetimeRangeComposableTab.tsx) so the date/time segment input — a piece the adapter
+ * does NOT cover, always using --basekit-radius directly, never Tailwind's tokens — still
+ * visually matches the real shadcn components sitting right next to it, instead of
+ * following the sidebar's "Radius" picker like the rest of the page's native previews do.
+ * (Sizing now self-adjusts via flex stretch in the package's own CSS — see
+ * .datetime-range-absolute-row / .datetime-range-segment-input — so no override needed
+ * here for that; only the radius token needs a scoped, genuinely-derived source.)
+ */
+.shadcn-theme-scope {
+  --basekit-radius: var(--radius-md);
+}
+
 :root {
-  --radius: var(--basekit-radius);
+  /*
+   * Deliberately NOT var(--basekit-radius): --radius drives Tailwind's rounded-*
+   * utilities, used by this app's own chrome AND by the uiAdapter demo's real
+   * shadcn/ui components. Both should look like a normal shadcn app regardless of
+   * what the sidebar's "Radius" picker is set to — that picker only previews
+   * basekit's own native (--basekit-radius-driven) components, a separate system
+   * an adapter is meant to replace, not inherit from.
+   */
   --basekit-background:           oklch(1 0 0);
   --basekit-foreground:           oklch(0.145 0 0);
   --basekit-card:                 oklch(1 0 0);

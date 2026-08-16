@@ -2,8 +2,8 @@
  * @loykin/control-bar
  *
  * Plain CSS, no Tailwind dependency. Consumers can override with:
- *   - CSS custom properties: --cb-*
- *   - Semantic class names: .cb-*
+ *   - CSS custom properties: --control-bar-*
+ *   - Semantic class names: .control-bar-*
  */
 
 :root {
@@ -16,15 +16,15 @@
   --basekit-primary-foreground:var(--primary-foreground,oklch(0.97 0.014 254.604));
   --basekit-radius:            var(--radius,            0px);
 
-  --cb-background:        var(--basekit-background);
-  --cb-foreground:        var(--basekit-foreground);
-  --cb-border:            var(--basekit-border);
-  --cb-muted:             var(--basekit-muted);
-  --cb-muted-foreground:  var(--basekit-muted-foreground);
-  --cb-primary:           var(--basekit-primary);
-  --cb-primary-foreground:var(--basekit-primary-foreground);
-  --cb-radius:            var(--basekit-radius);
-  --cb-header-height:     36px;
+  --control-bar-background:        var(--basekit-background);
+  --control-bar-foreground:        var(--basekit-foreground);
+  --control-bar-border:            var(--basekit-border);
+  --control-bar-muted:             var(--basekit-muted);
+  --control-bar-muted-foreground:  var(--basekit-muted-foreground);
+  --control-bar-primary:           var(--basekit-primary);
+  --control-bar-primary-foreground:var(--basekit-primary-foreground);
+  --control-bar-radius:            var(--basekit-radius);
+  --control-bar-header-height:     36px;
 }
 
 .dark {
@@ -39,30 +39,30 @@
 
 /* ── Root ────────────────────────────────────────────────────────────────────── */
 
-.cb-root {
+.control-bar-root {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 100;
-  background: var(--cb-background);
-  border-top: 1px solid var(--cb-border);
+  background: var(--control-bar-background);
+  border-top: 1px solid var(--control-bar-border);
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────────── */
 
-.cb-header {
+.control-bar-header {
   display: flex;
   align-items: center;
-  height: var(--cb-header-height);
-  border-bottom: 1px solid var(--cb-border);
-  background: var(--cb-muted);
+  height: var(--control-bar-header-height);
+  border-bottom: 1px solid var(--control-bar-border);
+  background: var(--control-bar-muted);
   overflow: hidden;
 }
 
 /* ── Tabs ────────────────────────────────────────────────────────────────────── */
 
-.cb-tabs {
+.control-bar-tabs {
   display: flex;
   align-items: center;
   flex: 1;
@@ -72,27 +72,27 @@
   min-width: 0;
 }
 
-.cb-tabs::-webkit-scrollbar { display: none; }
+.control-bar-tabs::-webkit-scrollbar { display: none; }
 
-.cb-empty {
+.control-bar-empty {
   padding: 0 12px;
-  color: var(--cb-muted-foreground);
+  color: var(--control-bar-muted-foreground);
   font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.cb-tab {
+.control-bar-tab {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: var(--cb-header-height);
+  height: var(--control-bar-header-height);
   padding: 0 12px;
   border: none;
-  border-right: 1px solid var(--cb-border);
+  border-right: 1px solid var(--control-bar-border);
   background: transparent;
-  color: var(--cb-muted-foreground);
+  color: var(--control-bar-muted-foreground);
   font-size: 12px;
   white-space: nowrap;
   cursor: pointer;
@@ -101,19 +101,19 @@
   outline: none;
 }
 
-.cb-tab:hover { background: var(--cb-background); color: var(--cb-foreground); }
+.control-bar-tab:hover { background: var(--control-bar-background); color: var(--control-bar-foreground); }
 
-.cb-tab--active {
-  background: var(--cb-background);
-  color: var(--cb-foreground);
-  border-top: 2px solid var(--cb-primary);
+.control-bar-tab--active {
+  background: var(--control-bar-background);
+  color: var(--control-bar-foreground);
+  border-top: 2px solid var(--control-bar-primary);
 }
 
-.cb-tab-icon { display: flex; align-items: center; width: 14px; height: 14px; }
+.control-bar-tab-icon { display: flex; align-items: center; width: 14px; height: 14px; }
 
-.cb-tab-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.control-bar-tab-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
-.cb-tab-close {
+.control-bar-tab-close {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,25 +121,25 @@
   height: 16px;
   border-radius: 2px;
   font-size: 10px;
-  color: var(--cb-muted-foreground);
+  color: var(--control-bar-muted-foreground);
   transition: background 150ms, color 150ms;
 }
 
-.cb-tab-close:hover { background: var(--cb-border); color: var(--cb-foreground); }
+.control-bar-tab-close:hover { background: var(--control-bar-border); color: var(--control-bar-foreground); }
 
 /* ── Tab scroll buttons ──────────────────────────────────────────────────────── */
 
-.cb-scroll-btn {
+.control-bar-scroll-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   width: 20px;
-  height: var(--cb-header-height);
+  height: var(--control-bar-header-height);
   border: none;
-  border-right: 1px solid var(--cb-border);
-  background: var(--cb-muted);
-  color: var(--cb-muted-foreground);
+  border-right: 1px solid var(--control-bar-border);
+  background: var(--control-bar-muted);
+  color: var(--control-bar-muted-foreground);
   font-size: 16px;
   cursor: pointer;
   transition: background 150ms, color 150ms;
@@ -147,50 +147,50 @@
   padding: 0;
 }
 
-.cb-scroll-btn--right {
+.control-bar-scroll-btn--right {
   border-right: none;
-  border-left: 1px solid var(--cb-border);
+  border-left: 1px solid var(--control-bar-border);
 }
 
-.cb-scroll-btn:hover { background: var(--cb-background); color: var(--cb-foreground); }
+.control-bar-scroll-btn:hover { background: var(--control-bar-background); color: var(--control-bar-foreground); }
 
 /* ── Actions ─────────────────────────────────────────────────────────────────── */
 
-.cb-actions {
+.control-bar-actions {
   display: flex;
   align-items: center;
   flex-shrink: 0;
   padding: 0 8px;
   gap: 4px;
-  border-left: 1px solid var(--cb-border);
+  border-left: 1px solid var(--control-bar-border);
   height: 100%;
 }
 
-.cb-action-btn {
+.control-bar-action-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 24px;
   height: 24px;
   border: none;
-  border-radius: var(--cb-radius);
+  border-radius: var(--control-bar-radius);
   background: transparent;
-  color: var(--cb-muted-foreground);
+  color: var(--control-bar-muted-foreground);
   font-size: 12px;
   cursor: pointer;
   transition: background 150ms, color 150ms;
 }
 
-.cb-action-btn:hover { background: var(--cb-border); color: var(--cb-foreground); }
+.control-bar-action-btn:hover { background: var(--control-bar-border); color: var(--control-bar-foreground); }
 
 /* ── Content ─────────────────────────────────────────────────────────────────── */
 
-.cb-content {
+.control-bar-content {
   overflow: hidden;
   position: relative;
 }
 
-.cb-panel {
+.control-bar-panel {
   width: 100%;
   height: 100%;
   flex-direction: column;

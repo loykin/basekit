@@ -68,15 +68,15 @@ export function ControlBar({
   const resolvedMax   = maxHeight ?? (typeof window !== 'undefined' ? Math.floor(window.innerHeight * 0.8) : 800)
   const resolvedSnaps = snapPoints ?? [minHeight, 400]
 
-  // --cb-height CSS variable
+  // --control-bar-height CSS variable
   useEffect(() => {
     const el = barRef.current
     if (!el) return
     const ro = new ResizeObserver(() => {
-      document.documentElement.style.setProperty('--cb-height', `${el.offsetHeight}px`)
+      document.documentElement.style.setProperty('--control-bar-height', `${el.offsetHeight}px`)
     })
     ro.observe(el)
-    return () => { ro.disconnect(); document.documentElement.style.removeProperty('--cb-height') }
+    return () => { ro.disconnect(); document.documentElement.style.removeProperty('--control-bar-height') }
   }, [])
 
   // Tab scroll button visibility
@@ -124,7 +124,7 @@ export function ControlBar({
   const contentHeight = displayHeight - minHeight
 
   return (
-    <div ref={barRef} className={`cb-root${className ? ` ${className}` : ''}`}>
+    <div ref={barRef} className={`control-bar-root${className ? ` ${className}` : ''}`}>
       <Resizable
         size={{ width: '100%', height: displayHeight }}
         minHeight={minHeight}
@@ -144,15 +144,15 @@ export function ControlBar({
         }}
       >
         {/* Header */}
-        <div className="cb-header">
+        <div className="control-bar-header">
           {!isEmpty && canScrollLeft && (
-            <button className="cb-scroll-btn cb-scroll-btn--left" onClick={() => scrollTabs('left')} aria-label="Scroll tabs left">‹</button>
+            <button className="control-bar-scroll-btn control-bar-scroll-btn--left" onClick={() => scrollTabs('left')} aria-label="Scroll tabs left">‹</button>
           )}
 
           {isEmpty ? (
-            <div className="cb-tabs cb-empty" role="status">{emptyState}</div>
+            <div className="control-bar-tabs control-bar-empty" role="status">{emptyState}</div>
           ) : (
-            <div ref={tabsRef} className="cb-tabs">
+            <div ref={tabsRef} className="control-bar-tabs">
               {tabs.map(tab => (
                 <ControlBarTabItem
                   key={tab.id}
@@ -169,10 +169,10 @@ export function ControlBar({
           )}
 
           {!isEmpty && canScrollRight && (
-            <button className="cb-scroll-btn cb-scroll-btn--right" onClick={() => scrollTabs('right')} aria-label="Scroll tabs right">›</button>
+            <button className="control-bar-scroll-btn control-bar-scroll-btn--right" onClick={() => scrollTabs('right')} aria-label="Scroll tabs right">›</button>
           )}
 
-          <div className="cb-actions">
+          <div className="control-bar-actions">
             {renderActions
               ? renderActions(actionCtx)
               : <DefaultActions ctx={actionCtx} isEmpty={isEmpty} />
@@ -182,7 +182,7 @@ export function ControlBar({
 
         {/* Content */}
         {!isEmpty && !isCollapsed && contentHeight > 0 && (
-          <div className="cb-content" style={{ height: contentHeight }}>
+          <div className="control-bar-content" style={{ height: contentHeight }}>
             <ControlBarContent tabs={tabs} activeTabId={activeTabId} />
           </div>
         )}
@@ -196,18 +196,18 @@ function DefaultActions({ ctx, isEmpty }: { ctx: ControlBarActionContext; isEmpt
 
   if (isEmpty) {
     return onRequestOpen
-      ? <button className="cb-action-btn" onClick={onRequestOpen} title="Open tab">+</button>
+      ? <button className="control-bar-action-btn" onClick={onRequestOpen} title="Open tab">+</button>
       : null
   }
 
   return (
     <>
       {onRequestOpen && (
-        <button className="cb-action-btn" onClick={onRequestOpen} title="Open tab">+</button>
+        <button className="control-bar-action-btn" onClick={onRequestOpen} title="Open tab">+</button>
       )}
       {!isCollapsed && (
         <button
-          className="cb-action-btn"
+          className="control-bar-action-btn"
           onClick={isFullscreen ? exitFullscreen : fullscreen}
           title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
         >
@@ -215,7 +215,7 @@ function DefaultActions({ ctx, isEmpty }: { ctx: ControlBarActionContext; isEmpt
         </button>
       )}
       <button
-        className="cb-action-btn"
+        className="control-bar-action-btn"
         onClick={isCollapsed ? expand : collapse}
         title={isCollapsed ? 'Expand' : 'Collapse'}
       >

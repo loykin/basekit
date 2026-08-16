@@ -3,7 +3,7 @@
  *
  * Plain CSS, no Tailwind dependency. Consumers can override with:
  *   - CSS custom properties: --basekit-*
- *   - Semantic class names: .fi-*
+ *   - Semantic class names: .filter-input-*
  *   - classNames props
  */
 
@@ -22,16 +22,16 @@
   --basekit-destructive:          var(--destructive,          oklch(0.577 0.245 27.325));
   --basekit-radius:               var(--radius,               6px);
   /* filter-input component tokens */
-  --basekit-fi-control-background:   var(--basekit-background);
-  --basekit-fi-control-foreground:   var(--basekit-foreground);
-  --basekit-fi-control-border:       var(--basekit-input);
-  --basekit-fi-control-placeholder:  var(--basekit-muted-foreground);
-  --basekit-fi-separator:            var(--basekit-border);
-  --basekit-fi-control-height:       32px;
-  --basekit-fi-control-padding-x:    8px;
-  --basekit-fi-control-font-size:    12px;
-  --basekit-fi-control-radius:       var(--basekit-radius);
-  --basekit-fi-control-icon-size:    14px;
+  --basekit-filter-input-control-background:   var(--basekit-background);
+  --basekit-filter-input-control-foreground:   var(--basekit-foreground);
+  --basekit-filter-input-control-border:       var(--basekit-input);
+  --basekit-filter-input-control-placeholder:  var(--basekit-muted-foreground);
+  --basekit-filter-input-separator:            var(--basekit-border);
+  --basekit-filter-input-control-height:       32px;
+  --basekit-filter-input-control-padding-x:    8px;
+  --basekit-filter-input-control-font-size:    12px;
+  --basekit-filter-input-control-radius:       var(--basekit-radius);
+  --basekit-filter-input-control-icon-size:    14px;
 }
 
 .dark {
@@ -47,46 +47,46 @@
   --basekit-primary:              var(--primary,              oklch(0.985 0 0));
   --basekit-primary-foreground:   var(--primary-foreground,   oklch(0.205 0 0));
   --basekit-destructive:          var(--destructive,          oklch(0.704 0.191 22.216));
-  --basekit-fi-separator:         oklch(1 0 0 / 20%);
+  --basekit-filter-input-separator:         oklch(1 0 0 / 20%);
 }
 
-.fi-variable {
+.filter-input-variable {
   display: flex;
   align-items: stretch;
   min-height: 32px;
   min-width: 0;
   overflow: visible;
-  border: 1px solid var(--basekit-fi-control-border);
+  border: 1px solid var(--basekit-filter-input-control-border);
   border-radius: var(--basekit-radius);
-  background: var(--basekit-fi-control-background);
-  color: var(--basekit-fi-control-foreground);
+  background: var(--basekit-filter-input-control-background);
+  color: var(--basekit-filter-input-control-foreground);
 }
 
-.fi-variable:hover {
-  border-color: var(--basekit-fi-control-border);
+.filter-input-variable:hover {
+  border-color: var(--basekit-filter-input-control-border);
 }
 
-.fi-variable:focus-within {
+.filter-input-variable:focus-within {
   box-shadow: 0 0 0 1px color-mix(in oklab, var(--basekit-ring) 50%, transparent);
 }
 
-.fi-variable[data-disabled="true"] {
+.filter-input-variable[data-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
-.fi-variable-label {
+.filter-input-variable-label {
   display: flex;
   align-items: center;
   flex-shrink: 0;
   gap: 6px;
   padding: 0 12px;
-  border-right: 1px solid var(--basekit-fi-separator);
+  border-right: 1px solid var(--basekit-filter-input-separator);
   font-size: 13px;
   font-weight: 600;
 }
 
-.fi-variable-value {
+.filter-input-variable-value {
   position: relative;
   display: flex;
   align-items: center;
@@ -94,73 +94,73 @@
   min-width: 0;
 }
 
-.fi-field {
+.filter-input-field {
   width: 100%;
   min-width: 0;
 }
 
-.fi-field-label {
+.filter-input-field-label {
   margin-bottom: 6px;
   color: var(--basekit-muted-foreground);
   font-size: 11px;
   font-weight: 500;
 }
 
-.fi-field-required {
+.filter-input-field-required {
   color: var(--basekit-destructive);
 }
 
-.fi-control,
-.fi-select,
-.fi-textarea {
+.filter-input-control,
+.filter-input-select,
+.filter-input-textarea {
   width: 100%;
   min-width: 0;
-  border: 1px solid var(--basekit-fi-control-border);
-  border-radius: var(--basekit-fi-control-radius);
-  background: var(--basekit-fi-control-background);
-  color: var(--basekit-fi-control-foreground);
+  border: 1px solid var(--basekit-filter-input-control-border);
+  border-radius: var(--basekit-filter-input-control-radius);
+  background: var(--basekit-filter-input-control-background);
+  color: var(--basekit-filter-input-control-foreground);
   outline: none;
-  font-size: var(--basekit-fi-control-font-size);
+  font-size: var(--basekit-filter-input-control-font-size);
 }
 
-.fi-control,
-.fi-select {
-  height: var(--basekit-fi-control-height);
-  padding: 0 var(--basekit-fi-control-padding-x);
+.filter-input-control,
+.filter-input-select {
+  height: var(--basekit-filter-input-control-height);
+  padding: 0 var(--basekit-filter-input-control-padding-x);
 }
 
-.fi-textarea {
+.filter-input-textarea {
   min-height: 80px;
-  padding: var(--basekit-fi-control-padding-x);
+  padding: var(--basekit-filter-input-control-padding-x);
   resize: none;
 }
 
 /* ── Size variants ───────────────────────────────────── */
 
-.fi-control[data-size="sm"],
-.fi-select[data-size="sm"],
-.fi-select-trigger[data-size="sm"] {
-  --basekit-fi-control-height: 28px;
-  --basekit-fi-control-padding-x: 6px;
-  --basekit-fi-control-font-size: 11px;
+.filter-input-control[data-size="sm"],
+.filter-input-select[data-size="sm"],
+.filter-input-select-trigger[data-size="sm"] {
+  --basekit-filter-input-control-height: 28px;
+  --basekit-filter-input-control-padding-x: 6px;
+  --basekit-filter-input-control-font-size: 11px;
 }
 
-.fi-control[data-size="lg"],
-.fi-select[data-size="lg"],
-.fi-select-trigger[data-size="lg"] {
-  --basekit-fi-control-height: 36px;
-  --basekit-fi-control-padding-x: 10px;
-  --basekit-fi-control-font-size: 13px;
+.filter-input-control[data-size="lg"],
+.filter-input-select[data-size="lg"],
+.filter-input-select-trigger[data-size="lg"] {
+  --basekit-filter-input-control-height: 36px;
+  --basekit-filter-input-control-padding-x: 10px;
+  --basekit-filter-input-control-font-size: 13px;
 }
 
-.fi-control::placeholder,
-.fi-textarea::placeholder {
-  color: var(--basekit-fi-control-placeholder);
+.filter-input-control::placeholder,
+.filter-input-textarea::placeholder {
+  color: var(--basekit-filter-input-control-placeholder);
 }
 
 /* ── Icon slots ──────────────────────────────────────── */
 
-.fi-control-wrap {
+.filter-input-control-wrap {
   position: relative;
   display: flex;
   align-items: center;
@@ -168,86 +168,86 @@
   flex: 1 1 auto;
 }
 
-.fi-control-icon {
+.filter-input-control-icon {
   position: absolute;
   top: 0;
   bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--basekit-fi-control-icon-size);
-  color: var(--basekit-fi-control-placeholder);
+  width: var(--basekit-filter-input-control-icon-size);
+  color: var(--basekit-filter-input-control-placeholder);
   pointer-events: none;
 }
 
-.fi-control-icon svg {
-  width: var(--basekit-fi-control-icon-size);
-  height: var(--basekit-fi-control-icon-size);
+.filter-input-control-icon svg {
+  width: var(--basekit-filter-input-control-icon-size);
+  height: var(--basekit-filter-input-control-icon-size);
 }
 
-.fi-control-icon-leading {
-  left: var(--basekit-fi-control-padding-x);
+.filter-input-control-icon-leading {
+  left: var(--basekit-filter-input-control-padding-x);
 }
 
-.fi-control-icon-trailing {
-  right: var(--basekit-fi-control-padding-x);
+.filter-input-control-icon-trailing {
+  right: var(--basekit-filter-input-control-padding-x);
 }
 
-.fi-control-has-leading-icon {
-  padding-left: calc(var(--basekit-fi-control-padding-x) * 2 + var(--basekit-fi-control-icon-size));
+.filter-input-control-has-leading-icon {
+  padding-left: calc(var(--basekit-filter-input-control-padding-x) * 2 + var(--basekit-filter-input-control-icon-size));
 }
 
-.fi-control-has-trailing-icon {
-  padding-right: calc(var(--basekit-fi-control-padding-x) * 2 + var(--basekit-fi-control-icon-size));
+.filter-input-control-has-trailing-icon {
+  padding-right: calc(var(--basekit-filter-input-control-padding-x) * 2 + var(--basekit-filter-input-control-icon-size));
 }
 
-.fi-control:focus-visible,
-.fi-select:focus-visible,
-.fi-textarea:focus-visible {
+.filter-input-control:focus-visible,
+.filter-input-select:focus-visible,
+.filter-input-textarea:focus-visible {
   border-color: var(--basekit-ring);
   box-shadow: 0 0 0 1px color-mix(in oklab, var(--basekit-ring) 50%, transparent);
 }
 
-.fi-control:disabled,
-.fi-select:disabled,
-.fi-textarea:disabled {
+.filter-input-control:disabled,
+.filter-input-select:disabled,
+.filter-input-textarea:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
-.fi-variable .fi-control,
-.fi-variable .fi-select,
-.fi-variable .fi-select-trigger,
-.fi-variable .fi-textarea {
+.filter-input-variable .filter-input-control,
+.filter-input-variable .filter-input-select,
+.filter-input-variable .filter-input-select-trigger,
+.filter-input-variable .filter-input-textarea {
   border: 0;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
 }
 
-.fi-variable .fi-select-trigger:focus-visible {
+.filter-input-variable .filter-input-select-trigger:focus-visible {
   border-color: transparent;
   box-shadow: none;
 }
 
-.fi-row {
+.filter-input-row {
   display: flex;
   gap: 6px;
 }
 
-.fi-stack {
+.filter-input-stack {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.fi-range {
+.filter-input-range {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 6px;
 }
 
-.fi-clear-button {
+.filter-input-clear-button {
   height: 32px;
   border: 1px solid var(--basekit-border);
   border-radius: var(--basekit-radius);
@@ -258,21 +258,21 @@
   cursor: pointer;
 }
 
-.fi-clear-button:hover {
+.filter-input-clear-button:hover {
   background: var(--basekit-muted);
   color: var(--basekit-foreground);
 }
 
-.fi-clear-button:disabled {
+.filter-input-clear-button:disabled {
   opacity: 0.5;
 }
 
-.fi-multi {
+.filter-input-multi {
   position: relative;
   width: 100%;
 }
 
-.fi-multi-trigger {
+.filter-input-multi-trigger {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -280,18 +280,18 @@
   min-height: 32px;
   border: 0;
   background: transparent;
-  color: var(--basekit-fi-control-foreground);
+  color: var(--basekit-filter-input-control-foreground);
   padding: 4px 8px;
   text-align: left;
   cursor: pointer;
 }
 
-.fi-multi-value {
+.filter-input-multi-value {
   min-width: 0;
   flex: 1 1 auto;
 }
 
-.fi-chevron {
+.filter-input-chevron {
   display: flex;
   align-items: center;
   color: var(--basekit-muted-foreground);
@@ -299,7 +299,7 @@
   flex-shrink: 0;
 }
 
-.fi-popover {
+.filter-input-popover {
   position: absolute;
   left: 0;
   right: 0;
@@ -315,13 +315,13 @@
 }
 
 /* legacy alias kept for external use */
-.fi-popover-search {
+.filter-input-popover-search {
   padding: 6px;
   border-bottom: 1px solid var(--basekit-border);
 }
 
 /* Header row: search input + reload button */
-.fi-popup-header {
+.filter-input-popup-header {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -329,13 +329,13 @@
   border-bottom: 1px solid var(--basekit-border);
 }
 
-.fi-popup-header .fi-control {
+.filter-input-popup-header .filter-input-control {
   flex: 1;
   min-width: 0;
 }
 
 /* Status row: loading / error / empty message */
-.fi-popup-status {
+.filter-input-popup-status {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -345,14 +345,14 @@
   min-height: 32px;
 }
 
-.fi-popup-status .fi-loading,
-.fi-popup-status .fi-error,
-.fi-popup-status .fi-empty {
+.filter-input-popup-status .filter-input-loading,
+.filter-input-popup-status .filter-input-error,
+.filter-input-popup-status .filter-input-empty {
   flex: 1;
 }
 
 /* Footer row: reload button only (select, idle state) */
-.fi-popup-footer {
+.filter-input-popup-footer {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -360,7 +360,7 @@
   border-top: 1px solid var(--basekit-border);
 }
 
-.fi-reload-button {
+.filter-input-reload-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -375,17 +375,17 @@
   padding: 0;
 }
 
-.fi-reload-button:hover {
+.filter-input-reload-button:hover {
   background: var(--basekit-muted);
   color: var(--basekit-foreground);
 }
 
-.fi-reload-button:disabled {
+.filter-input-reload-button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-.fi-option {
+.filter-input-option {
   display: flex;
   align-items: center;
   width: 100%;
@@ -399,15 +399,15 @@
   cursor: pointer;
 }
 
-.fi-option:hover {
+.filter-input-option:hover {
   background: var(--basekit-muted);
 }
 
-.fi-option:disabled {
+.filter-input-option:disabled {
   opacity: 0.5;
 }
 
-.fi-option-check {
+.filter-input-option-check {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -419,13 +419,13 @@
   color: var(--basekit-primary);
 }
 
-.fi-option-check[data-checked] {
+.filter-input-option-check[data-checked] {
   background: var(--basekit-primary);
   border-color: var(--basekit-primary);
   color: var(--basekit-primary-foreground);
 }
 
-.fi-option-label {
+.filter-input-option-label {
   min-width: 0;
   flex: 1 1 auto;
   overflow: hidden;
@@ -433,23 +433,23 @@
   white-space: nowrap;
 }
 
-.fi-empty,
-.fi-loading,
-.fi-error,
-.fi-selected-mark,
-.fi-selected-empty,
-.fi-selected-count,
-.fi-selected-summary {
+.filter-input-empty,
+.filter-input-loading,
+.filter-input-error,
+.filter-input-selected-mark,
+.filter-input-selected-empty,
+.filter-input-selected-count,
+.filter-input-selected-summary {
   color: var(--basekit-muted-foreground);
   font-size: 12px;
 }
 
-.fi-error {
+.filter-input-error {
   color: var(--basekit-destructive);
 }
 
-.fi-selected-list,
-.fi-tag-input {
+.filter-input-selected-list,
+.filter-input-tag-input {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -457,18 +457,18 @@
   gap: 4px;
 }
 
-.fi-tag-input {
+.filter-input-tag-input {
   width: 100%;
   min-height: 32px;
   padding: 4px 8px;
 }
 
-.fi-tag-input[data-disabled="true"] {
+.filter-input-tag-input[data-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
-.fi-tag {
+.filter-input-tag {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -481,13 +481,13 @@
   font-size: 11px;
 }
 
-.fi-tag-label {
+.filter-input-tag-label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.fi-tag-remove {
+.filter-input-tag-remove {
   display: flex;
   align-items: center;
   border: 0;
@@ -498,11 +498,11 @@
   line-height: 1;
 }
 
-.fi-tag-remove:hover {
+.filter-input-tag-remove:hover {
   color: var(--basekit-foreground);
 }
 
-.fi-tag-overflow {
+.filter-input-tag-overflow {
   display: inline-flex;
   align-items: center;
   height: 20px;
@@ -513,7 +513,7 @@
   font-size: 11px;
 }
 
-.fi-tag-text-input {
+.filter-input-tag-text-input {
   height: 24px;
   min-width: 96px;
   flex: 1 1 auto;
@@ -525,23 +525,23 @@
   font-size: 12px;
 }
 
-.fi-tag-text-input::placeholder {
+.filter-input-tag-text-input::placeholder {
   color: var(--basekit-muted-foreground);
 }
 
 /* ── Custom Select ───────────────────────────────────── */
 
-.fi-select-trigger {
+.filter-input-select-trigger {
   display: inline-flex;
   align-items: center;
   width: 100%;
-  height: var(--basekit-fi-control-height);
-  border: 1px solid var(--basekit-fi-control-border);
-  border-radius: var(--basekit-fi-control-radius);
-  background: var(--basekit-fi-control-background);
-  color: var(--basekit-fi-control-foreground);
-  padding: 0 var(--basekit-fi-control-padding-x);
-  font-size: var(--basekit-fi-control-font-size);
+  height: var(--basekit-filter-input-control-height);
+  border: 1px solid var(--basekit-filter-input-control-border);
+  border-radius: var(--basekit-filter-input-control-radius);
+  background: var(--basekit-filter-input-control-background);
+  color: var(--basekit-filter-input-control-foreground);
+  padding: 0 var(--basekit-filter-input-control-padding-x);
+  font-size: var(--basekit-filter-input-control-font-size);
   gap: 4px;
   cursor: pointer;
   outline: none;
@@ -549,17 +549,17 @@
   text-align: left;
 }
 
-.fi-select-trigger:focus-visible {
+.filter-input-select-trigger:focus-visible {
   border-color: var(--basekit-ring);
   box-shadow: 0 0 0 1px color-mix(in oklab, var(--basekit-ring) 50%, transparent);
 }
 
-.fi-select-trigger[data-disabled] {
+.filter-input-select-trigger[data-disabled] {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
-.fi-select-value {
+.filter-input-select-value {
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -567,18 +567,18 @@
   white-space: nowrap;
 }
 
-.fi-select-value[data-placeholder] {
-  color: var(--basekit-fi-control-placeholder);
+.filter-input-select-value[data-placeholder] {
+  color: var(--basekit-filter-input-control-placeholder);
 }
 
-.fi-select-icon {
+.filter-input-select-icon {
   display: flex;
   align-items: center;
   color: var(--basekit-muted-foreground);
   flex-shrink: 0;
 }
 
-.fi-select-popup {
+.filter-input-select-popup {
   min-width: var(--anchor-width, 120px);
   max-height: 256px;
   overflow-y: auto;
@@ -590,7 +590,7 @@
   outline: none;
 }
 
-.fi-select-item {
+.filter-input-select-item {
   display: flex;
   align-items: center;
   width: 100%;
@@ -606,21 +606,21 @@
   user-select: none;
 }
 
-.fi-select-item:hover,
-.fi-select-item[data-highlighted] {
+.filter-input-select-item:hover,
+.filter-input-select-item[data-highlighted] {
   background: var(--basekit-muted);
 }
 
-.fi-select-item[data-disabled] {
+.filter-input-select-item[data-disabled] {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.fi-select-item[data-selected] .fi-select-item-text {
+.filter-input-select-item[data-selected] .filter-input-select-item-text {
   font-weight: 500;
 }
 
-.fi-select-item-text {
+.filter-input-select-item-text {
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -628,7 +628,7 @@
   white-space: nowrap;
 }
 
-.fi-select-item-indicator {
+.filter-input-select-item-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -640,21 +640,21 @@
 
 /* ── Positioner wrapper (portal-based dropdowns) ──────── */
 
-.fi-positioner {
+.filter-input-positioner {
   isolation: isolate;
   z-index: 50;
 }
 
 /* ── Flex fill helper ────────────────────────────────── */
 
-.fi-flex-1 {
+.filter-input-flex-1 {
   flex: 1 1 auto;
   min-width: 0;
 }
 
 /* ── Multi-select popup (portal-based) ───────────────── */
 
-.fi-multi-popup {
+.filter-input-multi-popup {
   min-width: var(--anchor-width, 160px);
   max-height: 256px;
   overflow-y: auto;

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   CronInput,
   toCronExpression,
@@ -6,6 +6,24 @@ import {
   type CronValue,
 } from '@loykin/cron-input'
 import '@loykin/cron-input/styles'
+import { createShadcnAdapter } from '@loykin/cron-input/adapters/shadcn'
+import { Button as ShadcnButton } from '../components/ui/button'
+import { Popover as ShadcnPopover, PopoverTrigger as ShadcnPopoverTrigger, PopoverContent as ShadcnPopoverContent } from '../components/ui/popover'
+import { Tabs as ShadcnTabs, TabsList as ShadcnTabsList, TabsTrigger as ShadcnTabsTrigger, TabsContent as ShadcnTabsContent } from '../components/ui/tabs'
+
+// createShadcnAdapter bridges CronInput's internal Button/Popover/Tabs to your app's OWN
+// real shadcn/ui components. Built once at module scope: uiAdapter must be referentially
+// stable, or the affected subtree remounts on every render.
+const shadcnAdapter = createShadcnAdapter({
+  Button: ShadcnButton,
+  Popover: ShadcnPopover,
+  PopoverTrigger: ShadcnPopoverTrigger,
+  PopoverContent: ShadcnPopoverContent,
+  Tabs: ShadcnTabs,
+  TabsList: ShadcnTabsList,
+  TabsTrigger: ShadcnTabsTrigger,
+  TabsContent: ShadcnTabsContent,
+})
 
 function Code({ children }: { children: string }) {
   return (
@@ -62,6 +80,17 @@ function Demo({
 function useCron(init: CronValue) {
   const [value, setValue] = useState<CronValue>(init)
   return { value, onChange: setValue }
+}
+
+function ShadcnAdapterExample() {
+  const { value, onChange } = useCron({ type: 'daily', hour: 9, minute: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+  return (
+    <div ref={containerRef} className="shadcn-theme-scope">
+      <CronInput value={value} onChange={onChange} uiAdapter={shadcnAdapter} portalContainer={containerRef} />
+      <Value value={value} />
+    </div>
+  )
 }
 
 export function CronInputTab() {
@@ -199,6 +228,19 @@ export function CronInputTab() {
         code={`<CronInput disabled />`}
       >
         <CronInput value={disabled.value} onChange={disabled.onChange} disabled />
+      </Demo>
+
+      <Demo
+        title="shadcn adapter"
+        description="uiAdapter swaps Button/Popover/Tabs for your app's own real shadcn/ui components."
+        code={`const shadcnAdapter = createShadcnAdapter({
+  Button, Popover, PopoverTrigger, PopoverContent,
+  Tabs, TabsList, TabsTrigger, TabsContent,
+})
+
+<CronInput value={value} onChange={onChange} uiAdapter={shadcnAdapter} />`}
+      >
+        <ShadcnAdapterExample />
       </Demo>
 
     </div>

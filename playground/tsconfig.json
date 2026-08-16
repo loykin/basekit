@@ -9,6 +9,8 @@
     "skipLibCheck": true,
     "paths": {
       "@loykin/datetime-range": ["../packages/datetime-range/src/index.ts"],
+      "@loykin/datetime-range/adapters/shadcn": ["../packages/datetime-range/src/adapters/shadcn.tsx"],
+      "@loykin/cron-input/adapters/shadcn": ["../packages/cron-input/src/adapters/shadcn.tsx"],
       "@loykin/side-panel": ["../packages/side-panel/src/index.ts"]
     }
   },

@@ -5,7 +5,7 @@ import { format, getYear, setYear, addMonths, subMonths } from 'date-fns';
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from 'lucide-react';
 import { DayPicker, Matcher, TZDate } from 'react-day-picker';
 import { cn } from './lib/utils';
-import { Button } from './ui/button';
+import { Button } from './core/UIComponents';
 import { MonthYearPicker, TimePicker } from './DatetimeUtil';
 import type { DatetimePrecision } from './types';
 
@@ -132,8 +132,8 @@ export function DateTimePanel({
 
   return (
     <div>
-      <div className="dr-panel-header">
-        <div className="dr-panel-nav-label">
+      <div className="datetime-range-panel-header">
+        <div className="datetime-range-panel-nav-label">
           <div>
             <span onClick={() => setMonthYearPicker(monthYearPicker === 'month' ? false : 'month')}>
               {format(month, 'MMMM')}
@@ -149,7 +149,7 @@ export function DateTimePanel({
           </Button>
         </div>
         {!monthYearPicker && (
-          <div className="dr-panel-nav-btn">
+          <div className="datetime-range-panel-nav-btn">
             <Button variant="ghost" size="icon" aria-label="Previous month" onClick={onPrevMonth}>
               <ChevronLeftIcon style={{ width: 16, height: 16 }} />
             </Button>
@@ -160,7 +160,7 @@ export function DateTimePanel({
         )}
       </div>
 
-      <div className="dr-panel-calendar">
+      <div className="datetime-range-panel-calendar">
         <DayPicker
           timeZone={timezone}
           mode="single"
@@ -181,43 +181,43 @@ export function DateTimePanel({
           disabled={[max ? { after: max } : null, min ? { before: min } : null].filter(Boolean) as Matcher[]}
           onMonthChange={setMonth}
           classNames={{
-            dropdowns: 'dr-cal-dropdowns',
-            months: 'dr-cal-months',
-            month: 'dr-cal-month',
+            dropdowns: 'datetime-range-cal-dropdowns',
+            months: 'datetime-range-cal-months',
+            month: 'datetime-range-cal-month',
             month_caption: 'hidden',
             button_previous: 'hidden',
             button_next: 'hidden',
-            month_grid: 'dr-cal-month-grid',
-            weekdays: 'dr-cal-weekdays',
-            weekday: 'dr-cal-weekday',
-            week: 'dr-cal-week',
-            day: 'dr-cal-day',
-            day_button: 'dr-cal-day-btn',
-            range_end: 'dr-cal-day-range-end',
-            selected: 'dr-cal-day-selected',
-            today: 'dr-cal-day-today',
-            outside: 'dr-cal-day-outside',
-            disabled: 'dr-cal-day-disabled',
-            range_middle: 'dr-cal-day-range-middle',
-            hidden: 'dr-cal-day-hidden',
+            month_grid: 'datetime-range-cal-month-grid',
+            weekdays: 'datetime-range-cal-weekdays',
+            weekday: 'datetime-range-cal-weekday',
+            week: 'datetime-range-cal-week',
+            day: 'datetime-range-cal-day',
+            day_button: 'datetime-range-cal-day-btn',
+            range_end: 'datetime-range-cal-day-range-end',
+            selected: 'datetime-range-cal-day-selected',
+            today: 'datetime-range-cal-day-today',
+            outside: 'datetime-range-cal-day-outside',
+            disabled: 'datetime-range-cal-day-disabled',
+            range_middle: 'datetime-range-cal-day-range-middle',
+            hidden: 'datetime-range-cal-day-hidden',
           }}
           showOutsideDays={true}
           {...props}
         />
-        <div className={cn('dr-panel-overlay', !monthYearPicker && 'dr-panel-overlay--hidden')} />
+        <div className={cn('datetime-range-panel-overlay', !monthYearPicker && 'datetime-range-panel-overlay--hidden')} />
         <MonthYearPicker
           value={month}
           mode={monthYearPicker as 'month' | 'year'}
           onChange={onMonthYearChanged}
           minDate={minDate}
           maxDate={maxDate}
-          className={cn('dr-panel-monthyear', !monthYearPicker && 'dr-panel-monthyear--hidden')}
+          className={cn('datetime-range-panel-monthyear', !monthYearPicker && 'datetime-range-panel-monthyear--hidden')}
         />
       </div>
 
-      <div className="dr-panel-footer">
+      <div className="datetime-range-panel-footer">
         {precision !== 'date' && (
-          <div className="dr-panel-time">
+          <div className="datetime-range-panel-time">
             <TimePicker
               timePicker={precisionToTimePicker(precision)}
               value={date}
@@ -229,14 +229,14 @@ export function DateTimePanel({
           </div>
         )}
         {(isError || errorType !== null) && (
-          <div className="dr-panel-error">
-            <span className="dr-panel-error-msg">
+          <div className="datetime-range-panel-error">
+            <span className="datetime-range-panel-error-msg">
               {getRangeErrorMessage?.(errorType, title) ?? 'Invalid date range.'}
             </span>
           </div>
         )}
         {!immediate && (
-          <div className="dr-panel-buttons">
+          <div className="datetime-range-panel-buttons">
             <Button variant="outline" size="sm" onClick={onCancel}>Cancel</Button>
             <Button size="sm" onClick={onSubmit}>Done</Button>
           </div>

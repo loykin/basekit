@@ -153,15 +153,15 @@ function SelectedValueDisplay<TMeta>({
   const variant = display.variant ?? (Array.isArray(value) ? 'tags' : 'text')
 
   if (!items.length) {
-    return <span className="fi-selected-empty">{emptyText}</span>
+    return <span className="filter-input-selected-empty">{emptyText}</span>
   }
 
   if (variant === 'count') {
-    return <span className="fi-selected-count">{items.length} selected</span>
+    return <span className="filter-input-selected-count">{items.length} selected</span>
   }
 
   if (variant === 'summary') {
-    return <span className="fi-selected-summary">{items.length} {display.summaryLabel ?? 'selected'}</span>
+    return <span className="filter-input-selected-summary">{items.length} {display.summaryLabel ?? 'selected'}</span>
   }
 
   const maxVisible = display.maxVisible ?? items.length
@@ -169,29 +169,29 @@ function SelectedValueDisplay<TMeta>({
   const hidden = Math.max(0, items.length - visible.length)
   if (variant === 'text') {
     return (
-      <span className="fi-selected-text">
+      <span className="filter-input-selected-text">
         {items.map((item) => display.formatLabel?.(item) ?? item.label).join(', ')}
       </span>
     )
   }
 
   return (
-    <div className="fi-selected-list">
+    <div className="filter-input-selected-list">
       {visible.map((item) => {
         const label = display.formatLabel?.(item) ?? item.label
         return (
           <span
             key={stringifyValue(item.value)}
-            className="fi-tag"
+            className="filter-input-tag"
             data-size={display.size ?? 'sm'}
             title={label}
             style={display.colorBy !== 'none' ? { borderColor: optionColor(item), color: optionColor(item) } : undefined}
           >
-            <span className="fi-tag-label">{label}</span>
+            <span className="filter-input-tag-label">{label}</span>
             {display.removable && onRemove && (
               <button
                 type="button"
-                className="fi-tag-remove"
+                className="filter-input-tag-remove"
                 aria-label={`Remove ${label}`}
                 onClick={() => onRemove(item.value)}
               >
@@ -203,7 +203,7 @@ function SelectedValueDisplay<TMeta>({
       })}
       {hidden > 0 && display.overflow !== 'collapse' && (
         <span
-          className="fi-tag-overflow"
+          className="filter-input-tag-overflow"
           title={display.overflow === 'tooltip' ? items.slice(maxVisible).map((item) => item.label).join(', ') : undefined}
         >
           +{hidden}
@@ -245,7 +245,7 @@ export function FilterInput<TMeta = unknown>({
   const clearButton = behavior.clearable && value !== undefined && value !== null && value !== '' && (
     <button
       type="button"
-      className={cn('fi-clear-button', classNames?.clearButton)}
+      className={cn('filter-input-clear-button', classNames?.clearButton)}
       disabled={disabled}
       onClick={() => emit(Array.isArray(value) ? [] : null)}
     >
@@ -254,7 +254,7 @@ export function FilterInput<TMeta = unknown>({
   )
 
   const commonInputClass = cn(
-    'fi-control',
+    'filter-input-control',
     classNames?.control,
     inputClassName,
   )
@@ -263,17 +263,17 @@ export function FilterInput<TMeta = unknown>({
   const hasIcons = !!(leadingIcon || trailingIcon)
   const iconAwareInputClass = cn(
     commonInputClass,
-    leadingIcon && 'fi-control-has-leading-icon',
-    trailingIcon && 'fi-control-has-trailing-icon',
+    leadingIcon && 'filter-input-control-has-leading-icon',
+    trailingIcon && 'filter-input-control-has-trailing-icon',
   )
 
   const withIconWrap = (inputEl: React.ReactElement) => {
     if (!hasIcons) return inputEl
     return (
-      <div className={cn('fi-control-wrap', classNames?.controlWrap)}>
-        {leadingIcon && <span className="fi-control-icon fi-control-icon-leading">{leadingIcon}</span>}
+      <div className={cn('filter-input-control-wrap', classNames?.controlWrap)}>
+        {leadingIcon && <span className="filter-input-control-icon filter-input-control-icon-leading">{leadingIcon}</span>}
         {inputEl}
-        {trailingIcon && <span className="fi-control-icon fi-control-icon-trailing">{trailingIcon}</span>}
+        {trailingIcon && <span className="filter-input-control-icon filter-input-control-icon-trailing">{trailingIcon}</span>}
       </div>
     )
   }
@@ -283,7 +283,7 @@ export function FilterInput<TMeta = unknown>({
       case 'textarea':
         return (
           <textarea
-            className={cn('fi-textarea', classNames?.control, inputClassName)}
+            className={cn('filter-input-textarea', classNames?.control, inputClassName)}
             value={normalizeText(value)}
             placeholder={config.placeholder}
             disabled={disabled}
@@ -315,9 +315,9 @@ export function FilterInput<TMeta = unknown>({
 
       case 'boolean':
         return (
-          <div className={cn('fi-row', classNames?.row)}>
+          <div className={cn('filter-input-row', classNames?.row)}>
             <FiSelect
-              className="fi-flex-1"
+              className="filter-input-flex-1"
               size={display.size}
               options={[
                 { label: 'True', value: 'true' },
@@ -346,7 +346,7 @@ export function FilterInput<TMeta = unknown>({
         }
 
         return (
-          <div className={cn('fi-multi', classNames?.multi)}>
+          <div className={cn('filter-input-multi', classNames?.multi)}>
             <FiMultiSelect
               options={filteredOptions}
               value={selected}
@@ -373,7 +373,7 @@ export function FilterInput<TMeta = unknown>({
               renderOption={renderOption ? (o) => renderOption(o as FilterOption<TMeta>) : undefined}
               classNames={classNames ? { trigger: classNames.multiTrigger, popup: classNames.popover, item: classNames.option } : undefined}
             />
-            <div className="fi-row">
+            <div className="filter-input-row">
               {clearButton}
             </div>
           </div>
@@ -382,9 +382,9 @@ export function FilterInput<TMeta = unknown>({
 
       case 'select':
         return (
-          <div className={cn('fi-row', classNames?.row)}>
+          <div className={cn('filter-input-row', classNames?.row)}>
             <FiSelect
-              className="fi-flex-1"
+              className="filter-input-flex-1"
               size={display.size}
               options={filteredOptions.map((o) => ({ label: o.label, value: stringifyValue(o.value), disabled: o.disabled }))}
               value={value === null || value === undefined ? '' : normalizeText(value)}
@@ -413,8 +413,8 @@ export function FilterInput<TMeta = unknown>({
       case 'autocomplete':
       case 'combobox':
         return (
-          <div className={cn('fi-stack', classNames?.stack)}>
-            <div className={cn('fi-row', classNames?.row)}>
+          <div className={cn('filter-input-stack', classNames?.stack)}>
+            <div className={cn('filter-input-row', classNames?.row)}>
               {withIconWrap(
                 <input
                   className={iconAwareInputClass}
@@ -436,14 +436,14 @@ export function FilterInput<TMeta = unknown>({
               {clearButton}
             </div>
             {(loading || error || filteredOptions.length > 0) && (
-              <div className={cn('fi-popover', classNames?.popover)}>
-                {loading && <div className="fi-loading">Loading...</div>}
-                {error && <div className="fi-error">{error}</div>}
+              <div className={cn('filter-input-popover', classNames?.popover)}>
+                {loading && <div className="filter-input-loading">Loading...</div>}
+                {error && <div className="filter-input-error">{error}</div>}
                 {!loading && !error && filteredOptions.map((option) => (
                   <button
                     key={stringifyValue(option.value)}
                     type="button"
-                    className={cn('fi-option', classNames?.option)}
+                    className={cn('filter-input-option', classNames?.option)}
                     disabled={disabled || option.disabled}
                     onMouseDown={(event) => event.preventDefault()}
                     onClick={() => {
@@ -451,8 +451,8 @@ export function FilterInput<TMeta = unknown>({
                       emit(option.value as FilterValue, option)
                     }}
                   >
-                    <span className={cn('fi-option-label', classNames?.optionLabel)}>{renderOption ? renderOption(option as FilterOption<TMeta>) : option.label}</span>
-                    {optionMatches(option, value as FilterOptionValue) && <span className="fi-selected-mark">Selected</span>}
+                    <span className={cn('filter-input-option-label', classNames?.optionLabel)}>{renderOption ? renderOption(option as FilterOption<TMeta>) : option.label}</span>
+                    {optionMatches(option, value as FilterOptionValue) && <span className="filter-input-selected-mark">Selected</span>}
                   </button>
                 ))}
               </div>
@@ -481,7 +481,7 @@ export function FilterInput<TMeta = unknown>({
         const range = getDateRange(value)
         const inputType = config.type === 'date-range' ? 'date' : 'datetime-local'
         return (
-          <div className={cn('fi-range', classNames?.range)}>
+          <div className={cn('filter-input-range', classNames?.range)}>
             <input className={commonInputClass} type={inputType} value={range.from ?? ''} disabled={disabled} data-size={display.size} onChange={(event) => emit({ ...range, from: event.target.value || undefined })} />
             <input className={commonInputClass} type={inputType} value={range.to ?? ''} disabled={disabled} data-size={display.size} onChange={(event) => emit({ ...range, to: event.target.value || undefined })} />
           </div>
@@ -491,7 +491,7 @@ export function FilterInput<TMeta = unknown>({
       case 'range': {
         const range = getNumberRange(value)
         return (
-          <div className={cn('fi-range', classNames?.range)}>
+          <div className={cn('filter-input-range', classNames?.range)}>
             <input className={commonInputClass} type="number" value={range.min ?? ''} placeholder="Min" disabled={disabled} data-size={display.size} min={config.validation?.min} max={config.validation?.max} onChange={(event) => emit({ ...range, min: event.target.value === '' ? undefined : Number(event.target.value) })} />
             <input className={commonInputClass} type="number" value={range.max ?? ''} placeholder="Max" disabled={disabled} data-size={display.size} min={config.validation?.min} max={config.validation?.max} onChange={(event) => emit({ ...range, max: event.target.value === '' ? undefined : Number(event.target.value) })} />
           </div>
@@ -510,7 +510,7 @@ export function FilterInput<TMeta = unknown>({
         return (
           <div
             className={cn(
-              'fi-tag-input',
+              'filter-input-tag-input',
               classNames?.tagInput,
             )}
             data-disabled={disabled || undefined}
@@ -524,13 +524,13 @@ export function FilterInput<TMeta = unknown>({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className={cn('fi-tag', classNames?.tag)}
+                className={cn('filter-input-tag', classNames?.tag)}
                 title={tag}
               >
-                <span className={cn('fi-tag-label', classNames?.tagLabel)}>{tag}</span>
+                <span className={cn('filter-input-tag-label', classNames?.tagLabel)}>{tag}</span>
                 <button
                   type="button"
-                  className={cn('fi-tag-remove', classNames?.tagRemove)}
+                  className={cn('filter-input-tag-remove', classNames?.tagRemove)}
                   aria-label={`Remove ${tag}`}
                   disabled={disabled}
                   onClick={(event) => {
@@ -544,7 +544,7 @@ export function FilterInput<TMeta = unknown>({
             ))}
             <input
               id={`${config.key}-tag-input`}
-              className={cn('fi-tag-text-input', classNames?.tagTextInput)}
+              className={cn('filter-input-tag-text-input', classNames?.tagTextInput)}
               value={query}
               placeholder={tags.length ? '' : config.placeholder ?? 'Add tag...'}
               disabled={disabled}
@@ -567,7 +567,7 @@ export function FilterInput<TMeta = unknown>({
       case 'text':
       default:
         return (
-          <div className={cn('fi-row', classNames?.row)}>
+          <div className={cn('filter-input-row', classNames?.row)}>
             {withIconWrap(
               <input
                 className={iconAwareInputClass}
@@ -588,11 +588,11 @@ export function FilterInput<TMeta = unknown>({
   })()
 
   return (
-    <div className={cn('fi-field', classNames?.root, className)}>
+    <div className={cn('filter-input-field', classNames?.root, className)}>
       {config.label && (
-        <label className={cn('fi-field-label', classNames?.label)}>
+        <label className={cn('filter-input-field-label', classNames?.label)}>
           {config.label}
-          {behavior.required && <span className="fi-field-required"> *</span>}
+          {behavior.required && <span className="filter-input-field-required"> *</span>}
         </label>
       )}
       {control}

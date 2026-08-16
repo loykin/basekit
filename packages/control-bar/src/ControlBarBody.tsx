@@ -10,8 +10,8 @@ export interface ControlBarBodyProps {
 export function ControlBarBody({ children, className, style }: ControlBarBodyProps) {
   return (
     <div
-      className={clsx('cb-body', className)}
-      style={{ paddingBottom: 'var(--cb-height, 0px)', ...style }}
+      className={clsx('control-bar-body', className)}
+      style={{ paddingBottom: 'var(--control-bar-height, 0px)', ...style }}
     >
       {children}
     </div>

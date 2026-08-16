@@ -55,20 +55,20 @@ export function FiSelect({
       }}
       disabled={disabled}
     >
-      <Select.Trigger className={cn('fi-select-trigger', classNames?.trigger, className)} data-size={size}>
-        <Select.Value placeholder={placeholder} className="fi-select-value" />
-        <Select.Icon className="fi-select-icon">
+      <Select.Trigger className={cn('filter-input-select-trigger', classNames?.trigger, className)} data-size={size}>
+        <Select.Value placeholder={placeholder} className="filter-input-select-value" />
+        <Select.Icon className="filter-input-select-icon">
           <ChevronDownIcon />
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
-        <Select.Positioner sideOffset={4} className="fi-positioner">
-          <Select.Popup className={cn('fi-select-popup', classNames?.popup)}>
+        <Select.Positioner sideOffset={4} className="filter-input-positioner">
+          <Select.Popup className={cn('filter-input-select-popup', classNames?.popup)}>
             {(searchable || onReload) && (
-              <div className="fi-popup-header">
+              <div className="filter-input-popup-header">
                 {searchable && (
                   <input
-                    className="fi-control"
+                    className="filter-input-control"
                     value={query}
                     placeholder="Search..."
                     autoFocus
@@ -82,20 +82,20 @@ export function FiSelect({
                   />
                 )}
                 {onReload && (
-                  <button type="button" className="fi-reload-button" onClick={onReload} disabled={loading} aria-label="Reload">
+                  <button type="button" className="filter-input-reload-button" onClick={onReload} disabled={loading} aria-label="Reload">
                     <RefreshIcon />
                   </button>
                 )}
               </div>
             )}
             {(loading || error) && (
-              <div className="fi-popup-status">
+              <div className="filter-input-popup-status">
                 {loading
-                  ? <span className="fi-loading">Loading…</span>
-                  : <span className="fi-error">{error}</span>
+                  ? <span className="filter-input-loading">Loading…</span>
+                  : <span className="filter-input-error">{error}</span>
                 }
                 {onReload && !loading && (
-                  <button type="button" className="fi-reload-button" onClick={onReload} aria-label="Retry">
+                  <button type="button" className="filter-input-reload-button" onClick={onReload} aria-label="Retry">
                     <RefreshIcon />
                   </button>
                 )}
@@ -103,8 +103,8 @@ export function FiSelect({
             )}
             <Select.List>
               {!loading && !error && !required && (
-                <Select.Item value="" className={cn('fi-select-item', classNames?.item)}>
-                  <Select.ItemText className="fi-select-item-text">{placeholder}</Select.ItemText>
+                <Select.Item value="" className={cn('filter-input-select-item', classNames?.item)}>
+                  <Select.ItemText className="filter-input-select-item-text">{placeholder}</Select.ItemText>
                 </Select.Item>
               )}
               {!loading && !error && options.map((option) => (
@@ -112,23 +112,23 @@ export function FiSelect({
                   key={option.value}
                   value={option.value}
                   disabled={option.disabled}
-                  className={cn('fi-select-item', classNames?.item)}
+                  className={cn('filter-input-select-item', classNames?.item)}
                 >
-                  <Select.ItemText className="fi-select-item-text">{option.label}</Select.ItemText>
-                  <Select.ItemIndicator className="fi-select-item-indicator">
+                  <Select.ItemText className="filter-input-select-item-text">{option.label}</Select.ItemText>
+                  <Select.ItemIndicator className="filter-input-select-item-indicator">
                     <CheckIcon />
                   </Select.ItemIndicator>
                 </Select.Item>
               ))}
               {!loading && !error && !options.length && !required && (
-                <div className="fi-popup-status">
-                  <span className="fi-empty">No options</span>
+                <div className="filter-input-popup-status">
+                  <span className="filter-input-empty">No options</span>
                 </div>
               )}
             </Select.List>
             {onReload && !searchable && !loading && !error && (
-              <div className="fi-popup-footer">
-                <button type="button" className="fi-reload-button" onClick={onReload} aria-label="Reload">
+              <div className="filter-input-popup-footer">
+                <button type="button" className="filter-input-reload-button" onClick={onReload} aria-label="Reload">
                   <RefreshIcon />
                 </button>
               </div>

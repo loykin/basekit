@@ -11,6 +11,14 @@ import {
   QUICK_PRESETS,
 } from '@loykin/datetime-range'
 import '@loykin/datetime-range/styles'
+import { createShadcnAdapter } from '@loykin/datetime-range/adapters/shadcn'
+import { Button as ShadcnButton } from '../components/ui/button'
+import { Input as ShadcnInput } from '../components/ui/input'
+import { Popover as ShadcnPopover, PopoverTrigger as ShadcnPopoverTrigger, PopoverContent as ShadcnPopoverContent } from '../components/ui/popover'
+import { Select as ShadcnSelect, SelectTrigger as ShadcnSelectTrigger, SelectValue as ShadcnSelectValue, SelectContent as ShadcnSelectContent, SelectItem as ShadcnSelectItem } from '../components/ui/select'
+import { Tabs as ShadcnTabs, TabsList as ShadcnTabsList, TabsTrigger as ShadcnTabsTrigger, TabsContent as ShadcnTabsContent } from '../components/ui/tabs'
+import { Switch as ShadcnSwitch } from '../components/ui/switch'
+import { ScrollArea as ShadcnScrollArea } from '../components/ui/scroll-area'
 
 const initStart = (): DateTimeRangeValue => relativeAgo(1, 'Hours ago')
 const initEnd   = (): DateTimeRangeValue => relativeNow()
@@ -81,6 +89,76 @@ function CustomThemeExample() {
   )
 }
 
+// ── shadcn adapter ─────────────────────────────────────────────────────────────
+// createShadcnAdapter bridges DatetimeRange's internal Button/Popover/Select/Tabs/Switch/Input
+// to your app's OWN real shadcn/ui components — the actual DOM comes from your design system,
+// not a re-themed copy of basekit's own. Built once at module scope: uiAdapter must be
+// referentially stable, or the affected subtree remounts on every render.
+const shadcnAdapter = createShadcnAdapter({
+  Button: ShadcnButton,
+  Input: ShadcnInput,
+  Popover: ShadcnPopover,
+  PopoverTrigger: ShadcnPopoverTrigger,
+  PopoverContent: ShadcnPopoverContent,
+  Select: ShadcnSelect,
+  SelectTrigger: ShadcnSelectTrigger,
+  SelectValue: ShadcnSelectValue,
+  SelectContent: ShadcnSelectContent,
+  SelectItem: ShadcnSelectItem,
+  Tabs: ShadcnTabs,
+  TabsList: ShadcnTabsList,
+  TabsTrigger: ShadcnTabsTrigger,
+  TabsContent: ShadcnTabsContent,
+  Switch: ShadcnSwitch,
+  ScrollArea: ShadcnScrollArea,
+})
+
+function ShadcnAdapterExample() {
+  // Deliberately not relativeNow() here: that sets the End panel's "Now" toggle on,
+  // which disables Amount/Format — a bad first look for a demo meant to show off styling.
+  const [start, setStart] = useState(initStart())
+  const [end,   setEnd]   = useState(relativeAgo(5, 'Minutes ago'))
+  const containerRef = useRef<HTMLDivElement>(null)
+  return (
+    <div ref={containerRef} className="shadcn-theme-scope">
+      <DatetimeRange
+        startTime={start}
+        endTime={end}
+        onChange={(s, e) => { setStart(s); setEnd(e) }}
+        uiAdapter={shadcnAdapter}
+        portalContainer={containerRef}
+      />
+      <RangeDisplay start={start} end={end} />
+    </div>
+  )
+}
+
+// calendarMode="inline" composes with uiAdapter — the Absolute-mode calendar renders
+// always-expanded, and the trigger/tabs/select/switch it sits inside are still your
+// app's own shadcn/ui components. portalContainer + .shadcn-theme-scope (see
+// playground-entry.css) keep the date/time segment input's --basekit-radius matching the
+// real shadcn Button/Popover next to it, instead of following the sidebar's Radius picker.
+function ShadcnAdapterInlineExample() {
+  const [start, setStart] = useState(absoluteDate(new Date()))
+  const [end,   setEnd]   = useState(absoluteDate(new Date()))
+  const containerRef = useRef<HTMLDivElement>(null)
+  return (
+    <div ref={containerRef} className="shadcn-theme-scope">
+      <DatetimeRange
+        startTime={start}
+        endTime={end}
+        onChange={(s, e) => { setStart(s); setEnd(e) }}
+        uiAdapter={shadcnAdapter}
+        calendarMode="inline"
+        showRelative={false}
+        showQuickRanges={false}
+        portalContainer={containerRef}
+      />
+      <RangeDisplay start={start} end={end} />
+    </div>
+  )
+}
+
 // ── Custom layout ─────────────────────────────────────────────────────────────
 // useDatetimeRange manages draft/commit/validation.
 // SidePanel provides the picker UI. Everything else is custom.
@@ -118,7 +196,7 @@ function CustomLayoutExample() {
       }}>
         <div style={{ display: 'flex', gap: 6, padding: '8px 16px', borderBottom: '1px solid var(--basekit-border)', background: 'var(--basekit-muted)' }}>
           {QUICK_CHIPS.map(chip => (
-            <button key={chip.label} className="dr-btn" data-variant="ghost" data-size="xs"
+            <button key={chip.label} className="datetime-range-btn" data-variant="ghost" data-size="xs"
               onClick={() => { const [s, e] = chip.fn(); onPreset({ label: chip.label, start: s, end: e }) }}>
               {chip.label}
             </button>
@@ -141,12 +219,12 @@ function CustomLayoutExample() {
             : <span />
           }
           <div style={{ display: 'flex', gap: 8 }}>
-            <button className="dr-btn" data-variant="ghost" data-size="sm" onClick={onCancel}>Cancel</button>
-            <button className="dr-btn" data-variant="outline" data-size="sm"
+            <button className="datetime-range-btn" data-variant="ghost" data-size="sm" onClick={onCancel}>Cancel</button>
+            <button className="datetime-range-btn" data-variant="outline" data-size="sm"
               onClick={() => alert(`Saved: ${toDisplayString(draftStart, { precision: 'second' })} → ${toDisplayString(draftEnd, { precision: 'second' })}`)}>
               Save as preset
             </button>
-            <button className="dr-btn" data-variant="default" data-size="sm" onClick={onApply}>Apply</button>
+            <button className="datetime-range-btn" data-variant="default" data-size="sm" onClick={onApply}>Apply</button>
           </div>
         </div>
       </div>
@@ -173,7 +251,7 @@ function HookExample() {
 
   return (
     <div>
-      <button className="dr-btn" data-variant="outline" onClick={() => setIsOpen(!isOpen)}>
+      <button className="datetime-range-btn" data-variant="outline" onClick={() => setIsOpen(!isOpen)}>
         {toDisplayString(start, { precision: 'second' })} → {toDisplayString(end, { precision: 'second' })}
       </button>
 
@@ -189,7 +267,7 @@ function HookExample() {
         }}>
           <div style={{ display: 'flex', gap: 4, padding: '8px 12px', borderBottom: '1px solid var(--basekit-border)', background: 'var(--basekit-muted)' }}>
             {QUICK_PRESETS.slice(0, 4).map(p => (
-              <button key={p.label} className="dr-btn" data-variant="ghost" data-size="xs"
+              <button key={p.label} className="datetime-range-btn" data-variant="ghost" data-size="xs"
                 onClick={() => onPreset(p)}>
                 {p.label}
               </button>
@@ -212,8 +290,8 @@ function HookExample() {
               : <span />
             }
             <div style={{ display: 'flex', gap: 8 }}>
-              <button className="dr-btn" data-variant="ghost" data-size="sm" onClick={onCancel}>Cancel</button>
-              <button className="dr-btn" data-variant="default" data-size="sm" onClick={onApply}>Apply</button>
+              <button className="datetime-range-btn" data-variant="ghost" data-size="sm" onClick={onCancel}>Cancel</button>
+              <button className="datetime-range-btn" data-variant="default" data-size="sm" onClick={onApply}>Apply</button>
             </div>
           </div>
         </div>
@@ -249,6 +327,20 @@ export function DatetimeRangeComposableTab() {
         description="Same component — different visual via --basekit-* token overrides. portalContainer scopes the popup inside the wrapper."
       >
         <CustomThemeExample />
+      </Block>
+
+      <Block
+        title="shadcn adapter"
+        description="uiAdapter swaps the component implementation itself — Button/Popover/Select/Tabs/Switch/Input all render as your app's own shadcn/ui components (see playground/src/components/ui/*.tsx), not just a re-themed basekit control."
+      >
+        <ShadcnAdapterExample />
+      </Block>
+
+      <Block
+        title="shadcn adapter + inline calendar"
+        description="calendarMode='inline' and uiAdapter combine freely — the Absolute-mode calendar is always expanded (no popover-in-popover), rendered with your app's own shadcn/ui components."
+      >
+        <ShadcnAdapterInlineExample />
       </Block>
 
       <Block

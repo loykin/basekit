@@ -14,7 +14,7 @@ export const TOKEN_GROUPS: TokenGroupDef[] = [
     title: 'Side Panel Tokens',
     tokens: [
       { key: '--basekit-background', type: 'color', description: 'Panel content area background' },
-      { key: '--basekit-card', type: 'color', description: 'Panel surface (.sp-panel)' },
+      { key: '--basekit-card', type: 'color', description: 'Panel surface (.side-panel-panel)' },
       { key: '--basekit-border', type: 'color', description: 'Panel edge border' },
     ],
   },

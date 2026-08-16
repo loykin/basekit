@@ -15,7 +15,7 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   return (
     <SelectPrimitive.Value
       data-slot="select-value"
-      className={cn('dr-select-value', className)}
+      className={cn('datetime-range-select-value', className)}
       {...props}
     />
   )
@@ -31,7 +31,7 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
-      className={cn('dr-select-trigger', className)}
+      className={cn('datetime-range-select-trigger', className)}
       {...props}
     >
       {children}
@@ -40,7 +40,7 @@ function SelectTrigger({
           <HugeiconsIcon
             icon={UnfoldMoreIcon}
             strokeWidth={2}
-            className="dr-select-icon"
+            className="datetime-range-select-icon"
           />
         }
       />
@@ -70,12 +70,12 @@ function SelectContent({
         align={align}
         alignOffset={alignOffset}
         alignItemWithTrigger={alignItemWithTrigger}
-        className="dr-positioner"
+        className="datetime-range-positioner"
       >
         <SelectPrimitive.Popup
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
-          className={cn('dr-select-content', className)}
+          className={cn('datetime-range-select-content', className)}
           {...props}
         >
           <SelectScrollUpButton />
@@ -95,14 +95,14 @@ function SelectItem({
   return (
     <SelectPrimitive.Item
       data-slot="select-item"
-      className={cn('dr-select-item', className)}
+      className={cn('datetime-range-select-item', className)}
       {...props}
     >
-      <SelectPrimitive.ItemText className="dr-select-item-text">
+      <SelectPrimitive.ItemText className="datetime-range-select-item-text">
         {children}
       </SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator
-        render={<span className="dr-select-item-indicator" />}
+        render={<span className="datetime-range-select-item-indicator" />}
       >
         <HugeiconsIcon icon={Tick02Icon} strokeWidth={2} style={{ pointerEvents: 'none' }} />
       </SelectPrimitive.ItemIndicator>
@@ -117,7 +117,7 @@ function SelectScrollUpButton({
   return (
     <SelectPrimitive.ScrollUpArrow
       data-slot="select-scroll-up-button"
-      className={cn('dr-select-scroll-btn dr-select-scroll-btn--up', className)}
+      className={cn('datetime-range-select-scroll-btn datetime-range-select-scroll-btn--up', className)}
       {...props}
     >
       <HugeiconsIcon icon={ArrowUp01Icon} strokeWidth={2} />
@@ -132,7 +132,7 @@ function SelectScrollDownButton({
   return (
     <SelectPrimitive.ScrollDownArrow
       data-slot="select-scroll-down-button"
-      className={cn('dr-select-scroll-btn dr-select-scroll-btn--down', className)}
+      className={cn('datetime-range-select-scroll-btn datetime-range-select-scroll-btn--down', className)}
       {...props}
     >
       <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={2} />

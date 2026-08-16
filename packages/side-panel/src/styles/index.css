@@ -3,7 +3,7 @@
  *
  * Plain CSS, no Tailwind dependency. Consumers can override with:
  *   - CSS custom properties: --basekit-*
- *   - Semantic class names: .sp-*
+ *   - Semantic class names: .side-panel-*
  */
 
 :root {
@@ -18,7 +18,7 @@
   --basekit-border:     var(--border,     oklch(1 0 0 / 10%));
 }
 
-.sp-root {
+.side-panel-root {
   position: relative;
   overflow: hidden;
   flex: 1;
@@ -26,18 +26,18 @@
   min-width: 0;
 }
 
-.sp-panel {
+.side-panel-panel {
   z-index: 50;
   overflow: hidden;
   background: var(--basekit-card);
 }
 
-.sp-panel[data-side="right"] { border-left: 1px solid var(--basekit-border); }
-.sp-panel[data-side="left"] { border-right: 1px solid var(--basekit-border); }
-.sp-panel[data-side="top"] { border-bottom: 1px solid var(--basekit-border); }
-.sp-panel[data-side="bottom"] { border-top: 1px solid var(--basekit-border); }
+.side-panel-panel[data-side="right"] { border-left: 1px solid var(--basekit-border); }
+.side-panel-panel[data-side="left"] { border-right: 1px solid var(--basekit-border); }
+.side-panel-panel[data-side="top"] { border-bottom: 1px solid var(--basekit-border); }
+.side-panel-panel[data-side="bottom"] { border-top: 1px solid var(--basekit-border); }
 
-.sp-panel-content {
+.side-panel-panel-content {
   height: 100%;
   overflow: auto;
   background: var(--basekit-background);

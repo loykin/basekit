@@ -10,7 +10,7 @@ function Tabs({
     <TabsPrimitive.Root
       data-slot="tabs"
       data-orientation={orientation}
-      className={cn('dr-tabs', className)}
+      className={cn('datetime-range-tabs', className)}
       {...props}
     />
   )
@@ -25,7 +25,7 @@ function TabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       data-variant={variant}
-      className={cn('dr-tabs-list', className)}
+      className={cn('datetime-range-tabs-list', className)}
       {...props}
     />
   )
@@ -35,7 +35,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
   return (
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
-      className={cn('dr-tabs-trigger', className)}
+      className={cn('datetime-range-tabs-trigger', className)}
       {...props}
     />
   )
@@ -45,7 +45,7 @@ function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
   return (
     <TabsPrimitive.Panel
       data-slot="tabs-content"
-      className={cn('dr-tabs-content', className)}
+      className={cn('datetime-range-tabs-content', className)}
       {...props}
     />
   )

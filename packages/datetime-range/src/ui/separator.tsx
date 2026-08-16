@@ -10,7 +10,7 @@ function Separator({
     <SeparatorPrimitive
       data-slot="separator"
       orientation={orientation}
-      className={cn('dr-separator', className)}
+      className={cn('datetime-range-separator', className)}
       {...props}
     />
   )

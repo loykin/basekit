@@ -94,7 +94,7 @@ export function SidePanelProvider({
 
   return (
     <SidePanelContext.Provider value={{ store, open, close, registerGuard, unregisterGuard }}>
-      <div ref={containerRef} className={cn('sp-root', className)} style={style}>
+      <div ref={containerRef} className={cn('side-panel-root', className)} style={style}>
         {children}
         <SidePanelSlot
           store={store}
@@ -221,10 +221,10 @@ function SidePanelSlot({
         setIsResizing(false)
       }}
       enable={resizeEnable}
-      className="sp-panel"
+      className="side-panel-panel"
       data-side={side}
     >
-      <div ref={panelRef} className="sp-panel-content">
+      <div ref={panelRef} className="side-panel-panel-content">
         {content}
       </div>
     </Resizable>

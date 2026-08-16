@@ -17,11 +17,11 @@ export function useControlBarState<T>(selector: (s: ReturnType<ControlBarStore['
 
 export interface ControlBarProviderProps {
   children: React.ReactNode
-  /** Zustand persist key — use a unique value per layout to avoid state collisions. @default 'cb-state' */
+  /** Zustand persist key — use a unique value per layout to avoid state collisions. @default 'control-bar-state' */
   persistKey?: string
 }
 
-export function ControlBarProvider({ children, persistKey = 'cb-state' }: ControlBarProviderProps) {
+export function ControlBarProvider({ children, persistKey = 'control-bar-state' }: ControlBarProviderProps) {
   const storeRef = useRef<ControlBarStore | null>(null)
   if (!storeRef.current) {
     storeRef.current = createControlBarStore(persistKey)

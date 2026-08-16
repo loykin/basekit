@@ -10,12 +10,12 @@ function Switch({
     <SwitchPrimitive.Root
       data-slot="switch"
       data-size={size}
-      className={cn('dr-switch', className)}
+      className={cn('datetime-range-switch', className)}
       {...props}
     >
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
-        className="dr-switch-thumb"
+        className="datetime-range-switch-thumb"
       />
     </SwitchPrimitive.Root>
   )

@@ -26,9 +26,9 @@ function PopoverContent({
         align={align}
         side={side}
         sideOffset={sideOffset}
-        className="ci-positioner"
+        className="cron-input-positioner"
       >
-        <PopoverPrimitive.Popup className={cn('ci-popover-content', className)} {...props} />
+        <PopoverPrimitive.Popup className={cn('cron-input-popover-content', className)} {...props} />
       </PopoverPrimitive.Positioner>
     </PopoverPrimitive.Portal>
   )

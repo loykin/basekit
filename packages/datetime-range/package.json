@@ -15,6 +15,11 @@
     "./styles": {
       "types": "./dist/styles.d.ts",
       "default": "./dist/styles.css"
+    },
+    "./adapters/shadcn": {
+      "types": "./dist/adapters/shadcn.d.ts",
+      "import": "./dist/adapters/shadcn.js",
+      "require": "./dist/adapters/shadcn.cjs"
     }
   },
   "files": [

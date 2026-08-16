@@ -30,7 +30,7 @@ export function FilterVariable<TMeta = unknown>({
   return (
     <div
       className={cn(
-        'fi-variable',
+        'filter-input-variable',
         classNames?.root,
         className,
       )}
@@ -39,7 +39,7 @@ export function FilterVariable<TMeta = unknown>({
       {label && (
         <div
           className={cn(
-            'fi-variable-label',
+            'filter-input-variable-label',
             classNames?.label,
             labelClassName,
           )}
@@ -47,7 +47,7 @@ export function FilterVariable<TMeta = unknown>({
           {label}
         </div>
       )}
-      <div className={cn('fi-variable-value', classNames?.value, valueClassName)}>
+      <div className={cn('filter-input-variable-value', classNames?.value, valueClassName)}>
         <FilterInput
           config={valueConfig}
           value={value}

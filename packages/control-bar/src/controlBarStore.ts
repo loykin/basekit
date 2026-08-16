@@ -32,7 +32,7 @@ function uid(): string {
 
 export { uid, DEFAULT_HEIGHT, MIN_HEIGHT }
 
-export const createControlBarStore = (persistKey = 'cb-state') =>
+export const createControlBarStore = (persistKey = 'control-bar-state') =>
   createStore<ControlBarState & ControlBarActions>()(
     persist(
       (set, get) => ({

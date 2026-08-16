@@ -25,9 +25,7 @@ import {
 import { setMonth as setMonthFns } from 'date-fns/setMonth';
 import { CheckIcon, ChevronDownIcon, Clock } from 'lucide-react';
 import { cn } from './lib/utils';
-import { ScrollArea } from './ui/scroll-area';
-import { Button } from './ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { ScrollArea, Button, Popover, PopoverContent, PopoverTrigger } from './core/UIComponents';
 
 const AM_VALUE = 0;
 const PM_VALUE = 1;

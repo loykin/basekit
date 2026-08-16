@@ -36,11 +36,11 @@ export const TOKEN_GROUPS: TokenGroupDef[] = [
     title: 'Control overrides',
     description: 'FilterInput / FilterVariable only — inherits from Base tokens by default',
     tokens: [
-      { key: '--basekit-fi-control-background', type: 'color', description: '↳ --basekit-background' },
-      { key: '--basekit-fi-control-foreground', type: 'color', description: '↳ --basekit-foreground' },
-      { key: '--basekit-fi-control-border', type: 'color', description: '↳ --basekit-input' },
-      { key: '--basekit-fi-control-placeholder', type: 'color', description: '↳ --basekit-muted-foreground' },
-      { key: '--basekit-fi-separator', type: 'color', description: 'Label | value divider' },
+      { key: '--basekit-filter-input-control-background', type: 'color', description: '↳ --basekit-background' },
+      { key: '--basekit-filter-input-control-foreground', type: 'color', description: '↳ --basekit-foreground' },
+      { key: '--basekit-filter-input-control-border', type: 'color', description: '↳ --basekit-input' },
+      { key: '--basekit-filter-input-control-placeholder', type: 'color', description: '↳ --basekit-muted-foreground' },
+      { key: '--basekit-filter-input-separator', type: 'color', description: 'Label | value divider' },
     ],
   },
 ]
@@ -447,12 +447,12 @@ export function FilterInputTab() {
 │ Categories │ [ Alpha x ][ Beta x ]            v  │
 └──────────────────────────────────────────────────┘
 
-Without label (.fi-variable with no .fi-variable-label):
+Without label (.filter-input-variable with no .filter-input-variable-label):
 ┌──────────────────────────────────────────────────┐
 │ [ Alpha x ][ Beta x ]                        v   │
 └──────────────────────────────────────────────────┘
 
-Standalone (no .fi-variable wrapper):
+Standalone (no .filter-input-variable wrapper):
 [ Alpha x ][ Beta x ]                         v
 
 Types: text · textarea · number · boolean · select · multi-select · tag`}</Code>

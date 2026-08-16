@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { CalendarDays } from 'lucide-react';
-import { Button } from './ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Input } from './ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Switch } from './ui/switch';
+import {
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Switch,
+} from './core/UIComponents';
+import { DatetimeRangeProvider } from './core/UIAdapterContext';
+import type { DatetimeRangeUIAdapter } from './core/UIAdapterContext';
 import { DateTimePanel } from './DatetimePanel';
 import { DatetimeSegmentInput } from './DatetimeSegmentInput';
 import {
@@ -60,15 +73,15 @@ function RelativeSidePanel({ value, onChange, relativeFormats, showNow, labels }
   };
 
   return (
-    <div className="dr-relative">
+    <div className="datetime-range-relative">
       <div>
-        <p className="dr-relative-label">{labels.amount}</p>
-        <div className="dr-relative-row">
+        <p className="datetime-range-relative-label">{labels.amount}</p>
+        <div className="datetime-range-relative-row">
           <Input
             type="text"
             inputMode="numeric"
             pattern="[0-9]*"
-            className="dr-relative-input"
+            className="datetime-range-relative-input"
             disabled={isNow}
             value={numValue}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,7 +117,7 @@ function RelativeSidePanel({ value, onChange, relativeFormats, showNow, labels }
         </div>
       </div>
       {showNow && (
-        <div className="dr-relative-now-row">
+        <div className="datetime-range-relative-now-row">
           <Switch
             checked={isNow}
             onCheckedChange={(checked: boolean) => {
@@ -112,9 +125,9 @@ function RelativeSidePanel({ value, onChange, relativeFormats, showNow, labels }
               emit({ numValue, format, isNow: checked });
             }}
           />
-          <div className="dr-relative-now-labels">
-            <label className="dr-relative-now-label">{labels.now}</label>
-            <span className="dr-relative-now-desc">{labels.nowDescription}</span>
+          <div className="datetime-range-relative-now-labels">
+            <label className="datetime-range-relative-now-label">{labels.now}</label>
+            <span className="datetime-range-relative-now-desc">{labels.nowDescription}</span>
           </div>
         </div>
       )}
@@ -173,11 +186,11 @@ function AbsoluteContent({
 
   return (
     <div>
-      <div className="dr-absolute-row">
+      <div className="datetime-range-absolute-row">
         <DatetimeSegmentInput
           value={currentDate}
           onChange={(d) => onChange(absoluteDate(d))}
-          className="dr-absolute-input"
+          className="datetime-range-absolute-input"
           precision={precision}
         />
         {calendarMode === 'popover' && (
@@ -189,7 +202,7 @@ function AbsoluteContent({
                   type="button"
                   variant="outline"
                   size="icon"
-                  className="dr-absolute-btn"
+                  className="datetime-range-absolute-btn"
                   title="Pick from calendar"
                 >
                   <CalendarDays size={14} />
@@ -209,7 +222,7 @@ function AbsoluteContent({
         )}
       </div>
       {calendarMode === 'inline' && (
-        <div className="dr-absolute-inline-calendar">{calendarPanel}</div>
+        <div className="datetime-range-absolute-inline-calendar">{calendarPanel}</div>
       )}
     </div>
   );
@@ -236,6 +249,14 @@ export interface SidePanelProps {
   labels?: DatetimeRangeLabels;
   /** How the calendar is presented in Absolute mode: a popover triggered by a button, or always visible inline. @default 'popover' */
   calendarMode?: 'popover' | 'inline';
+  /**
+   * Replace the underlying Button/Popover/Select/Tabs/Input/Switch implementations —
+   * e.g. `createShadcnAdapter(...)` from `@loykin/datetime-range/adapters/shadcn` to render
+   * with your app's own shadcn/ui components instead of the built-in ones.
+   * Must be referentially stable (module-scope constant or memoized) — a new object every
+   * render remounts the affected subtree.
+   */
+  uiAdapter?: DatetimeRangeUIAdapter;
 }
 
 export function SidePanel({
@@ -254,6 +275,7 @@ export function SidePanel({
   use12HourFormat,
   labels: labelsProp,
   calendarMode,
+  uiAdapter,
 }: SidePanelProps) {
   const labels = { ...DEFAULT_LABELS, ...labelsProp };
 
@@ -293,14 +315,14 @@ export function SidePanel({
     />
   );
 
-  return (
-    <div className="dr-side-panel">
-      <p className="dr-side-panel-title">{title}</p>
+  const content = (
+    <div className="datetime-range-side-panel">
+      <p className="datetime-range-side-panel-title">{title}</p>
 
       {hasBothModes ? (
         <Tabs
           value={value.type}
-          className="dr-side-panel-tabs"
+          className="datetime-range-side-panel-tabs"
           onValueChange={(t: string) => {
             if (t === 'absolute') {
               onChange(absoluteDate(value.type === 'absolute' ? toDate(value) : new Date()));
@@ -309,7 +331,7 @@ export function SidePanel({
             }
           }}
         >
-          <TabsList className="dr-tabs-list--grid dr-tabs-list--grid-2">
+          <TabsList className="datetime-range-tabs-list--grid datetime-range-tabs-list--grid-2">
             <TabsTrigger value="absolute">{labels.absolute}</TabsTrigger>
             <TabsTrigger value="relative">{labels.relative}</TabsTrigger>
           </TabsList>
@@ -319,4 +341,6 @@ export function SidePanel({
       ) : showAbsolute ? absoluteContent : relativeContent}
     </div>
   );
+
+  return uiAdapter ? <DatetimeRangeProvider adapter={uiAdapter}>{content}</DatetimeRangeProvider> : content;
 }

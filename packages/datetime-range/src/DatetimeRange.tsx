@@ -1,8 +1,9 @@
 import React from 'react';
 import { CalendarDays } from 'lucide-react';
 import { cn } from './lib/utils';
-import { Button } from './ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Button, Popover, PopoverContent, PopoverTrigger } from './core/UIComponents';
+import { DatetimeRangeProvider } from './core/UIAdapterContext';
+import type { DatetimeRangeUIAdapter } from './core/UIAdapterContext';
 import { SidePanel } from './DatetimeRangeSidePanel';
 import { useDatetimeRange } from './useDatetimeRange';
 import {
@@ -73,6 +74,14 @@ export interface DatetimeRangeProps {
   /** DOM element the popover portal renders into. Use a scoped container to inherit CSS custom properties. */
   portalContainer?: React.RefObject<HTMLElement | null> | HTMLElement | null;
   className?: string;
+  /**
+   * Replace the underlying Button/Popover/Select/Tabs/Input/Switch implementations —
+   * e.g. `createShadcnAdapter(...)` from `@loykin/datetime-range/adapters/shadcn` to render
+   * with your app's own shadcn/ui components instead of the built-in ones.
+   * Must be referentially stable (module-scope constant or memoized) — a new object every
+   * render remounts the affected subtree.
+   */
+  uiAdapter?: DatetimeRangeUIAdapter;
 }
 
 export function DatetimeRange({
@@ -98,6 +107,7 @@ export function DatetimeRange({
   renderTrigger,
   portalContainer,
   className,
+  uiAdapter,
 }: DatetimeRangeProps) {
   const labels = { ...DEFAULT_LABELS, ...labelsProp };
 
@@ -126,7 +136,7 @@ export function DatetimeRange({
     calendarMode,
   };
 
-  return (
+  const content = (
     <Popover open={isOpen} onOpenChange={disabled ? undefined : setIsOpen}>
       <PopoverTrigger
         disabled={disabled}
@@ -138,11 +148,11 @@ export function DatetimeRange({
               {...triggerProps}
               variant="outline"
               disabled={disabled}
-              className={cn('dr-range-trigger', isOpen && 'dr-range-trigger--open', className)}
+              className={cn('datetime-range-range-trigger', isOpen && 'datetime-range-range-trigger--open', className)}
             >
-              <CalendarDays size={14} className="dr-range-trigger-icon" />
+              <CalendarDays size={14} className="datetime-range-range-trigger-icon" />
               <span>{toDisplayString(startTime, { precision })}</span>
-              <span className="dr-range-trigger-arrow">→</span>
+              <span className="datetime-range-range-trigger-arrow">→</span>
               <span>{toDisplayString(endTime, { precision })}</span>
             </Button>
           )
@@ -150,23 +160,23 @@ export function DatetimeRange({
       />
 
       <PopoverContent
-        className="dr-range-popup-content"
+        className="datetime-range-range-popup-content"
         align={popoverAlign}
         side={popoverSide}
         sideOffset={4}
         container={portalContainer}
       >
-        <div className="dr-range-popup">
+        <div className="datetime-range-range-popup">
           {showQuickRanges && quickPresets.length > 0 && (
-            <div className="dr-range-quick">
-              <div className="dr-range-quick-inner">
-                <div className="dr-range-quick-label">{labels.quickRanges}</div>
-                <div className="dr-range-quick-list">
+            <div className="datetime-range-range-quick">
+              <div className="datetime-range-range-quick-inner">
+                <div className="datetime-range-range-quick-label">{labels.quickRanges}</div>
+                <div className="datetime-range-range-quick-list">
                   {quickPresets.map((preset) => (
                     <button
                       key={preset.label}
                       type="button"
-                      className="dr-range-quick-item"
+                      className="datetime-range-range-quick-item"
                       onClick={() => handlePreset(preset)}
                     >
                       {preset.label}
@@ -177,10 +187,10 @@ export function DatetimeRange({
             </div>
           )}
 
-          <div className="dr-range-pickers">
-            <div className="dr-range-divider" />
-            <div className="dr-range-panels">
-              <div className="dr-range-panel-slot">
+          <div className="datetime-range-range-pickers">
+            <div className="datetime-range-range-divider" />
+            <div className="datetime-range-range-panels">
+              <div className="datetime-range-range-panel-slot">
                 <SidePanel
                   title={labels.start}
                   value={draftStart}
@@ -189,7 +199,7 @@ export function DatetimeRange({
                   {...sidePanelProps}
                 />
               </div>
-              <div className="dr-range-panel-slot">
+              <div className="datetime-range-range-panel-slot">
                 <SidePanel
                   title={labels.end}
                   value={draftEnd}
@@ -200,13 +210,13 @@ export function DatetimeRange({
               </div>
             </div>
 
-            <div className="dr-range-footer">
+            <div className="datetime-range-range-footer">
               {error === 'validation' ? (
-                <span className="dr-range-error-text">Start must be earlier than end.</span>
+                <span className="datetime-range-range-error-text">Start must be earlier than end.</span>
               ) : (
                 <span />
               )}
-              <div className="dr-range-actions">
+              <div className="datetime-range-range-actions">
                 <Button variant="outline" size="sm" onClick={handleCancel}>{labels.cancel}</Button>
                 <Button size="sm" onClick={handleApply}>{labels.apply}</Button>
               </div>
@@ -216,4 +226,6 @@ export function DatetimeRange({
       </PopoverContent>
     </Popover>
   );
+
+  return uiAdapter ? <DatetimeRangeProvider adapter={uiAdapter}>{content}</DatetimeRangeProvider> : content;
 }

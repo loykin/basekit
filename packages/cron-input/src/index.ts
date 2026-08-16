@@ -1,5 +1,7 @@
 export { CronInput } from './CronInput'
 export type { CronInputProps } from './CronInput'
+export { CronInputProvider, useCronInputUI } from './core/UIAdapterContext'
+export type { CronInputUIAdapter } from './core/UIAdapterContext'
 export { useCronInput } from './useCronInput'
 export type { UseCronInputOptions, UseCronInputReturn } from './useCronInput'
 export { toCronExpression, fromCronExpression, toDisplayString, validateCronExpression } from './cron-utils'

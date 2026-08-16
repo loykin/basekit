@@ -69,7 +69,7 @@ describe('FilterInput', () => {
     )
 
     expect(screen.getByTestId('search-icon')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Search')).toHaveClass('fi-control-has-leading-icon')
+    expect(screen.getByPlaceholderText('Search')).toHaveClass('filter-input-control-has-leading-icon')
   })
 
   it('does not wrap the control when no icon is configured', () => {
@@ -81,6 +81,6 @@ describe('FilterInput', () => {
       />,
     )
 
-    expect(screen.getByPlaceholderText('Search').parentElement).not.toHaveClass('fi-control-wrap')
+    expect(screen.getByPlaceholderText('Search').parentElement).not.toHaveClass('filter-input-control-wrap')
   })
 })

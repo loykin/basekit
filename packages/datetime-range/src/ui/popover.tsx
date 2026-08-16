@@ -36,11 +36,11 @@ function PopoverContent({
         sideOffset={sideOffset}
         disableAnchorTracking={disableAnchorTracking}
         collisionAvoidance={collisionAvoidance}
-        className="dr-positioner"
+        className="datetime-range-positioner"
       >
         <PopoverPrimitive.Popup
           data-slot="popover-content"
-          className={cn('dr-popover-content', className)}
+          className={cn('datetime-range-popover-content', className)}
           {...props}
         />
       </PopoverPrimitive.Positioner>

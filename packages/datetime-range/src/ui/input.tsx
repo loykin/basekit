@@ -8,7 +8,7 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
       type={type}
       data-slot="input"
       className={cn(
-        'dr-input',
+        'datetime-range-input',
         className,
       )}
       {...props}

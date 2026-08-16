@@ -13,13 +13,13 @@ function ScrollArea({
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
       style={{ position: 'relative', ...style }}
-      className={cn('dr-scroll-area', className)}
+      className={cn('datetime-range-scroll-area', className)}
       {...props}
     >
       <ScrollAreaPrimitive.Viewport
         ref={viewportRef}
         data-slot="scroll-area-viewport"
-        className="dr-scroll-area-viewport"
+        className="datetime-range-scroll-area-viewport"
       >
         {children}
       </ScrollAreaPrimitive.Viewport>
@@ -39,12 +39,12 @@ function ScrollBar({
     <ScrollAreaPrimitive.Scrollbar
       data-slot="scroll-area-scrollbar"
       orientation={orientation}
-      className={cn('dr-scrollbar', className)}
+      className={cn('datetime-range-scrollbar', className)}
       {...props}
     >
       <ScrollAreaPrimitive.Thumb
         data-slot="scroll-area-thumb"
-        className="dr-scrollbar-thumb"
+        className="datetime-range-scrollbar-thumb"
       />
     </ScrollAreaPrimitive.Scrollbar>
   )

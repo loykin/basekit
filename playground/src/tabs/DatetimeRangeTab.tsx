@@ -131,16 +131,16 @@ export function DatetimeRangePreview() {
       <div>
         <p className="text-[11px] text-muted-foreground mb-2">Button variants</p>
         <div className="flex flex-wrap gap-2">
-          <button className="dr-btn" data-variant="default" data-size="sm">Primary</button>
-          <button className="dr-btn" data-variant="outline" data-size="sm">Outline</button>
-          <button className="dr-btn" data-variant="secondary" data-size="sm">Secondary</button>
-          <button className="dr-btn" data-variant="ghost" data-size="sm">Ghost</button>
-          <button className="dr-btn" data-variant="destructive" data-size="sm">Destructive</button>
+          <button className="datetime-range-btn" data-variant="default" data-size="sm">Primary</button>
+          <button className="datetime-range-btn" data-variant="outline" data-size="sm">Outline</button>
+          <button className="datetime-range-btn" data-variant="secondary" data-size="sm">Secondary</button>
+          <button className="datetime-range-btn" data-variant="ghost" data-size="sm">Ghost</button>
+          <button className="datetime-range-btn" data-variant="destructive" data-size="sm">Destructive</button>
         </div>
       </div>
       <div>
         <p className="text-[11px] text-muted-foreground mb-2">Input</p>
-        <input className="dr-input" placeholder="Placeholder text..." style={{ maxWidth: 280 }} readOnly />
+        <input className="datetime-range-input" placeholder="Placeholder text..." style={{ maxWidth: 280 }} readOnly />
       </div>
     </div>
   )

@@ -54,22 +54,22 @@ export function FiMultiSelect({
   return (
     <Popover.Root onOpenChange={(open) => { if (open) onOpen?.() }}>
       <Popover.Trigger
-        className={cn('fi-multi-trigger', classNames?.trigger)}
+        className={cn('filter-input-multi-trigger', classNames?.trigger)}
         disabled={disabled}
       >
-        <span className="fi-multi-value">{renderTriggerValue()}</span>
-        <span className="fi-chevron">
+        <span className="filter-input-multi-value">{renderTriggerValue()}</span>
+        <span className="filter-input-chevron">
           <ChevronDownIcon />
         </span>
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Positioner sideOffset={4} align="start" className="fi-positioner">
-          <Popover.Popup className={cn('fi-multi-popup', classNames?.popup)}>
+        <Popover.Positioner sideOffset={4} align="start" className="filter-input-positioner">
+          <Popover.Popup className={cn('filter-input-multi-popup', classNames?.popup)}>
             {(searchable || onReload) && (
-              <div className="fi-popup-header">
+              <div className="filter-input-popup-header">
                 {searchable && (
                   <input
-                    className="fi-control"
+                    className="filter-input-control"
                     value={query}
                     placeholder={placeholder}
                     onChange={(e) => onQueryChange(e.target.value)}
@@ -78,7 +78,7 @@ export function FiMultiSelect({
                 {onReload && (
                   <button
                     type="button"
-                    className="fi-reload-button"
+                    className="filter-input-reload-button"
                     onClick={onReload}
                     disabled={loading}
                     aria-label="Reload"
@@ -88,30 +88,30 @@ export function FiMultiSelect({
                 )}
               </div>
             )}
-            {loading && <div className="fi-popup-status"><span className="fi-loading">Loading…</span></div>}
-            {!loading && error && <div className="fi-popup-status"><span className="fi-error">{error}</span></div>}
+            {loading && <div className="filter-input-popup-status"><span className="filter-input-loading">Loading…</span></div>}
+            {!loading && error && <div className="filter-input-popup-status"><span className="filter-input-error">{error}</span></div>}
             {!loading && !error && options.map((option) => {
               const checked = value.some((item) => optionMatches(option, item))
               return (
                 <button
                   key={stringifyValue(option.value)}
                   type="button"
-                  className={cn('fi-option', classNames?.item)}
+                  className={cn('filter-input-option', classNames?.item)}
                   disabled={option.disabled}
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => onToggle(option)}
                 >
-                  <span className="fi-option-check" data-checked={checked || undefined}>
+                  <span className="filter-input-option-check" data-checked={checked || undefined}>
                     {checked && <CheckIcon />}
                   </span>
-                  <span className="fi-option-label">
+                  <span className="filter-input-option-label">
                     {renderOption ? renderOption(option) : option.label}
                   </span>
                 </button>
               )
             })}
             {!loading && !error && !options.length && (
-              <div className="fi-popup-status"><span className="fi-empty">No options</span></div>
+              <div className="filter-input-popup-status"><span className="filter-input-empty">No options</span></div>
             )}
           </Popover.Popup>
         </Popover.Positioner>

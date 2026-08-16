@@ -13,7 +13,7 @@ function buttonVariants({
   size?: ButtonSize
   className?: string
 } = {}) {
-  return cn('dr-btn', className, variant && `dr-btn--${variant}`, size && `dr-btn--${size}`)
+  return cn('datetime-range-btn', className, variant && `datetime-range-btn--${variant}`, size && `datetime-range-btn--${size}`)
 }
 
 function Button({

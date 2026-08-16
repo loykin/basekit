@@ -180,7 +180,7 @@ export function DatetimeSegmentInput({
   return (
     <div
       ref={containerRef}
-      className={cn('dr-segment-input', className)}
+      className={cn('datetime-range-segment-input', className)}
       data-error={isError || undefined}
       data-disabled={disabled || undefined}
       onMouseDown={(e) => {
@@ -197,7 +197,7 @@ export function DatetimeSegmentInput({
         return (
           <React.Fragment key={seg.key}>
             {sep !== null && (
-              <span className="dr-segment-sep" aria-hidden>{sep}</span>
+              <span className="datetime-range-segment-sep" aria-hidden>{sep}</span>
             )}
             <div
               ref={(el) => { spanRefs.current[seg.key] = el; }}
@@ -207,7 +207,7 @@ export function DatetimeSegmentInput({
               aria-valuemin={seg.min}
               aria-valuemax={seg.max}
               tabIndex={disabled ? -1 : 0}
-              className="dr-segment"
+              className="datetime-range-segment"
               data-focused={isFocused || undefined}
               style={{ height: '24px', lineHeight: '24px' }}
               onKeyDown={(e) => handleKeyDown(e, seg)}

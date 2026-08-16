@@ -14,7 +14,7 @@ function Button({
     <ButtonPrimitive
       data-variant={variant}
       data-size={size}
-      className={cn('ci-btn', className)}
+      className={cn('cron-input-btn', className)}
       {...props}
     />
   )

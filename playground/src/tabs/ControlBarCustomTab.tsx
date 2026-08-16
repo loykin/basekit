@@ -11,8 +11,8 @@ import '@loykin/control-bar/styles'
 registerTabType('custom-terminal', {
   label: 'Terminal',
   render: (data: { pod: string }) => (
-    <div style={{ padding: 16, fontFamily: 'monospace', fontSize: 12, color: 'var(--cb-foreground)' }}>
-      <div style={{ color: 'var(--cb-muted-foreground)', marginBottom: 8 }}>$ terminal — {data.pod}</div>
+    <div style={{ padding: 16, fontFamily: 'monospace', fontSize: 12, color: 'var(--control-bar-foreground)' }}>
+      <div style={{ color: 'var(--control-bar-muted-foreground)', marginBottom: 8 }}>$ terminal — {data.pod}</div>
       <div>{'>'} _</div>
     </div>
   ),
@@ -21,8 +21,8 @@ registerTabType('custom-terminal', {
 registerTabType('custom-log', {
   label: 'Log',
   render: (data: { pod: string }) => (
-    <div style={{ padding: 16, fontFamily: 'monospace', fontSize: 12, color: 'var(--cb-foreground)' }}>
-      <div style={{ color: 'var(--cb-muted-foreground)', marginBottom: 8 }}>log — {data.pod}</div>
+    <div style={{ padding: 16, fontFamily: 'monospace', fontSize: 12, color: 'var(--control-bar-foreground)' }}>
+      <div style={{ color: 'var(--control-bar-muted-foreground)', marginBottom: 8 }}>log — {data.pod}</div>
       <div>INFO server started on :8080</div>
       <div>INFO GET /health 200 1ms</div>
     </div>
@@ -52,39 +52,39 @@ const CUSTOM_THEMES: { label: string; description: string; vars: Record<string, 
     label: 'Dark Terminal',
     description: 'Dark background with green accent — classic terminal feel.',
     vars: {
-      '--cb-background':       'oklch(0.13 0 0)',
-      '--cb-foreground':       'oklch(0.85 0.12 145)',
-      '--cb-muted':            'oklch(0.18 0 0)',
-      '--cb-muted-foreground': 'oklch(0.5 0.08 145)',
-      '--cb-border':           'oklch(0.28 0 0)',
-      '--cb-primary':          'oklch(0.65 0.2 145)',
-      '--cb-primary-foreground':'oklch(0.1 0 0)',
+      '--control-bar-background':       'oklch(0.13 0 0)',
+      '--control-bar-foreground':       'oklch(0.85 0.12 145)',
+      '--control-bar-muted':            'oklch(0.18 0 0)',
+      '--control-bar-muted-foreground': 'oklch(0.5 0.08 145)',
+      '--control-bar-border':           'oklch(0.28 0 0)',
+      '--control-bar-primary':          'oklch(0.65 0.2 145)',
+      '--control-bar-primary-foreground':'oklch(0.1 0 0)',
     },
   },
   {
     label: 'Warm',
     description: 'Warm off-white surface with amber accent.',
     vars: {
-      '--cb-background':       'oklch(0.99 0.01 80)',
-      '--cb-foreground':       'oklch(0.2 0.02 60)',
-      '--cb-muted':            'oklch(0.95 0.02 80)',
-      '--cb-muted-foreground': 'oklch(0.55 0.04 60)',
-      '--cb-border':           'oklch(0.87 0.03 80)',
-      '--cb-primary':          'oklch(0.6 0.18 50)',
-      '--cb-primary-foreground':'oklch(0.99 0 0)',
+      '--control-bar-background':       'oklch(0.99 0.01 80)',
+      '--control-bar-foreground':       'oklch(0.2 0.02 60)',
+      '--control-bar-muted':            'oklch(0.95 0.02 80)',
+      '--control-bar-muted-foreground': 'oklch(0.55 0.04 60)',
+      '--control-bar-border':           'oklch(0.87 0.03 80)',
+      '--control-bar-primary':          'oklch(0.6 0.18 50)',
+      '--control-bar-primary-foreground':'oklch(0.99 0 0)',
     },
   },
   {
     label: 'High Contrast',
     description: 'Strong borders and pure black/white — maximum legibility.',
     vars: {
-      '--cb-background':       'oklch(1 0 0)',
-      '--cb-foreground':       'oklch(0 0 0)',
-      '--cb-muted':            'oklch(0.94 0 0)',
-      '--cb-muted-foreground': 'oklch(0.35 0 0)',
-      '--cb-border':           'oklch(0.4 0 0)',
-      '--cb-primary':          'oklch(0 0 0)',
-      '--cb-primary-foreground':'oklch(1 0 0)',
+      '--control-bar-background':       'oklch(1 0 0)',
+      '--control-bar-foreground':       'oklch(0 0 0)',
+      '--control-bar-muted':            'oklch(0.94 0 0)',
+      '--control-bar-muted-foreground': 'oklch(0.35 0 0)',
+      '--control-bar-border':           'oklch(0.4 0 0)',
+      '--control-bar-primary':          'oklch(0 0 0)',
+      '--control-bar-primary-foreground':'oklch(1 0 0)',
     },
   },
 ]
@@ -94,25 +94,25 @@ function ThemedPreview({ vars }: { vars: Record<string, string> }) {
     <div style={vars as CSSProperties}
          className="relative h-28 overflow-hidden rounded border border-border">
       <div className="absolute bottom-0 left-0 right-0"
-           style={{ background: 'var(--cb-background)', borderTop: '1px solid var(--cb-border)' }}>
+           style={{ background: 'var(--control-bar-background)', borderTop: '1px solid var(--control-bar-border)' }}>
         <div className="flex items-center overflow-hidden"
-             style={{ height: 36, background: 'var(--cb-muted)', borderBottom: '1px solid var(--cb-border)' }}>
+             style={{ height: 36, background: 'var(--control-bar-muted)', borderBottom: '1px solid var(--control-bar-border)' }}>
           {['Terminal', 'Log'].map((label, i) => (
             <div key={label} style={{
               display: 'inline-flex', alignItems: 'center',
               height: 36, padding: '0 12px',
-              borderRight: '1px solid var(--cb-border)',
-              background: i === 0 ? 'var(--cb-background)' : 'transparent',
-              color: i === 0 ? 'var(--cb-foreground)' : 'var(--cb-muted-foreground)',
-              borderTop: i === 0 ? '2px solid var(--cb-primary)' : undefined,
+              borderRight: '1px solid var(--control-bar-border)',
+              background: i === 0 ? 'var(--control-bar-background)' : 'transparent',
+              color: i === 0 ? 'var(--control-bar-foreground)' : 'var(--control-bar-muted-foreground)',
+              borderTop: i === 0 ? '2px solid var(--control-bar-primary)' : undefined,
               fontSize: 12, flexShrink: 0,
             }}>
               {label}
             </div>
           ))}
         </div>
-        <div style={{ padding: '6px 14px', fontFamily: 'monospace', fontSize: 11, color: 'var(--cb-foreground)' }}>
-          <span style={{ color: 'var(--cb-muted-foreground)' }}>$ </span>kubectl get pods -n default_
+        <div style={{ padding: '6px 14px', fontFamily: 'monospace', fontSize: 11, color: 'var(--control-bar-foreground)' }}>
+          <span style={{ color: 'var(--control-bar-muted-foreground)' }}>$ </span>kubectl get pods -n default_
         </div>
       </div>
     </div>
@@ -124,7 +124,7 @@ function CustomThemesSection() {
     <section className="border border-border">
       <SectionHeader
         title="Custom Themes"
-        description="Apply --cb-* overrides on the container to theme independently of the base tokens."
+        description="Apply --control-bar-* overrides on the container to theme independently of the base tokens."
       />
       <div className="grid grid-cols-2 gap-4 p-4">
         {CUSTOM_THEMES.map(theme => (
@@ -297,19 +297,19 @@ const CUSTOM_UI_EXAMPLES = [
   {
     label: 'Browser Tabs',
     description: 'Tabs on top with content below — the active tab connects to the content area.',
-    persistKey: 'cb-demo-browser',
+    persistKey: 'control-bar-demo-browser',
     Bar: BrowserTabsBar,
   },
   {
     label: 'Sidebar',
     description: 'A vertical tab list on the left with content on the right — ideal for side panels and inspectors.',
-    persistKey: 'cb-demo-sidebar',
+    persistKey: 'control-bar-demo-sidebar',
     Bar: SidebarBar,
   },
   {
     label: 'VS Code',
-    description: 'Tabs on top with a fixed dark palette and a blue top border when active — independent of --cb-* tokens.',
-    persistKey: 'cb-demo-vscode',
+    description: 'Tabs on top with a fixed dark palette and a blue top border when active — independent of --control-bar-* tokens.',
+    persistKey: 'control-bar-demo-vscode',
     Bar: VSCodeBar,
   },
 ]

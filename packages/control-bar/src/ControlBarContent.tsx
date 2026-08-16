@@ -16,11 +16,11 @@ export function ControlBarContent({ tabs, activeTabId }: ControlBarContentProps)
         return (
           <div
             key={tab.id}
-            className="cb-panel"
+            className="control-bar-panel"
             style={{ display: isActive ? 'flex' : 'none' }}
           >
             {def ? def.render(tab.data) : (
-              <span style={{ padding: 16, color: 'var(--cb-muted-foreground)', fontSize: 12 }}>
+              <span style={{ padding: 16, color: 'var(--control-bar-muted-foreground)', fontSize: 12 }}>
                 Unknown tab type: {tab.type}
               </span>
             )}

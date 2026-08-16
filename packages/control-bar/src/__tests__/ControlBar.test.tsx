@@ -15,14 +15,14 @@ function Harness({ persistKey, ...props }: { persistKey: string } & ComponentPro
 
 describe('ControlBar — always-visible empty state', () => {
   it('renders nothing when there are no tabs and alwaysVisible is not set', () => {
-    const { container } = render(<Harness persistKey="cb-test-default" />)
-    expect(container.querySelector('.cb-root')).toBeNull()
+    const { container } = render(<Harness persistKey="control-bar-test-default" />)
+    expect(container.querySelector('.control-bar-root')).toBeNull()
   })
 
   it('renders the empty-state header when alwaysVisible is set with zero tabs', () => {
     render(
       <Harness
-        persistKey="cb-test-always-visible"
+        persistKey="control-bar-test-always-visible"
         alwaysVisible
         emptyState="No active resource panels"
       />,
@@ -33,7 +33,7 @@ describe('ControlBar — always-visible empty state', () => {
   it('calls onRequestOpen from the empty-state + button', () => {
     const onRequestOpen = vi.fn()
     render(
-      <Harness persistKey="cb-test-empty-action" alwaysVisible onRequestOpen={onRequestOpen} />,
+      <Harness persistKey="control-bar-test-empty-action" alwaysVisible onRequestOpen={onRequestOpen} />,
     )
     fireEvent.click(screen.getByTitle('Open tab'))
     expect(onRequestOpen).toHaveBeenCalledTimes(1)
@@ -41,7 +41,7 @@ describe('ControlBar — always-visible empty state', () => {
 
   it('hides collapse/fullscreen controls in the empty state', () => {
     render(
-      <Harness persistKey="cb-test-empty-controls" alwaysVisible onRequestOpen={() => undefined} />,
+      <Harness persistKey="control-bar-test-empty-controls" alwaysVisible onRequestOpen={() => undefined} />,
     )
     expect(screen.queryByTitle('Collapse')).toBeNull()
     expect(screen.queryByTitle('Expand')).toBeNull()
@@ -55,7 +55,7 @@ describe('ControlBar — always-visible empty state', () => {
     }
 
     render(
-      <ControlBarProvider persistKey="cb-test-transition">
+      <ControlBarProvider persistKey="control-bar-test-transition">
         <OpenTabButton />
         <ControlBar alwaysVisible emptyState="No active resource panels" />
       </ControlBarProvider>,
