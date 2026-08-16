@@ -23,6 +23,7 @@ interface FiSelectProps {
   onOpen?: () => void
   onReload?: () => void
   className?: string
+  size?: 'sm' | 'md' | 'lg'
   classNames?: { trigger?: string; popup?: string; item?: string }
 }
 
@@ -41,6 +42,7 @@ export function FiSelect({
   onOpen,
   onReload,
   className,
+  size,
   classNames,
 }: FiSelectProps) {
   return (
@@ -53,7 +55,7 @@ export function FiSelect({
       }}
       disabled={disabled}
     >
-      <Select.Trigger className={cn('fi-select-trigger', classNames?.trigger, className)}>
+      <Select.Trigger className={cn('fi-select-trigger', classNames?.trigger, className)} data-size={size}>
         <Select.Value placeholder={placeholder} className="fi-select-value" />
         <Select.Icon className="fi-select-icon">
           <ChevronDownIcon />

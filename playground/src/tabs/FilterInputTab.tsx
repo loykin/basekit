@@ -3,6 +3,15 @@ import { FilterInput, FilterInputConfig, FilterValue, FilterVariable } from '@lo
 import '@loykin/filter-input/styles'
 import type { TokenGroupDef } from '../components/TokensPanel'
 
+function SearchIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  )
+}
+
 export const TOKEN_GROUPS: TokenGroupDef[] = [
   {
     title: 'Base',
@@ -386,6 +395,43 @@ export function FilterInputTab() {
           <pre className="text-[11px] font-mono border border-border bg-background p-3 text-muted-foreground">
             {JSON.stringify(standalone, null, 2)}
           </pre>
+        </div>
+      </section>
+
+      {/* ── Sizes + icon slot ────────────────────────────── */}
+      <section className="border border-border">
+        <SectionHeader
+          title="Sizes + icon slot"
+          description="display.size (sm | md | lg) resizes the control via CSS custom properties. display.leadingIcon / trailingIcon add an icon without fighting the control's own padding."
+        />
+        <div className="flex flex-col gap-3 p-4">
+          <Code>{`<FilterInput
+  config={{
+    key: 'objectSearch',
+    type: 'text',
+    placeholder: 'Search objects…',
+    display: { size: 'sm', leadingIcon: <SearchIcon /> },
+  }}
+  value={query}
+  onChange={...}
+/>`}</Code>
+          <div className="flex flex-col gap-2" style={{ maxWidth: 280 }}>
+            <FilterInput
+              config={{ key: 'sm', type: 'text', placeholder: 'sm + leading icon', display: { size: 'sm', leadingIcon: <SearchIcon /> } }}
+              value={standalone.sm as string ?? ''}
+              onChange={(value, ctx) => setStandalone(prev => ({ ...prev, [ctx.key]: value }))}
+            />
+            <FilterInput
+              config={{ key: 'md', type: 'text', placeholder: 'md (default) + leading icon', display: { leadingIcon: <SearchIcon /> } }}
+              value={standalone.md as string ?? ''}
+              onChange={(value, ctx) => setStandalone(prev => ({ ...prev, [ctx.key]: value }))}
+            />
+            <FilterInput
+              config={{ key: 'lg', type: 'text', placeholder: 'lg + leading icon', display: { size: 'lg', leadingIcon: <SearchIcon /> } }}
+              value={standalone.lg as string ?? ''}
+              onChange={(value, ctx) => setStandalone(prev => ({ ...prev, [ctx.key]: value }))}
+            />
+          </div>
         </div>
       </section>
 

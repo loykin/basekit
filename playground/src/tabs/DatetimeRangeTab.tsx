@@ -159,6 +159,7 @@ export function DatetimeRangeTab() {
   const i18n          = useRange()
   const customTrigger = useRange()
   const disabledDemo  = useRange()
+  const calendarInline = useRange()
 
   return (
     <div className="flex flex-col gap-4 max-w-3xl">
@@ -366,6 +367,24 @@ export function DatetimeRangeTab() {
           startTime={disabledDemo.start} endTime={disabledDemo.end} onChange={disabledDemo.onChange}
           disabled
         />
+      </Demo>
+
+      <Demo
+        title="Calendar Mode — inline"
+        description="Show the Absolute-mode calendar always expanded, shadcn-style, instead of behind a popover button. Useful for dashboard filter bars where a wide layout is already available."
+        code={`<DatetimeRange
+  calendarMode="inline"
+  showRelative={false}
+  showQuickRanges={false}
+/>`}
+      >
+        <DatetimeRange
+          startTime={calendarInline.start} endTime={calendarInline.end} onChange={calendarInline.onChange}
+          calendarMode="inline"
+          showRelative={false}
+          showQuickRanges={false}
+        />
+        <Value start={calendarInline.start} end={calendarInline.end} />
       </Demo>
 
     </div>

@@ -258,6 +258,25 @@ export function FilterInput<TMeta = unknown>({
     classNames?.control,
     inputClassName,
   )
+  const leadingIcon = display.leadingIcon
+  const trailingIcon = display.trailingIcon
+  const hasIcons = !!(leadingIcon || trailingIcon)
+  const iconAwareInputClass = cn(
+    commonInputClass,
+    leadingIcon && 'fi-control-has-leading-icon',
+    trailingIcon && 'fi-control-has-trailing-icon',
+  )
+
+  const withIconWrap = (inputEl: React.ReactElement) => {
+    if (!hasIcons) return inputEl
+    return (
+      <div className={cn('fi-control-wrap', classNames?.controlWrap)}>
+        {leadingIcon && <span className="fi-control-icon fi-control-icon-leading">{leadingIcon}</span>}
+        {inputEl}
+        {trailingIcon && <span className="fi-control-icon fi-control-icon-trailing">{trailingIcon}</span>}
+      </div>
+    )
+  }
 
   const control = (() => {
     switch (config.type) {
@@ -269,14 +288,15 @@ export function FilterInput<TMeta = unknown>({
             placeholder={config.placeholder}
             disabled={disabled}
             required={behavior.required}
+            data-size={display.size}
             onChange={(event) => emit(event.target.value)}
           />
         )
 
       case 'number':
-        return (
+        return withIconWrap(
           <input
-            className={commonInputClass}
+            className={iconAwareInputClass}
             type="number"
             value={normalizeText(value)}
             min={config.validation?.min}
@@ -284,12 +304,13 @@ export function FilterInput<TMeta = unknown>({
             placeholder={config.placeholder}
             disabled={disabled}
             required={behavior.required}
+            data-size={display.size}
             onKeyDown={(event) => {
               if (['e', 'E', '+'].includes(event.key)) event.preventDefault()
               if (event.key === '-' && (config.validation?.min ?? Number.NEGATIVE_INFINITY) >= 0) event.preventDefault()
             }}
             onChange={(event) => emit(event.target.value === '' ? null : Number(event.target.value))}
-          />
+          />,
         )
 
       case 'boolean':
@@ -297,6 +318,7 @@ export function FilterInput<TMeta = unknown>({
           <div className={cn('fi-row', classNames?.row)}>
             <FiSelect
               className="fi-flex-1"
+              size={display.size}
               options={[
                 { label: 'True', value: 'true' },
                 { label: 'False', value: 'false' },
@@ -363,6 +385,7 @@ export function FilterInput<TMeta = unknown>({
           <div className={cn('fi-row', classNames?.row)}>
             <FiSelect
               className="fi-flex-1"
+              size={display.size}
               options={filteredOptions.map((o) => ({ label: o.label, value: stringifyValue(o.value), disabled: o.disabled }))}
               value={value === null || value === undefined ? '' : normalizeText(value)}
               placeholder={config.placeholder ?? 'Select...'}
@@ -392,21 +415,24 @@ export function FilterInput<TMeta = unknown>({
         return (
           <div className={cn('fi-stack', classNames?.stack)}>
             <div className={cn('fi-row', classNames?.row)}>
-              <input
-                className={commonInputClass}
-                value={query}
-                placeholder={config.placeholder ?? 'Search...'}
-                disabled={disabled}
-                onChange={(event) => {
-                  const nextQuery = event.target.value
-                  setQuery(nextQuery)
-                  onSearch?.(nextQuery, { key: config.key })
-                  if (config.type === 'combobox' && behavior.allowCustomValue) emit(nextQuery)
-                }}
-                onBlur={() => {
-                  if (config.type === 'combobox' && behavior.selectOnBlur && query) emit(query)
-                }}
-              />
+              {withIconWrap(
+                <input
+                  className={iconAwareInputClass}
+                  value={query}
+                  placeholder={config.placeholder ?? 'Search...'}
+                  disabled={disabled}
+                  data-size={display.size}
+                  onChange={(event) => {
+                    const nextQuery = event.target.value
+                    setQuery(nextQuery)
+                    onSearch?.(nextQuery, { key: config.key })
+                    if (config.type === 'combobox' && behavior.allowCustomValue) emit(nextQuery)
+                  }}
+                  onBlur={() => {
+                    if (config.type === 'combobox' && behavior.selectOnBlur && query) emit(query)
+                  }}
+                />,
+              )}
               {clearButton}
             </div>
             {(loading || error || filteredOptions.length > 0) && (
@@ -445,6 +471,7 @@ export function FilterInput<TMeta = unknown>({
             placeholder={config.placeholder}
             disabled={disabled}
             required={behavior.required}
+            data-size={display.size}
             onChange={(event) => emit(event.target.value || null)}
           />
         )
@@ -455,8 +482,8 @@ export function FilterInput<TMeta = unknown>({
         const inputType = config.type === 'date-range' ? 'date' : 'datetime-local'
         return (
           <div className={cn('fi-range', classNames?.range)}>
-            <input className={commonInputClass} type={inputType} value={range.from ?? ''} disabled={disabled} onChange={(event) => emit({ ...range, from: event.target.value || undefined })} />
-            <input className={commonInputClass} type={inputType} value={range.to ?? ''} disabled={disabled} onChange={(event) => emit({ ...range, to: event.target.value || undefined })} />
+            <input className={commonInputClass} type={inputType} value={range.from ?? ''} disabled={disabled} data-size={display.size} onChange={(event) => emit({ ...range, from: event.target.value || undefined })} />
+            <input className={commonInputClass} type={inputType} value={range.to ?? ''} disabled={disabled} data-size={display.size} onChange={(event) => emit({ ...range, to: event.target.value || undefined })} />
           </div>
         )
       }
@@ -465,8 +492,8 @@ export function FilterInput<TMeta = unknown>({
         const range = getNumberRange(value)
         return (
           <div className={cn('fi-range', classNames?.range)}>
-            <input className={commonInputClass} type="number" value={range.min ?? ''} placeholder="Min" disabled={disabled} min={config.validation?.min} max={config.validation?.max} onChange={(event) => emit({ ...range, min: event.target.value === '' ? undefined : Number(event.target.value) })} />
-            <input className={commonInputClass} type="number" value={range.max ?? ''} placeholder="Max" disabled={disabled} min={config.validation?.min} max={config.validation?.max} onChange={(event) => emit({ ...range, max: event.target.value === '' ? undefined : Number(event.target.value) })} />
+            <input className={commonInputClass} type="number" value={range.min ?? ''} placeholder="Min" disabled={disabled} data-size={display.size} min={config.validation?.min} max={config.validation?.max} onChange={(event) => emit({ ...range, min: event.target.value === '' ? undefined : Number(event.target.value) })} />
+            <input className={commonInputClass} type="number" value={range.max ?? ''} placeholder="Max" disabled={disabled} data-size={display.size} min={config.validation?.min} max={config.validation?.max} onChange={(event) => emit({ ...range, max: event.target.value === '' ? undefined : Number(event.target.value) })} />
           </div>
         )
       }
@@ -541,16 +568,19 @@ export function FilterInput<TMeta = unknown>({
       default:
         return (
           <div className={cn('fi-row', classNames?.row)}>
-            <input
-              className={commonInputClass}
-              type="text"
-              value={normalizeText(value)}
-              pattern={config.validation?.pattern}
-              placeholder={config.placeholder}
-              disabled={disabled}
-              required={behavior.required}
-              onChange={(event) => emit(event.target.value)}
-            />
+            {withIconWrap(
+              <input
+                className={iconAwareInputClass}
+                type="text"
+                value={normalizeText(value)}
+                pattern={config.validation?.pattern}
+                placeholder={config.placeholder}
+                disabled={disabled}
+                required={behavior.required}
+                data-size={display.size}
+                onChange={(event) => emit(event.target.value)}
+              />,
+            )}
             {clearButton}
           </div>
         )

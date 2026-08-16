@@ -134,6 +134,8 @@ interface AbsoluteContentProps {
   max?: Date;
   timezone?: string;
   use12HourFormat?: boolean;
+  /** How the calendar is presented: a popover triggered by a button, or always visible inline. @default 'popover' */
+  calendarMode?: 'popover' | 'inline';
 }
 
 function AbsoluteContent({
@@ -146,57 +148,69 @@ function AbsoluteContent({
   max,
   timezone,
   use12HourFormat,
+  calendarMode = 'popover',
 }: AbsoluteContentProps) {
   const compareDate = compareValue ? toDate(compareValue) : undefined;
   const currentDate = value.type === 'absolute' ? toDate(value) : new Date();
 
+  const calendarPanel = (
+    <DateTimePanel
+      value={value.type === 'absolute' ? currentDate : undefined}
+      compareValue={compareDate}
+      title={title}
+      immediate
+      precision={precision}
+      min={min}
+      max={max}
+      timezone={timezone}
+      use12HourFormat={use12HourFormat}
+      onChangeAction={(d) => {
+        if (!d) return;
+        onChange(absoluteDate(d));
+      }}
+    />
+  );
+
   return (
-    <div className="dr-absolute-row">
-      <DatetimeSegmentInput
-        value={currentDate}
-        onChange={(d) => onChange(absoluteDate(d))}
-        className="dr-absolute-input"
-        precision={precision}
-      />
-      <Popover>
-        <PopoverTrigger
-          render={(triggerProps) => (
-            <Button
-              {...triggerProps}
-              type="button"
-              variant="outline"
-              size="icon"
-              className="dr-absolute-btn"
-              title="Pick from calendar"
-            >
-              <CalendarDays size={14} />
-            </Button>
-          )}
+    <div>
+      <div className="dr-absolute-row">
+        <DatetimeSegmentInput
+          value={currentDate}
+          onChange={(d) => onChange(absoluteDate(d))}
+          className="dr-absolute-input"
+          precision={precision}
         />
-        <PopoverContent
-          className="p-0 w-auto"
-          side="bottom"
-          align="start"
-          sideOffset={6}
-          disableAnchorTracking={true}
-        >
-          <DateTimePanel
-            value={value.type === 'absolute' ? currentDate : undefined}
-            compareValue={compareDate}
-            title={title}
-            immediate
-            precision={precision}
-            min={min}
-            max={max}
-            timezone={timezone}
-            use12HourFormat={use12HourFormat}
-            onChangeAction={(d) => {
-              if (!d) return;
-              onChange(absoluteDate(d));
-            }}
-          />
-        </PopoverContent>
-      </Popover>
+        {calendarMode === 'popover' && (
+          <Popover>
+            <PopoverTrigger
+              render={(triggerProps) => (
+                <Button
+                  {...triggerProps}
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="dr-absolute-btn"
+                  title="Pick from calendar"
+                >
+                  <CalendarDays size={14} />
+                </Button>
+              )}
+            />
+            <PopoverContent
+              className="p-0 w-auto"
+              side="bottom"
+              align="start"
+              sideOffset={6}
+              disableAnchorTracking={true}
+            >
+              {calendarPanel}
+            </PopoverContent>
+          </Popover>
+        )}
+      </div>
+      {calendarMode === 'inline' && (
+        <div className="dr-absolute-inline-calendar">{calendarPanel}</div>
+      )}
     </div>
   );
 }
@@ -220,6 +234,8 @@ export interface SidePanelProps {
   timezone?: string;
   use12HourFormat?: boolean;
   labels?: DatetimeRangeLabels;
+  /** How the calendar is presented in Absolute mode: a popover triggered by a button, or always visible inline. @default 'popover' */
+  calendarMode?: 'popover' | 'inline';
 }
 
 export function SidePanel({
@@ -237,6 +253,7 @@ export function SidePanel({
   timezone,
   use12HourFormat,
   labels: labelsProp,
+  calendarMode,
 }: SidePanelProps) {
   const labels = { ...DEFAULT_LABELS, ...labelsProp };
 
@@ -262,6 +279,7 @@ export function SidePanel({
       max={max}
       timezone={timezone}
       use12HourFormat={use12HourFormat}
+      calendarMode={calendarMode}
     />
   );
 

@@ -85,6 +85,10 @@ export type FilterDisplayConfig<TMeta = unknown> = {
   emptyText?: string
   summaryLabel?: string
   formatLabel?: (option: FilterOption<TMeta>) => string
+  /** Icon rendered inside the control, before the input text. */
+  leadingIcon?: React.ReactNode
+  /** Icon rendered inside the control, after the input text. */
+  trailingIcon?: React.ReactNode
 }
 
 export type FilterValidationConfig = {
@@ -115,6 +119,7 @@ export type FilterInputClassNames = {
   root?: string
   label?: string
   control?: string
+  controlWrap?: string
   row?: string
   stack?: string
   range?: string

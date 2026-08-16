@@ -687,6 +687,11 @@
 .dr-absolute-row { display: flex; align-items: center; gap: 6px; margin-top: 12px; }
 .dr-absolute-input { flex: 1; }
 .dr-absolute-btn { height: 32px; width: 32px; flex-shrink: 0; }
+.dr-absolute-inline-calendar {
+  margin-top: 8px;
+  border: 1px solid var(--basekit-border);
+  border-radius: var(--basekit-radius);
+}
 
 /* ── RelativeSidePanel ──────────────────────────────────────────────────────── */
 

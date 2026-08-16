@@ -9,6 +9,11 @@ if (typeof globalThis.ResizeObserver === 'undefined') {
   }
 }
 
+// jsdom does not implement the Web Animations API (used by base-ui's ScrollArea).
+if (typeof Element !== 'undefined' && !Element.prototype.getAnimations) {
+  Element.prototype.getAnimations = () => []
+}
+
 // Node's experimental built-in `localStorage` shadows jsdom's implementation and
 // returns undefined without a `--localstorage-file` flag. Polyfill with an in-memory store.
 if (typeof globalThis.localStorage === 'undefined') {

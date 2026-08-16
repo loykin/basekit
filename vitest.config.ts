@@ -7,6 +7,9 @@ export default defineConfig({
     projects: [
       {
         plugins: [react()],
+        resolve: {
+          alias: { '@': resolve(__dirname, 'packages/datetime-range/src') },
+        },
         test: {
           name: 'datetime-range',
           environment: 'jsdom',

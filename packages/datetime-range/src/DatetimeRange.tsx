@@ -47,6 +47,13 @@ export interface DatetimeRangeProps {
   use12HourFormat?: boolean;
   /** Show the "Now" toggle in relative mode. @default true */
   showNow?: boolean;
+  /**
+   * How the calendar is presented in Absolute mode: `'popover'` opens it from a button
+   * (current default behavior); `'inline'` renders it always visible below the date input,
+   * like an embedded shadcn-style calendar. Pick whichever suits the surrounding layout.
+   * @default 'popover'
+   */
+  calendarMode?: 'popover' | 'inline';
   /** Disable the entire component. @default false */
   disabled?: boolean;
   /** Override UI labels for i18n. */
@@ -83,6 +90,7 @@ export function DatetimeRange({
   timezone,
   use12HourFormat = false,
   showNow = true,
+  calendarMode = 'popover',
   disabled = false,
   labels: labelsProp,
   popoverAlign = 'start',
@@ -115,6 +123,7 @@ export function DatetimeRange({
     timezone,
     use12HourFormat,
     labels,
+    calendarMode,
   };
 
   return (

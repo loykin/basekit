@@ -27,6 +27,11 @@
   --basekit-fi-control-border:       var(--basekit-input);
   --basekit-fi-control-placeholder:  var(--basekit-muted-foreground);
   --basekit-fi-separator:            var(--basekit-border);
+  --basekit-fi-control-height:       32px;
+  --basekit-fi-control-padding-x:    8px;
+  --basekit-fi-control-font-size:    12px;
+  --basekit-fi-control-radius:       var(--basekit-radius);
+  --basekit-fi-control-icon-size:    14px;
 }
 
 .dark {
@@ -111,28 +116,89 @@
   width: 100%;
   min-width: 0;
   border: 1px solid var(--basekit-fi-control-border);
-  border-radius: var(--basekit-radius);
+  border-radius: var(--basekit-fi-control-radius);
   background: var(--basekit-fi-control-background);
   color: var(--basekit-fi-control-foreground);
   outline: none;
-  font-size: 12px;
+  font-size: var(--basekit-fi-control-font-size);
 }
 
 .fi-control,
 .fi-select {
-  height: 32px;
-  padding: 0 8px;
+  height: var(--basekit-fi-control-height);
+  padding: 0 var(--basekit-fi-control-padding-x);
 }
 
 .fi-textarea {
   min-height: 80px;
-  padding: 8px;
+  padding: var(--basekit-fi-control-padding-x);
   resize: none;
+}
+
+/* ── Size variants ───────────────────────────────────── */
+
+.fi-control[data-size="sm"],
+.fi-select[data-size="sm"],
+.fi-select-trigger[data-size="sm"] {
+  --basekit-fi-control-height: 28px;
+  --basekit-fi-control-padding-x: 6px;
+  --basekit-fi-control-font-size: 11px;
+}
+
+.fi-control[data-size="lg"],
+.fi-select[data-size="lg"],
+.fi-select-trigger[data-size="lg"] {
+  --basekit-fi-control-height: 36px;
+  --basekit-fi-control-padding-x: 10px;
+  --basekit-fi-control-font-size: 13px;
 }
 
 .fi-control::placeholder,
 .fi-textarea::placeholder {
   color: var(--basekit-fi-control-placeholder);
+}
+
+/* ── Icon slots ──────────────────────────────────────── */
+
+.fi-control-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.fi-control-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--basekit-fi-control-icon-size);
+  color: var(--basekit-fi-control-placeholder);
+  pointer-events: none;
+}
+
+.fi-control-icon svg {
+  width: var(--basekit-fi-control-icon-size);
+  height: var(--basekit-fi-control-icon-size);
+}
+
+.fi-control-icon-leading {
+  left: var(--basekit-fi-control-padding-x);
+}
+
+.fi-control-icon-trailing {
+  right: var(--basekit-fi-control-padding-x);
+}
+
+.fi-control-has-leading-icon {
+  padding-left: calc(var(--basekit-fi-control-padding-x) * 2 + var(--basekit-fi-control-icon-size));
+}
+
+.fi-control-has-trailing-icon {
+  padding-right: calc(var(--basekit-fi-control-padding-x) * 2 + var(--basekit-fi-control-icon-size));
 }
 
 .fi-control:focus-visible,
@@ -469,13 +535,13 @@
   display: inline-flex;
   align-items: center;
   width: 100%;
-  height: 32px;
+  height: var(--basekit-fi-control-height);
   border: 1px solid var(--basekit-fi-control-border);
-  border-radius: var(--basekit-radius);
+  border-radius: var(--basekit-fi-control-radius);
   background: var(--basekit-fi-control-background);
   color: var(--basekit-fi-control-foreground);
-  padding: 0 8px;
-  font-size: 12px;
+  padding: 0 var(--basekit-fi-control-padding-x);
+  font-size: var(--basekit-fi-control-font-size);
   gap: 4px;
   cursor: pointer;
   outline: none;
