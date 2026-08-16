@@ -119,6 +119,7 @@ try {
     join(appDir, 'src/main.tsx'),
     `import { DatetimeRange } from '@loykin/datetime-range'
 import '@loykin/datetime-range/styles'
+import { createShadcnAdapter as createDatetimeRangeShadcnAdapter } from '@loykin/datetime-range/adapters/shadcn'
 import { FilterInput } from '@loykin/filter-input'
 import '@loykin/filter-input/styles'
 import { SidePanelProvider } from '@loykin/side-panel'
@@ -127,8 +128,25 @@ import { ControlBarProvider, ControlBarBody, ControlBar } from '@loykin/control-
 import '@loykin/control-bar/styles'
 import { CronInput } from '@loykin/cron-input'
 import '@loykin/cron-input/styles'
+import { createShadcnAdapter as createCronInputShadcnAdapter } from '@loykin/cron-input/adapters/shadcn'
 import { formatUnit } from '@loykin/unit'
 import { createRoot } from 'react-dom/client'
+
+// Stand-ins for a consumer's own shadcn/ui components — enough shape to prove the
+// adapter subpath resolves (types + build), not a real shadcn/ui integration.
+const Stub = (props: Record<string, unknown>) => <div {...props} />
+
+const datetimeRangeShadcnAdapter = createDatetimeRangeShadcnAdapter({
+  Button: Stub, Popover: Stub, PopoverTrigger: Stub, PopoverContent: Stub,
+  Select: Stub, SelectTrigger: Stub, SelectValue: Stub, SelectContent: Stub, SelectItem: Stub,
+  Tabs: Stub, TabsList: Stub, TabsTrigger: Stub, TabsContent: Stub,
+  Input: Stub, Switch: Stub,
+})
+
+const cronInputShadcnAdapter = createCronInputShadcnAdapter({
+  Button: Stub, Popover: Stub, PopoverTrigger: Stub, PopoverContent: Stub,
+  Tabs: Stub, TabsList: Stub, TabsTrigger: Stub, TabsContent: Stub,
+})
 
 function App() {
   return (
@@ -141,8 +159,8 @@ function App() {
             value=""
             onChange={() => undefined}
           />
-          <CronInput onChange={() => undefined} />
-          <span data-export={DatetimeRange.name} />
+          <CronInput onChange={() => undefined} uiAdapter={cronInputShadcnAdapter} />
+          <span data-export={DatetimeRange.name} data-adapter={typeof datetimeRangeShadcnAdapter} />
         </ControlBarBody>
       </SidePanelProvider>
       <ControlBar />
