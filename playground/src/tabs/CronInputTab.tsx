@@ -93,6 +93,38 @@ function ShadcnAdapterExample() {
   )
 }
 
+function AdversarialFormTriggerExample() {
+  const { value, onChange } = useCron({ type: 'daily', hour: 9, minute: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [submitCount, setSubmitCount] = useState(0)
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        setSubmitCount((n) => n + 1)
+      }}
+    >
+      <div ref={containerRef} className="shadcn-theme-scope">
+        <CronInput
+          value={value}
+          onChange={onChange}
+          uiAdapter={shadcnAdapter}
+          portalContainer={containerRef}
+          renderTrigger={(triggerProps, { value: v }) => (
+            <button {...triggerProps} className="cron-input-trigger">
+              {toCronExpression(v)}
+            </button>
+          )}
+        />
+        <Value value={value} />
+      </div>
+      <p className="mt-2 text-[11px] text-muted-foreground" data-testid="submit-count">
+        Form onSubmit fired: {submitCount} {submitCount === 0 ? '(clicking the trigger above should never move this off 0)' : '⚠️ unexpected'}
+      </p>
+    </form>
+  )
+}
+
 export function CronInputTab() {
   const daily   = useCron({ type: 'daily',    hour: 9, minute: 0 })
   const weekly  = useCron({ type: 'weekly',   days: [1, 3, 5], hour: 9, minute: 30 })
@@ -241,6 +273,23 @@ export function CronInputTab() {
 <CronInput value={value} onChange={onChange} uiAdapter={shadcnAdapter} />`}
       >
         <ShadcnAdapterExample />
+      </Demo>
+
+      <Demo
+        title="shadcn adapter + custom trigger (no manual type=&quot;button&quot; needed)"
+        description="renderTrigger combined with uiAdapter — the spread {...triggerProps} carries a safe type=&quot;button&quot; on its own, even though this trigger doesn't set one itself. Wrapped in a real <form> below to prove clicking it doesn't submit."
+        code={`<form onSubmit={...}>
+  <CronInput
+    value={value}
+    onChange={onChange}
+    uiAdapter={shadcnAdapter}
+    renderTrigger={(triggerProps, { value }) => (
+      <button {...triggerProps}>{toCronExpression(value)}</button>
+    )}
+  />
+</form>`}
+      >
+        <AdversarialFormTriggerExample />
       </Demo>
 
     </div>

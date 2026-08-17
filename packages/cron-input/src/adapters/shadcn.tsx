@@ -51,8 +51,14 @@ export function createShadcnAdapter(components: ShadcnAdapterComponents): CronIn
   // cron-input's own 'default' | 'outline' | 'ghost' variants and 'default' | 'sm' sizes
   // are already a subset of shadcn's standard Button API, so no size/variant map is needed
   // here (unlike datetime-range's wider size union).
-  function Button(props: ButtonProps) {
-    return <ShadcnButton {...props} />;
+  //
+  // type="button" default: a plain <button>/shadcn Button with no explicit `type` is
+  // type="submit" per the HTML spec — inside a real <form> (a schedule field almost always
+  // is one), clicking it submits the form instead of just doing its own thing. Stock
+  // shadcn/ui Button templates don't default this themselves, so without it here every
+  // Button in this package would silently submit an enclosing form when adapted.
+  function Button({ type = 'button', ...props }: ButtonProps) {
+    return <ShadcnButton type={type} {...props} />;
   }
 
   function Popover(props: PopoverProps) {
@@ -63,7 +69,23 @@ export function createShadcnAdapter(components: ShadcnAdapterComponents): CronIn
     // base-ui's render-prop contract: `render(props, state) => ReactElement`, or a bare
     // element. Radix's `asChild` clones whatever element we hand it and injects its own
     // onClick/aria/ref regardless of the placeholder props/state below.
-    const rendered = typeof render === 'function' ? render({}, { disabled: !!disabled, open: false }) : render;
+    //
+    // { type: 'button' } (not {}): the real base-ui Popover.Trigger always includes
+    // type: 'button' in the props it hands to a render function, precisely so a bare
+    // <button {...triggerProps}> defaults safely. An empty object here silently drops
+    // that — the trigger falls back to the browser's type="submit" default and submits
+    // any enclosing <form> on click instead of opening the popover. base-ui's own render
+    // prop type doesn't declare `type` on its generic HTML props bag even though its
+    // runtime always includes it, so the final cast to Parameters<typeof render>[0] is
+    // unavoidable — but typing the literal itself first still gets excess-property
+    // checking on it, so a future typo'd key or wrong value here doesn't silently pass.
+    const placeholderTriggerProps: { type: 'button' } = { type: 'button' };
+    // The `state` (2nd) argument's `open: false` is a placeholder too, but a harmless one:
+    // CronInput.tsx's own `render={(triggerProps) => ...}` callback only ever destructures
+    // the first argument, and the real `open` state it exposes to a consumer's own
+    // `renderTrigger` prop is computed separately from CronInput's own React state, not
+    // from this placeholder — so no consumer-facing code path ever observes this `false`.
+    const rendered = typeof render === 'function' ? render(placeholderTriggerProps as Parameters<typeof render>[0], { disabled: !!disabled, open: false }) : render;
 
     return (
       <ShadcnPopoverTrigger asChild disabled={disabled}>

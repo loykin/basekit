@@ -23,6 +23,19 @@ describe('DatetimeRange uiAdapter — default behavior unchanged', () => {
     expect(trigger).toBeInTheDocument()
     expect(trigger).toHaveClass('datetime-range-btn')
   })
+
+  it('does not submit an enclosing <form> on the built-in (no uiAdapter) path', () => {
+    const handleSubmit = vi.fn((e: React.FormEvent) => e.preventDefault())
+    render(
+      <form onSubmit={handleSubmit}>
+        <DatetimeRange startTime={relativeAgo(1, 'Hours ago')} endTime={relativeNow()} onChange={vi.fn()} />
+      </form>,
+    )
+
+    fireEvent.click(screen.getByRole('button'))
+
+    expect(handleSubmit).not.toHaveBeenCalled()
+  })
 })
 
 describe('DatetimeRange uiAdapter — slot replacement', () => {
@@ -178,6 +191,67 @@ describe('createShadcnAdapter', () => {
       const { unmount } = render(<AdaptedButton size={size}>x</AdaptedButton>)
       unmount()
     }
+  })
+
+  it('defaults type="button" on the Button bridge even when the consumer component omits it', () => {
+    // A stock shadcn Button template just spreads {...props} onto a native <button> —
+    // it doesn't default `type` itself. The adapter bridge must, or every Button in this
+    // package silently becomes type="submit" once adapted. Checked on the footer's Cancel
+    // button specifically (not the trigger) — the trigger also receives {...triggerProps}
+    // from the (separately fixed and separately tested) PopoverTrigger bridge, which would
+    // mask a missing Button-bridge default; the footer button gets no such prop.
+    const RawButton = (props: Record<string, unknown>) => <button {...props} />
+    const adapter = createShadcnAdapter({ ...shadcnTestComponents, Button: RawButton })
+    render(
+      <DatetimeRange
+        startTime={relativeAgo(1, 'Hours ago')}
+        endTime={relativeNow()}
+        onChange={vi.fn()}
+        uiAdapter={adapter}
+      />,
+    )
+    fireEvent.click(screen.getByRole('button'))
+    const cancelButton = screen.getByText('Cancel').closest('button')
+    expect(cancelButton).toHaveAttribute('type', 'button')
+  })
+
+  it("does not submit an enclosing <form> when the default trigger is clicked (regression: bare <button> defaults to type=submit)", () => {
+    const adapter = createShadcnAdapter(shadcnTestComponents)
+    const handleSubmit = vi.fn((e: React.FormEvent) => e.preventDefault())
+    render(
+      <form onSubmit={handleSubmit}>
+        <DatetimeRangeProvider adapter={adapter}>
+          <DatetimeRange startTime={relativeAgo(1, 'Hours ago')} endTime={relativeNow()} onChange={vi.fn()} />
+        </DatetimeRangeProvider>
+      </form>,
+    )
+
+    fireEvent.click(screen.getByRole('button'))
+
+    expect(handleSubmit).not.toHaveBeenCalled()
+    expect(screen.getByTestId('fake-popover-content')).toBeInTheDocument()
+  })
+
+  it("does not submit an enclosing <form> for a consumer-authored renderTrigger that spreads {...triggerProps} without setting type itself (isolates the PopoverTrigger bridge's own default, independent of DatetimeRange.tsx's own Button usage)", () => {
+    const adapter = createShadcnAdapter(shadcnTestComponents)
+    const handleSubmit = vi.fn((e: React.FormEvent) => e.preventDefault())
+    render(
+      <form onSubmit={handleSubmit}>
+        <DatetimeRangeProvider adapter={adapter}>
+          <DatetimeRange
+            startTime={relativeAgo(1, 'Hours ago')}
+            endTime={relativeNow()}
+            onChange={vi.fn()}
+            renderTrigger={(triggerProps) => <button {...triggerProps}>open</button>}
+          />
+        </DatetimeRangeProvider>
+      </form>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    expect(handleSubmit).not.toHaveBeenCalled()
+    expect(screen.getByTestId('fake-popover-content')).toBeInTheDocument()
   })
 
   it('strips DR-only TabsList.variant and Switch.size before forwarding', () => {

@@ -364,6 +364,7 @@ export function CronInput({
           ) : (
             <button
               {...triggerProps}
+              type="button"
               disabled={disabled}
               className={cn('cron-input-trigger', isOpen && 'cron-input-trigger--open', className)}
             >

@@ -20,6 +20,19 @@ describe('CronInput uiAdapter — default behavior unchanged', () => {
     const trigger = screen.getByRole('button', { name: /09:00/i })
     expect(trigger).toHaveClass('cron-input-trigger')
   })
+
+  it('does not submit an enclosing <form> on the built-in (no uiAdapter) path — CronInput.tsx\'s own type="button" is what protects this path, independent of the adapter bridge', () => {
+    const handleSubmit = vi.fn((e: React.FormEvent) => e.preventDefault())
+    render(
+      <form onSubmit={handleSubmit}>
+        <CronInput value={{ type: 'daily', hour: 9, minute: 0 }} onChange={vi.fn()} />
+      </form>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /09:00/i }))
+
+    expect(handleSubmit).not.toHaveBeenCalled()
+  })
 })
 
 describe('CronInput uiAdapter — slot replacement', () => {
@@ -130,5 +143,63 @@ describe('createShadcnAdapter', () => {
     expect(screen.queryByTestId('fake-popover-content')).not.toBeInTheDocument()
     fireEvent.click(screen.getByText('Open'))
     expect(screen.getByTestId('fake-popover-content')).toHaveTextContent('Hello')
+  })
+
+  it('defaults type="button" on the Button bridge even when the consumer component omits it', () => {
+    // A stock shadcn Button template just spreads {...props} onto a native <button> —
+    // it doesn't default `type` itself. The adapter bridge must, or every Button in this
+    // package silently becomes type="submit" once adapted.
+    const RawButton = (props: Record<string, unknown>) => <button {...props} />
+    const adapter = createShadcnAdapter({ ...shadcnTestComponents, Button: RawButton })
+    render(
+      <CronInput
+        value={{ type: 'daily', hour: 9, minute: 0 }}
+        onChange={vi.fn()}
+        uiAdapter={adapter}
+      />,
+    )
+    openPopup(/09:00/i)
+    const applyButton = screen.getByText('Apply').closest('button')
+    expect(applyButton).toHaveAttribute('type', 'button')
+  })
+
+  it("does not submit an enclosing <form> when the default trigger is clicked (regression: bare <button> defaults to type=submit)", () => {
+    const adapter = createShadcnAdapter(shadcnTestComponents)
+    const handleSubmit = vi.fn((e: React.FormEvent) => e.preventDefault())
+    render(
+      <form onSubmit={handleSubmit}>
+        <CronInputProvider adapter={adapter}>
+          <CronInput value={{ type: 'daily', hour: 9, minute: 0 }} onChange={vi.fn()} />
+        </CronInputProvider>
+      </form>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /09:00/i }))
+
+    expect(handleSubmit).not.toHaveBeenCalled()
+    expect(screen.getByTestId('fake-popover-content')).toBeInTheDocument()
+  })
+
+  it("does not submit an enclosing <form> for a consumer-authored renderTrigger that spreads {...triggerProps} without setting type itself (isolates the PopoverTrigger bridge's own default, independent of CronInput.tsx's own hardcoded type=\"button\")", () => {
+    const adapter = createShadcnAdapter(shadcnTestComponents)
+    const handleSubmit = vi.fn((e: React.FormEvent) => e.preventDefault())
+    render(
+      <form onSubmit={handleSubmit}>
+        <CronInputProvider adapter={adapter}>
+          <CronInput
+            value={{ type: 'daily', hour: 9, minute: 0 }}
+            onChange={vi.fn()}
+            renderTrigger={(triggerProps, { value }) => (
+              <button {...triggerProps}>{value.type}</button>
+            )}
+          />
+        </CronInputProvider>
+      </form>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'daily' }))
+
+    expect(handleSubmit).not.toHaveBeenCalled()
+    expect(screen.getByTestId('fake-popover-content')).toBeInTheDocument()
   })
 })
