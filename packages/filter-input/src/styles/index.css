@@ -30,8 +30,19 @@
   --basekit-filter-input-control-height:       32px;
   --basekit-filter-input-control-padding-x:    8px;
   --basekit-filter-input-control-font-size:    12px;
-  --basekit-filter-input-control-radius:       var(--basekit-radius);
   --basekit-filter-input-control-icon-size:    14px;
+  /*
+   * --basekit-filter-input-control-radius is deliberately NOT defined here (unlike the
+   * other control-* tokens above). A custom property's var() reference resolves once,
+   * at the element where it's declared, and that computed value — not a live binding —
+   * is what descendants inherit. Since this is declared at :root, an ancestor scope
+   * further down the tree that overrides --basekit-radius (e.g. a demo isolating itself
+   * from a global radius picker) would never reach a --control-radius fixed at :root.
+   * Left unset, the var(--basekit-filter-input-control-radius, var(--basekit-radius))
+   * fallback at each point of use re-resolves --basekit-radius fresh, at whatever
+   * element actually renders — while still letting an advanced consumer override this
+   * token directly if they explicitly set it.
+   */
 }
 
 .dark {
@@ -48,6 +59,14 @@
   --basekit-primary-foreground:   var(--primary-foreground,   oklch(0.205 0 0));
   --basekit-destructive:          var(--destructive,          oklch(0.704 0.191 22.216));
   --basekit-filter-input-separator:         oklch(1 0 0 / 20%);
+  /*
+   * shadcn/ui's own Input is bg-transparent in light mode but dark:bg-input/30 — a
+   * translucent tint, brighter than the page, instead of a solid fill — specifically in
+   * dark mode. --basekit-background (solid, same tone as the page) matches shadcn's
+   * light-mode transparency closely enough visually, but not its dark-mode treatment, so
+   * override just this one derived token here to follow suit.
+   */
+  --basekit-filter-input-control-background: color-mix(in oklab, var(--basekit-input) 30%, transparent);
 }
 
 .filter-input-variable {
@@ -116,7 +135,7 @@
   width: 100%;
   min-width: 0;
   border: 1px solid var(--basekit-filter-input-control-border);
-  border-radius: var(--basekit-filter-input-control-radius);
+  border-radius: var(--basekit-filter-input-control-radius, var(--basekit-radius));
   background: var(--basekit-filter-input-control-background);
   color: var(--basekit-filter-input-control-foreground);
   outline: none;
@@ -537,7 +556,7 @@
   width: 100%;
   height: var(--basekit-filter-input-control-height);
   border: 1px solid var(--basekit-filter-input-control-border);
-  border-radius: var(--basekit-filter-input-control-radius);
+  border-radius: var(--basekit-filter-input-control-radius, var(--basekit-radius));
   background: var(--basekit-filter-input-control-background);
   color: var(--basekit-filter-input-control-foreground);
   padding: 0 var(--basekit-filter-input-control-padding-x);

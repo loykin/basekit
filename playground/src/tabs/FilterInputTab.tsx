@@ -2,6 +2,9 @@ import { useMemo, useRef, useState } from 'react'
 import { FilterInput, FilterInputConfig, FilterValue, FilterVariable } from '@loykin/filter-input'
 import '@loykin/filter-input/styles'
 import type { TokenGroupDef } from '../components/TokensPanel'
+import { Button as ShadcnButton } from '../components/ui/button'
+import { Input as ShadcnInput } from '../components/ui/input'
+import { Select as ShadcnSelect, SelectContent as ShadcnSelectContent, SelectItem as ShadcnSelectItem, SelectTrigger as ShadcnSelectTrigger, SelectValue as ShadcnSelectValue } from '../components/ui/select'
 
 function SearchIcon() {
   return (
@@ -234,6 +237,7 @@ behavior: { showReload: false }`}</Code>
 }
 
 export function FilterInputTab() {
+  const [toneShadcnSelect, setToneShadcnSelect] = useState('')
   const [labeled, setLabeled] = useState<Record<string, FilterValue>>({
     keyword: 'abc',
     keywords: ['a', 'b'],
@@ -402,7 +406,7 @@ export function FilterInputTab() {
       <section className="border border-border">
         <SectionHeader
           title="Sizes + icon slot"
-          description="display.size (sm | md | lg) resizes the control via CSS custom properties. display.leadingIcon / trailingIcon add an icon without fighting the control's own padding."
+          description="display.size (sm | md | lg) resizes the control via CSS custom properties. display.leadingIcon and display.trailingIcon are independent slots — set either one, or both — without fighting the control's own padding."
         />
         <div className="flex flex-col gap-3 p-4">
           <Code>{`<FilterInput
@@ -431,12 +435,84 @@ export function FilterInputTab() {
               value={standalone.lg as string ?? ''}
               onChange={(value, ctx) => setStandalone(prev => ({ ...prev, [ctx.key]: value }))}
             />
+            <FilterInput
+              config={{ key: 'trailing', type: 'text', placeholder: 'trailing icon only', display: { trailingIcon: <span className="text-[10px]">⌘K</span> } }}
+              value={standalone.trailing as string ?? ''}
+              onChange={(value, ctx) => setStandalone(prev => ({ ...prev, [ctx.key]: value }))}
+            />
+            <FilterInput
+              config={{ key: 'both', type: 'text', placeholder: 'leading + trailing icon', display: { leadingIcon: <SearchIcon />, trailingIcon: <span className="text-[10px]">⌘K</span> } }}
+              value={standalone.both as string ?? ''}
+              onChange={(value, ctx) => setStandalone(prev => ({ ...prev, [ctx.key]: value }))}
+            />
           </div>
         </div>
       </section>
 
       {/* ── Async / lazy loading ─────────────────────────── */}
       <AsyncSection />
+
+      {/* ── Tone match against real shadcn/ui controls ──── */}
+      <section className="border border-border">
+        <SectionHeader
+          title="Tone match — next to real shadcn/ui controls"
+          description="FilterInput isn't composed from swappable Button/Popover/Select primitives the way DatetimeRange/CronInput are — it's used as one opaque field. So instead of a uiAdapter, it leans entirely on the --basekit-* → var(--background|border|ring|...) fallback chain to inherit a host app's real shadcn tokens. Placed side by side here (display.size=&quot;lg&quot;, matching shadcn's default control height) with real shadcn Button/Input/Select to check the border, radius, height, and focus ring actually line up."
+        />
+        <div className="shadcn-theme-scope flex flex-col gap-3 p-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">shadcn Input</span>
+              <div className="relative flex items-center">
+                <span className="pointer-events-none absolute left-2.5 text-muted-foreground [&_svg]:block">
+                  <SearchIcon />
+                </span>
+                <ShadcnInput placeholder="Search…" className="pl-8" />
+              </div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">FilterInput (text)</span>
+              <FilterInput
+                config={{ key: 'toneText', type: 'text', placeholder: 'Search…', display: { size: 'lg', leadingIcon: <SearchIcon /> } }}
+                value={standalone.toneText as string ?? ''}
+                onChange={(value, ctx) => setStandalone(prev => ({ ...prev, [ctx.key]: value }))}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">shadcn Select</span>
+              <ShadcnSelect value={toneShadcnSelect} onValueChange={setToneShadcnSelect}>
+                <ShadcnSelectTrigger className="w-full">
+                  <ShadcnSelectValue placeholder="Status" />
+                </ShadcnSelectTrigger>
+                <ShadcnSelectContent>
+                  {statusOptions.map((o) => (
+                    <ShadcnSelectItem key={o.value} value={o.value}>{o.label}</ShadcnSelectItem>
+                  ))}
+                </ShadcnSelectContent>
+              </ShadcnSelect>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">FilterInput (select)</span>
+              <FilterInput
+                config={{ key: 'toneSelect', type: 'select', options: statusOptions, placeholder: 'Status', display: { size: 'lg' } }}
+                value={standalone.toneSelect as string ?? ''}
+                onChange={(value, ctx) => setStandalone(prev => ({ ...prev, [ctx.key]: value }))}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">FilterVariable (as actually used — labeled)</span>
+            <FilterVariable
+              config={{ key: 'toneKeyword', label: 'Keyword', type: 'text', placeholder: 'Search…', display: { size: 'lg', leadingIcon: <SearchIcon /> } }}
+              value={standalone.toneKeyword as string ?? ''}
+              onChange={(value, ctx) => setStandalone(prev => ({ ...prev, [ctx.key]: value }))}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <ShadcnButton variant="outline" size="sm">shadcn Button</ShadcnButton>
+            <span className="text-[11px] text-muted-foreground">for radius/border reference</span>
+          </div>
+        </div>
+      </section>
 
       {/* ── Shape reference ──────────────────────────────── */}
       <section className="border border-border">
