@@ -1,6 +1,6 @@
 {
   "name": "@loykin/side-panel",
-  "version": "0.0.1",
+  "version": "0.0.0-dev",
   "description": "Non-blocking resizable side panel with Zustand state management.",
   "type": "module",
   "main": "./dist/index.cjs",

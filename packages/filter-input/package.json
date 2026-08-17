@@ -1,6 +1,6 @@
 {
   "name": "@loykin/filter-input",
-  "version": "0.0.1",
+  "version": "0.0.0-dev",
   "description": "Config-driven React filter input with static, searchable, and remote option support.",
   "type": "module",
   "main": "./dist/index.cjs",

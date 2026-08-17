@@ -1,6 +1,6 @@
 {
   "name": "@loykin/control-bar",
-  "version": "0.0.1",
+  "version": "0.0.0-dev",
   "description": "Persistent bottom control bar with typed tabs, resize, and Zustand state management.",
   "type": "module",
   "main": "./dist/index.cjs",

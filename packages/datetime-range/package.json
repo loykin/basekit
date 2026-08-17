@@ -1,6 +1,6 @@
 {
   "name": "@loykin/datetime-range",
-  "version": "0.0.1",
+  "version": "0.0.0-dev",
   "description": "Headless datetime range picker component with relative and absolute time support.",
   "type": "module",
   "main": "./dist/index.cjs",

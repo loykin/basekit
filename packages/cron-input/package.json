@@ -1,6 +1,6 @@
 {
   "name": "@loykin/cron-input",
-  "version": "0.0.1",
+  "version": "0.0.0-dev",
   "description": "Cron expression builder component with visual schedule editor and raw expression fallback.",
   "type": "module",
   "main": "./dist/index.cjs",
