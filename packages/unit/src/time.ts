@@ -6,6 +6,11 @@ function fixed(value: number, decimals?: number): string {
   return parseFloat(value.toFixed(d)).toString();
 }
 
+const DURATION_SCALES: [number, string][] = [
+  [0.001, '\u00b5s'], [1, 'ms'], [1000, 's'], [60_000, 'min'],
+  [3_600_000, 'h'], [86_400_000, 'd'],
+];
+
 const FIXED_UNIT_LABELS: Record<Exclude<TimeUnit, 'duration' | 'durationS'>, string> = {
   ns: 'ns', us: '\u00b5s', ms: 'ms', s: 's', min: 'min', h: 'h', d: 'd',
 };
@@ -18,12 +23,25 @@ const FIXED_UNIT_LABELS: Record<Exclude<TimeUnit, 'duration' | 'durationS'>, str
 function autoScaleMs(ms: number, decimals?: number): string {
   const abs = Math.abs(ms);
   if (abs === 0) return '0 ms';
-  if (abs < 1) return `${fixed(ms * 1e3, decimals)} \u00b5s`;
-  if (abs < 1000) return `${fixed(ms, decimals)} ms`;
-  if (abs < 60_000) return `${fixed(ms / 1000, decimals)} s`;
-  if (abs < 3_600_000) return `${fixed(ms / 60_000, decimals)} min`;
-  if (abs < 86_400_000) return `${fixed(ms / 3_600_000, decimals)} h`;
-  return `${fixed(ms / 86_400_000, decimals)} d`;
+
+  let index = 0;
+  for (let candidate = DURATION_SCALES.length - 1; candidate >= 0; candidate -= 1) {
+    if (abs >= DURATION_SCALES[candidate][0]) {
+      index = candidate;
+      break;
+    }
+  }
+
+  while (index < DURATION_SCALES.length - 1) {
+    const [threshold] = DURATION_SCALES[index];
+    const [nextThreshold] = DURATION_SCALES[index + 1];
+    const rounded = Number(fixed(ms / threshold, decimals));
+    if (Math.abs(rounded) < nextThreshold / threshold) break;
+    index += 1;
+  }
+
+  const [threshold, label] = DURATION_SCALES[index];
+  return `${fixed(ms / threshold, decimals)} ${label}`;
 }
 
 export function formatTime(value: number, unit: TimeUnit, decimals?: number): string {

@@ -7,10 +7,33 @@ function fixed(value: number, decimals?: number): string {
   return parseFloat(value.toFixed(d)).toString();
 }
 
+type Scale = [number, string];
+
+function autoScale(value: number, scales: Scale[], decimals?: number): string {
+  let index = 0;
+  for (let candidate = scales.length - 1; candidate >= 0; candidate -= 1) {
+    if (Math.abs(value) >= scales[candidate][0]) {
+      index = candidate;
+      break;
+    }
+  }
+
+  while (index < scales.length - 1) {
+    const [threshold] = scales[index];
+    const [nextThreshold] = scales[index + 1];
+    const rounded = Number(fixed(value / threshold, decimals));
+    if (Math.abs(rounded) < nextThreshold / threshold) break;
+    index += 1;
+  }
+
+  const [threshold, label] = scales[index];
+  return `${fixed(value / threshold, decimals)} ${label}`;
+}
+
 // ─── SI bytes (1000) ─────────────────────────────────────────────────────────
 
-const SI_THRESHOLDS: [number, string][] = [
-  [1e15, 'PB'], [1e12, 'TB'], [1e9, 'GB'], [1e6, 'MB'], [1e3, 'KB'],
+const SI_SCALES: Scale[] = [
+  [1, 'B'], [1e3, 'KB'], [1e6, 'MB'], [1e9, 'GB'], [1e12, 'TB'], [1e15, 'PB'],
 ];
 
 const SI_FIXED_LABELS: Record<SIByteUnit, string> = {
@@ -23,32 +46,21 @@ const SI_FIXED_FACTORS: Record<SIByteUnit, number> = {
 
 export function formatSIBytes(value: number, unit: SIByteUnit, decimals?: number): string {
   if (unit === 'bytes') {
-    // auto-scale
-    for (const [threshold, label] of SI_THRESHOLDS) {
-      if (Math.abs(value) >= threshold) return `${fixed(value / threshold, decimals)} ${label}`;
-    }
-    return `${fixed(value, decimals)} B`;
+    return autoScale(value, SI_SCALES, decimals);
   }
   return `${fixed(value / SI_FIXED_FACTORS[unit], decimals)} ${SI_FIXED_LABELS[unit]}`;
 }
 
 // ─── IEC bytes (1024) ────────────────────────────────────────────────────────
 
-const IEC_THRESHOLDS: [number, string][] = [
-  [1024 ** 5, 'PiB'], [1024 ** 4, 'TiB'], [1024 ** 3, 'GiB'], [1024 ** 2, 'MiB'], [1024, 'KiB'],
+const IEC_SCALES: Scale[] = [
+  [1, 'B'], [1024, 'KiB'], [1024 ** 2, 'MiB'], [1024 ** 3, 'GiB'],
+  [1024 ** 4, 'TiB'], [1024 ** 5, 'PiB'],
 ];
 
-const IEC_FIXED_FACTORS: Record<IECByteUnit, number> = {
-  kibytes: 1024, mibytes: 1024 ** 2, gibytes: 1024 ** 3, tibytes: 1024 ** 4, pibytes: 1024 ** 5,
-};
-
-export function formatIECBytes(value: number, unit: IECByteUnit, decimals?: number): string {
+export function formatIECBytes(value: number, _unit: IECByteUnit, decimals?: number): string {
   // Always auto-scale from bytes for IEC units — unit name just signals IEC preference
-  const inputBytes = value * IEC_FIXED_FACTORS[unit];
-  for (const [threshold, label] of IEC_THRESHOLDS) {
-    if (Math.abs(inputBytes) >= threshold) return `${fixed(inputBytes / threshold, decimals)} ${label}`;
-  }
-  return `${fixed(inputBytes, decimals)} B`;
+  return autoScale(value, IEC_SCALES, decimals);
 }
 
 // ─── Bits ─────────────────────────────────────────────────────────────────────
