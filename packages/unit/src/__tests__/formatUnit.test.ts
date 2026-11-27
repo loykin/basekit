@@ -6,6 +6,20 @@ describe('formatUnit', () => {
     expect(formatUnit(1536, { unit: 'bytes', decimals: 1 })).toBe('1.5 KB')
   })
 
+  it('auto-scales byte inputs using IEC units', () => {
+    expect(formatUnit(1536, { unit: 'kibytes', decimals: 2 })).toBe('1.50 KiB')
+    expect(formatUnit(1_048_576, { unit: 'kibytes', decimals: 2 })).toBe('1.00 MiB')
+  })
+
+  it('promotes rounded byte values to the next unit', () => {
+    expect(formatUnit(999_999, { unit: 'bytes' })).toBe('1 MB')
+  })
+
+  it('promotes rounded durations to the next unit', () => {
+    expect(formatUnit(59_999, { unit: 'duration' })).toBe('1 min')
+    expect(formatUnit(3_599_999, { unit: 'duration' })).toBe('1 h')
+  })
+
   it('formats percentages expressed as fractions', () => {
     expect(formatUnit(0.9234, { unit: 'percentunit', decimals: 2 })).toBe('92.34%')
   })
